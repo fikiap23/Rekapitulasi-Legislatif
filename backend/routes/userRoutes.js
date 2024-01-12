@@ -12,18 +12,6 @@ router.post(
   protectUserRoute,
   villageController.addVotesArrayToValidBallots
 )
-router.put(
-  '/validBallots',
-  protectUserRoute,
-  villageController.updateVotesToValidBallots
-)
-
-// route invalidBallots
-router.patch(
-  '/invalidBallots',
-  protectUserRoute,
-  villageController.addVoteToInvalidBallots
-)
 
 //! route district
 router.get('/districts', districtController.getDistricts)
