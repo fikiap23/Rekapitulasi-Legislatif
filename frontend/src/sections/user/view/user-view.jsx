@@ -122,10 +122,10 @@ export default function UserPage() {
                 onRequestSort={handleSort}
                 onSelectAllClick={handleSelectAllClick}
                 headLabel={[
-                  { id: 'name', label: 'Name' },
-                  { id: 'company', label: 'Company' },
-                  { id: 'role', label: 'Role' },
-                  { id: 'isVerified', label: 'Verified', align: 'center' },
+                  { id: 'name', label: 'Nama' },
+                  { id: 'daerah', label: 'Daerah' },
+                  { id: 'role', label: 'Peran' },
+
                   { id: 'status', label: 'Status' },
                   { id: '' },
                 ]}
@@ -139,9 +139,7 @@ export default function UserPage() {
                       name={row.name}
                       role={row.role}
                       status={row.status}
-                      company={row.company}
-                      avatarUrl={row.avatarUrl}
-                      isVerified={row.isVerified}
+                      daerah={row.daerah}
                       selected={selected.indexOf(row.name) !== -1}
                       handleClick={(event) => handleClick(event, row.name)}
                     />
