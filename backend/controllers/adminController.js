@@ -1,38 +1,49 @@
-import Admin from '../models/adminModel.js'
 import User from '../models/userModel.js'
 import { District, Regency, Village } from '../models/regionModel.js'
 import Party from '../models/partyModel.js'
 import bcrypt from 'bcryptjs'
-import generateTokenAndSetCookie from '../utils/helpers/generateTokenAndSetCookie.js'
+import apiHandler from '../utils/apiHandler.js'
 
 const adminController = {
-  //* kelola user
   createNewUser: async (req, res) => {
     try {
       const { username, password, village_id } = req.body
 
-      // Validate input not null
       if (!username || !password || !village_id) {
-        return res.status(400).json({ error: 'All fields are required' })
+        return apiHandler({
+          res,
+          status: 'error',
+          code: 400,
+          message: 'All fields are required',
+          error: null,
+        })
       }
 
-      // check is village exists
       const village = await Village.findById(village_id)
       if (!village) {
-        return res.status(400).json({ error: 'Village not found' })
+        return apiHandler({
+          res,
+          status: 'error',
+          code: 400,
+          message: 'Village not found',
+          error: null,
+        })
       }
 
-      // Check if the user already exists
       const existingUser = await User.findOne({ username })
       if (existingUser) {
-        return res.status(400).json({ error: 'User already exists' })
+        return apiHandler({
+          res,
+          status: 'error',
+          code: 400,
+          message: 'User already exists',
+          error: null,
+        })
       }
 
-      // Encrypt password
       const salt = await bcrypt.genSalt(10)
       const hashedPassword = await bcrypt.hash(password, salt)
 
-      // Create new user
       const newUser = new User({
         username,
         password: hashedPassword,
@@ -40,36 +51,57 @@ const adminController = {
       })
       await newUser.save()
 
-      res.status(201).json({
-        _id: newUser._id,
-        username: newUser.username,
-        village_id: newUser.village_id,
+      return apiHandler({
+        res,
+        status: 'success',
+        code: 201,
+        message: 'User created successfully',
+        data: {
+          _id: newUser._id,
+          username: newUser.username,
+          village_id: newUser.village_id,
+        },
+        error: null,
       })
     } catch (error) {
-      res.status(500).json({ error: error.message })
-      console.log('Error in createNewUser: ', error.message)
+      return apiHandler({
+        res,
+        status: 'error',
+        code: 500,
+        message: 'Internal Server Error',
+        data: null,
+        error: { type: 'InternalServerError', details: error.message },
+      })
     }
   },
 
-  //* kelola partai
   createNewParty: async (req, res) => {
     try {
       let { name, code, path, logoUrl } = req.body
 
-      // Validate input
       if (!name || !code || !path) {
-        return res.status(400).json({ error: 'Missing required fields' })
+        return apiHandler({
+          res,
+          status: 'error',
+          code: 400,
+          message: 'Missing required fields',
+          error: null,
+        })
       }
       name = name.toLowerCase()
       code = code.toLowerCase()
 
-      // Check if the party already exists
       const existingParty = await Party.findOne({ code })
       if (existingParty) {
-        return res.status(400).json({ error: 'Party already exists' })
+        return apiHandler({
+          res,
+          status: 'error',
+          code: 400,
+          message: 'Party already exists',
+          error: null,
+        })
       }
 
-      // Create new party
       const newParty = new Party({
         logoUrl,
         name,
@@ -78,46 +110,78 @@ const adminController = {
       })
       await newParty.save()
 
-      res.status(201).json({
-        _id: newParty._id,
-        logoUrl: newParty.logoUrl,
-        name: newParty.name,
-        path: newParty.path,
-        code: newParty.code,
+      return apiHandler({
+        res,
+        status: 'success',
+        code: 201,
+        message: 'Party created successfully',
+        data: {
+          _id: newParty._id,
+          logoUrl: newParty.logoUrl,
+          name: newParty.name,
+          path: newParty.path,
+          code: newParty.code,
+        },
+        error: null,
       })
     } catch (error) {
-      res.status(500).json({ error: error.message })
-      console.log('Error in createNewParty: ', error.message)
+      return apiHandler({
+        res,
+        status: 'error',
+        code: 500,
+        message: 'Internal Server Error',
+        data: null,
+        error: { type: 'InternalServerError', details: error.message },
+      })
     }
   },
 
   getAllParties: async (req, res) => {
     try {
-      // Retrieve all parties from the database
       const allParties = await Party.find()
-
-      // Respond with the list of parties
-      res.status(200).json(allParties)
+      return apiHandler({
+        res,
+        status: 'success',
+        code: 200,
+        message: 'Parties retrieved successfully',
+        data: allParties,
+        error: null,
+      })
     } catch (error) {
-      res.status(500).json({ error: error.message })
-      console.log('Error in getAllParties: ', error.message)
+      return apiHandler({
+        res,
+        status: 'error',
+        code: 500,
+        message: 'Internal Server Error',
+        data: null,
+        error: { type: 'InternalServerError', details: error.message },
+      })
     }
   },
 
-  //* kelola desa
   createNewVillage: async (req, res) => {
     try {
       const { village_name, total_voters, district_id } = req.body
 
-      // Check if input is null
       if (!village_name || !total_voters || !district_id) {
-        return res.status(400).json({ error: 'Missing required fields' })
+        return apiHandler({
+          res,
+          status: 'error',
+          code: 400,
+          message: 'Missing required fields',
+          error: null,
+        })
       }
 
-      // check if district exists
       const district = await District.findById(district_id)
       if (!district) {
-        return res.status(400).json({ error: 'District not found' })
+        return apiHandler({
+          res,
+          status: 'error',
+          code: 400,
+          message: 'District not found',
+          error: null,
+        })
       }
 
       const newVillage = new Village({
@@ -128,35 +192,56 @@ const adminController = {
 
       await newVillage.save()
 
-      // add to district
       district.villages.push(newVillage._id)
       await district.save()
 
-      res.status(201).json({
-        _id: newVillage._id,
-        district_id: newVillage.district_id,
-        village_name: newVillage.village_name,
+      return apiHandler({
+        res,
+        status: 'success',
+        code: 201,
+        message: 'Village created successfully',
+        data: {
+          _id: newVillage._id,
+          district_id: newVillage.district_id,
+          village_name: newVillage.village_name,
+        },
+        error: null,
       })
     } catch (error) {
-      res.status(500).json({ error: error.message })
-      console.log('Error in createNewVillage: ', error.message)
+      return apiHandler({
+        res,
+        status: 'error',
+        code: 500,
+        message: 'Internal Server Error',
+        data: null,
+        error: { type: 'InternalServerError', details: error.message },
+      })
     }
   },
 
-  //* kelola kecamatan
   createNewDistrict: async (req, res) => {
     try {
       const { district_name, regency_id } = req.body
 
-      // Check if input is null
       if (!district_name || !regency_id) {
-        return res.status(400).json({ error: 'Missing required fields' })
+        return apiHandler({
+          res,
+          status: 'error',
+          code: 400,
+          message: 'Missing required fields',
+          error: null,
+        })
       }
 
-      // check if regency exists
       const regency = await Regency.findById(regency_id)
       if (!regency) {
-        return res.status(400).json({ error: 'Regency not found' })
+        return apiHandler({
+          res,
+          status: 'error',
+          code: 400,
+          message: 'Regency not found',
+          error: null,
+        })
       }
 
       const newDistrict = new District({
@@ -166,29 +251,45 @@ const adminController = {
 
       await newDistrict.save()
 
-      // add to regency
       regency.districts.push(newDistrict._id)
       await regency.save()
 
-      res.status(201).json({
-        _id: newDistrict._id,
-        district_name: newDistrict.district_name,
-        regency_id: newDistrict.regency_id,
+      return apiHandler({
+        res,
+        status: 'success',
+        code: 201,
+        message: 'District created successfully',
+        data: {
+          _id: newDistrict._id,
+          district_name: newDistrict.district_name,
+          regency_id: newDistrict.regency_id,
+        },
+        error: null,
       })
     } catch (error) {
-      res.status(500).json({ error: error.message })
-      console.log('Error in createNewDistrict: ', error.message)
+      return apiHandler({
+        res,
+        status: 'error',
+        code: 500,
+        message: 'Internal Server Error',
+        data: null,
+        error: { type: 'InternalServerError', details: error.message },
+      })
     }
   },
 
-  //*kelola kabupaten
   createNewRegency: async (req, res) => {
     try {
       const { regency_name } = req.body
 
-      // Check if input is null
       if (!regency_name) {
-        return res.status(400).json({ error: 'Missing required fields' })
+        return apiHandler({
+          res,
+          status: 'error',
+          code: 400,
+          message: 'Missing required fields',
+          error: null,
+        })
       }
 
       const newRegency = new Regency({
@@ -197,13 +298,26 @@ const adminController = {
 
       await newRegency.save()
 
-      res.status(201).json({
-        _id: newRegency._id,
-        regency_name: newRegency.regency_name,
+      return apiHandler({
+        res,
+        status: 'success',
+        code: 201,
+        message: 'Regency created successfully',
+        data: {
+          _id: newRegency._id,
+          regency_name: newRegency.regency_name,
+        },
+        error: null,
       })
     } catch (error) {
-      res.status(500).json({ error: error.message })
-      console.log('Error in createNewRegency: ', error.message)
+      return apiHandler({
+        res,
+        status: 'error',
+        code: 500,
+        message: 'Internal Server Error',
+        data: null,
+        error: { type: 'InternalServerError', details: error.message },
+      })
     }
   },
 }

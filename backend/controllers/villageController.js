@@ -1,95 +1,119 @@
 import User from '../models/userModel.js'
 import Party from '../models/partyModel.js'
 import { Village } from '../models/regionModel.js'
+import apiHandler from '../utils/apiHandler.js'
 
 const villageController = {
   addVotesArrayToValidBallots: async (req, res) => {
     try {
-      const votes = req.body // directly use the array of votes
+      const votes = req.body
 
-      // Check if input is not null and is an array
       if (!votes || !Array.isArray(votes) || votes.length === 0) {
-        return res.status(400).json({ error: 'Votes array is required' })
+        return apiHandler({
+          res,
+          status: 'error',
+          code: 400,
+          message: 'Votes array is required',
+          data: null,
+          error: null,
+        })
       }
 
       const userId = req.user._id
 
-      // Check if user exists
       const user = await User.findById(userId)
       if (!user) {
-        return res.status(404).json({ error: 'User not found' })
+        return apiHandler({
+          res,
+          status: 'error',
+          code: 404,
+          message: 'User not found',
+          data: null,
+          error: null,
+        })
       }
 
       const villageId = user.village_id
 
       const village = await Village.findById(villageId)
       if (!village) {
-        return res.status(404).json({ error: 'Village not found' })
+        return apiHandler({
+          res,
+          status: 'error',
+          code: 404,
+          message: 'Village not found',
+          data: null,
+          error: null,
+        })
       }
 
-      // check limit of votes
-      const total_voters = village.total_voters
-
-      // Variable to track total votes added
+      const totalVoters = village.total_voters
       let totalVotesAdded = 0
 
       for (const vote of votes) {
         const { code, numberOfVotes } = vote
 
-        // Check if code is valid
         const party = await Party.findOne({ code })
         if (!party) {
-          return res
-            .status(404)
-            .json({ error: `Party with code ${code} not found` })
+          return apiHandler({
+            res,
+            status: 'error',
+            code: 404,
+            message: `Party with code ${code} not found`,
+            data: null,
+            error: null,
+          })
         }
 
-        // Check if the party has already been voted for
         const existingBallotIndex = village.valid_ballots.findIndex(
           (ballot) => String(ballot.code) === code
         )
 
         if (existingBallotIndex !== -1) {
-          // If the party has been voted for, update the vote
           totalVotesAdded += numberOfVotes
         } else {
-          // If the party has not been voted for, add a new vote
           totalVotesAdded += numberOfVotes
         }
       }
 
-      // Verifikasi apakah totalVotesAdded melebihi total_voters
-      if (totalVotesAdded > total_voters) {
-        return res
-          .status(400)
-          .json({ error: 'Total number of votes exceeds the limit' })
+      console.log(totalVotesAdded)
+
+      if (totalVotesAdded > totalVoters) {
+        return apiHandler({
+          res,
+          status: 'error',
+          code: 400,
+          message: 'Total number of votes exceeds the limit',
+          data: null,
+          error: null,
+        })
       }
 
-      // Jika tidak melebihi, simpan ke database
       for (const vote of votes) {
         const { code, numberOfVotes } = vote
 
-        // Check if code is valid
         const party = await Party.findOne({ code })
         if (!party) {
-          return res
-            .status(404)
-            .json({ error: `Party with code ${code} not found` })
+          return apiHandler({
+            res,
+            status: 'error',
+            code: 404,
+            message: `Party with code ${code} not found`,
+            data: null,
+            error: null,
+          })
         }
 
-        // Check if the party has already been voted for
         const existingBallotIndex = village.valid_ballots.findIndex(
           (ballot) => String(ballot.code) === code
         )
 
         if (existingBallotIndex !== -1) {
-          // If the party has been voted for, update the vote
           await Village.updateOne(
             { _id: villageId, 'valid_ballots.code': code },
             { $set: { 'valid_ballots.$.numberOfVotes': numberOfVotes } }
           )
         } else {
-          // If the party has not been voted for, add a new vote
           await Village.updateOne(
             { _id: villageId },
             {
@@ -105,17 +129,28 @@ const villageController = {
         }
       }
 
-      // console.log(totalVotesAdded)
-      // add invalid ballots
       await Village.updateOne(
         { _id: villageId },
-        { $set: { invalid_ballots: total_voters - totalVotesAdded } }
+        { $set: { invalid_ballots: totalVoters - totalVotesAdded } }
       )
 
-      res.status(200).json({ message: 'Votes added/updated successfully' })
+      return apiHandler({
+        res,
+        status: 'success',
+        code: 200,
+        message: 'Votes added/updated successfully',
+        data: null,
+        error: null,
+      })
     } catch (error) {
-      res.status(500).json({ error: error.message })
-      console.log('Error in addVotesArrayToValidBallots: ', error.message)
+      return apiHandler({
+        res,
+        status: 'error',
+        code: 500,
+        message: 'Internal Server Error',
+        data: null,
+        error: { type: 'InternalServerError', details: error.message },
+      })
     }
   },
 }

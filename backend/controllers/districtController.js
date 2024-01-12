@@ -1,8 +1,6 @@
-import User from '../models/userModel.js'
 import Party from '../models/partyModel.js'
-import { District, Regency, Village } from '../models/regionModel.js'
-
-// Fungsi pembantu untuk mendapatkan rekapitulasi suara per distrik
+import { District, Village } from '../models/regionModel.js'
+import apiHandler from '../utils/apiHandler.js'
 const getVotesSummaryByDistrictHelper = async (districtId) => {
   const district = await District.findById(districtId)
   if (!district) {
@@ -130,20 +128,14 @@ const getVotesPartiesByDistrictHelper = async (districtId) => {
 const districtController = {
   getDistricts: async (req, res) => {
     try {
-      // Langkah 1: Mencari Semua Distrik
       const districts = await District.find()
-
-      // Langkah 2: Membuat array untuk menyimpan rekapitulasi setiap distrik
       const districtsSummary = []
 
-      // Langkah 3: Iterasi melalui setiap distrik untuk mendapatkan rekapitulasi
       for (const district of districts) {
-        // Mendapatkan rekapitulasi untuk setiap distrik menggunakan fungsi sebelumnya
         const districtSummary = await getVotesPartiesByDistrictHelper(
           district._id
         )
 
-        // Menambahkan informasi distrik ke rekapitulasi distrik
         districtsSummary.push({
           districtId: district._id,
           districtName: district.district_name,
@@ -151,11 +143,23 @@ const districtController = {
         })
       }
 
-      // Mengirim respons dengan rekapitulasi distrik
-      res.status(200).json(districtsSummary)
+      return apiHandler({
+        res,
+        status: 'success',
+        code: 200,
+        message: 'Districts retrieved successfully',
+        data: districtsSummary,
+        error: null,
+      })
     } catch (error) {
-      res.status(500).json({ error: error.message })
-      console.log('Error in getDistricts: ', error.message)
+      return apiHandler({
+        res,
+        status: 'error',
+        code: 500,
+        message: 'Internal Server Error',
+        data: null,
+        error: { type: 'InternalServerError', details: error.message },
+      })
     }
   },
 
@@ -165,38 +169,75 @@ const districtController = {
       const district = await District.findById(districtId)
 
       if (!district) {
-        return res.status(404).json({ error: 'District not found' })
+        return apiHandler({
+          res,
+          status: 'error',
+          code: 404,
+          message: 'District not found',
+          data: null,
+          error: null,
+        })
       }
 
-      res.status(200).json(district)
+      return apiHandler({
+        res,
+        status: 'success',
+        code: 200,
+        message: 'District retrieved successfully',
+        data: district,
+        error: null,
+      })
     } catch (error) {
-      res.status(500).json({ error: error.message })
-      console.log('Error in getDistrictById: ', error.message)
+      return apiHandler({
+        res,
+        status: 'error',
+        code: 500,
+        message: 'Internal Server Error',
+        data: null,
+        error: { type: 'InternalServerError', details: error.message },
+      })
     }
   },
 
   getVotesSummaryByDistrict: async (req, res) => {
     try {
-      // Langkah 1: Mendapatkan ID Distrik dari Permintaan (Request)
       const districtId = req.params.id
-
-      // Langkah 2: Mencari Distrik Berdasarkan ID
       const district = await District.findById(districtId)
+
       if (!district) {
-        return res.status(404).json({ error: 'District not found' })
+        return apiHandler({
+          res,
+          status: 'error',
+          code: 404,
+          message: 'District not found',
+          data: null,
+          error: null,
+        })
       }
 
       const districtSummary = await getVotesSummaryByDistrictHelper(districtId)
 
-      res.status(200).json({
-        districtId: district._id,
-        districtName: district.district_name,
-        ...districtSummary,
+      return apiHandler({
+        res,
+        status: 'success',
+        code: 200,
+        message: 'Votes summary retrieved successfully',
+        data: {
+          districtId: district._id,
+          districtName: district.district_name,
+          ...districtSummary,
+        },
+        error: null,
       })
     } catch (error) {
-      // Menangani kesalahan dan mengirim tanggapan dengan status 500
-      res.status(500).json({ error: error.message })
-      console.log('Error in getVotesSummaryByDistrict: ', error.message)
+      return apiHandler({
+        res,
+        status: 'error',
+        code: 500,
+        message: 'Internal Server Error',
+        data: null,
+        error: { type: 'InternalServerError', details: error.message },
+      })
     }
   },
 }
