@@ -1,60 +1,95 @@
-import Admin from '../models/adminModel.js'
-import User from '../models/userModel.js'
+// authController.js
 import bcrypt from 'bcryptjs'
 import generateTokenAndSetCookie from '../utils/helpers/generateTokenAndSetCookie.js'
+import apiHandler from '../utils/apiHandler.js'
+import Admin from '../models/adminModel.js'
+import User from '../models/userModel.js'
 
 const authController = {
   signupAdmin: async (req, res) => {
     try {
-      // property yg ada di req.body
       const { username, password, repassword } = req.body
 
-      // cek apakah user ada di db
       const admin = await Admin.findOne({ username: username })
       if (admin) {
-        return res.status(400).json({ error: 'Admin already exists' })
+        return apiHandler({
+          res,
+          status: 'error',
+          code: 400,
+          message: 'Admin already exists',
+          error: { type: 'AdminExists', details: 'Admin already exists' },
+        })
       }
 
-      // cek apakah password dan repassword sama
       if (password !== repassword) {
-        return res.status(400).json({ error: 'Passwords do not match' })
+        return apiHandler({
+          res,
+          status: 'error',
+          code: 400,
+          message: 'Passwords do not match',
+          error: {
+            type: 'PasswordMismatch',
+            details: 'Passwords do not match',
+          },
+        })
       }
 
-      // encrypt password
       const salt = await bcrypt.genSalt(10)
       const hashedPassword = await bcrypt.hash(password, salt)
 
-      // buat Admin baru
       const newAdmin = new Admin({
         username,
         password: hashedPassword,
       })
       await newAdmin.save()
 
-      // buat response
       if (newAdmin) {
-        // generate token
         generateTokenAndSetCookie(newAdmin._id, res)
-        res.status(201).json({
-          _id: newAdmin._id,
-          username: newAdmin.username,
+        return apiHandler({
+          res,
+          status: 'success',
+          code: 201,
+          message: 'Admin account created successfully',
+          data: {
+            _id: newAdmin._id,
+            username: newAdmin.username,
+          },
         })
       } else {
-        res.status(400).json({ error: 'Invalid user data' })
+        return apiHandler({
+          res,
+          status: 'error',
+          code: 400,
+          message: 'Invalid user data',
+          error: { type: 'InvalidUserData', details: 'Invalid user data' },
+        })
       }
     } catch (error) {
-      res.status(500).json({ error: error.message })
-      console.log('error di signup', error.message)
+      return apiHandler({
+        res,
+        status: 'error',
+        code: 500,
+        message: 'Internal Server Error',
+        error: { type: 'InternalServerError', details: error.message },
+      })
     }
   },
+
   loginUser: async (req, res) => {
     try {
       let { username, password } = req.body
-      // check username and password not null
+
       if (!username || !password) {
-        return res
-          .status(400)
-          .json({ error: 'Username and password are required' })
+        return apiHandler({
+          res,
+          status: 'error',
+          code: 400,
+          message: 'Username and password are required',
+          error: {
+            type: 'MissingCredentials',
+            details: 'Username and password are required',
+          },
+        })
       }
 
       username = username.toLowerCase()
@@ -66,14 +101,30 @@ const authController = {
           admin?.password || ''
         )
 
-        if (!isPasswordCorrect)
-          return res.status(400).json({ error: 'Invalid username or password' })
+        if (!isPasswordCorrect) {
+          return apiHandler({
+            res,
+            status: 'error',
+            code: 400,
+            message: 'Invalid username or password',
+            error: {
+              type: 'InvalidCredentials',
+              details: 'Invalid username or password',
+            },
+          })
+        }
 
         generateTokenAndSetCookie(admin._id, 'admin', res)
-        res.status(200).json({
-          _id: admin._id,
-          name: admin.name,
-          username: admin.username,
+        return apiHandler({
+          res,
+          status: 'success',
+          code: 200,
+          message: 'Admin logged in successfully',
+          data: {
+            _id: admin._id,
+            name: admin.name,
+            username: admin.username,
+          },
         })
       } else {
         const user = await User.findOne({ username: username })
@@ -83,29 +134,63 @@ const authController = {
           user?.password || ''
         )
 
-        if (!user || !isPasswordCorrect)
-          return res.status(400).json({ error: 'Invalid username or password' })
+        if (!user || !isPasswordCorrect) {
+          return apiHandler({
+            res,
+            status: 'error',
+            code: 400,
+            message: 'Invalid username or password',
+            error: {
+              type: 'InvalidCredentials',
+              details: 'Invalid username or password',
+            },
+          })
+        }
 
         generateTokenAndSetCookie(user._id, 'user', res)
 
-        res.status(200).json({
-          _id: user._id,
-          village_id: user.village_id,
-          username: user.username,
+        return apiHandler({
+          res,
+          status: 'success',
+          code: 200,
+          message: 'User logged in successfully',
+          data: {
+            _id: user._id,
+            village_id: user.village_id,
+            username: user.username,
+          },
         })
       }
     } catch (error) {
-      res.status(500).json({ error: error.message })
-      console.log('Error in loginUser: ', error.message)
+      return apiHandler({
+        res,
+        status: 'error',
+        code: 500,
+        message: 'Internal Server Error',
+        error: { type: 'InternalServerError', details: error.message },
+      })
     }
   },
+
   logoutUser: (req, res) => {
     try {
       res.cookie('jwt', '', { maxAge: 1 })
-      res.status(200).json({ message: 'User logged out successfully' })
+      return apiHandler({
+        res,
+        status: 'success',
+        code: 200,
+        message: 'User logged out successfully',
+        data: null,
+        error: null,
+      })
     } catch (err) {
-      res.status(500).json({ error: err.message })
-      console.log('Error in logout: ', err.message)
+      return apiHandler({
+        res,
+        status: 'error',
+        code: 500,
+        message: 'Internal Server Error',
+        error: { type: 'InternalServerError', details: err.message },
+      })
     }
   },
 }

@@ -11,9 +11,8 @@ import LoadingButton from '@mui/lab/LoadingButton';
 import { alpha, useTheme } from '@mui/material/styles';
 import InputAdornment from '@mui/material/InputAdornment';
 
-import { useRouter } from 'src/routes/hooks';
-
 import { bgGradient } from 'src/theme/css';
+import authService from 'src/services/authService';
 
 import Logo from 'src/components/logo';
 import Iconify from 'src/components/iconify';
@@ -23,20 +22,49 @@ import Iconify from 'src/components/iconify';
 export default function LoginView() {
   const theme = useTheme();
 
-  const router = useRouter();
-
+  // const router = useRouter();
+  const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [userData, setUserData] = useState({
+    username: '',
+    password: '',
+  });
 
-  const handleClick = () => {
-    router.push('/dashboard');
+  const handleLogin = async () => {
+    try {
+      // router.push('/dashboard');
+      // console.log(userData);
+      // check if username and password are not empty
+      if (!userData.username || !userData.password) {
+        alert('Please enter username and password');
+        return;
+      }
+      setLoading(true);
+      const result = await authService.loginUser(userData);
+      if (!result) {
+        alert('Invalid username or password');
+        setLoading(false);
+        return;
+      }
+      console.log('Login successful:', result);
+      setLoading(false);
+    } catch (error) {
+      console.error('Login error:', error);
+      setLoading(false);
+    }
   };
 
   const renderForm = (
     <>
       <Stack spacing={3}>
-        <TextField name="username" label="Username" />
+        <TextField
+          name="username"
+          label="Username"
+          onChange={(e) => setUserData({ ...userData, username: e.target.value })}
+        />
 
         <TextField
+          onChange={(e) => setUserData({ ...userData, password: e.target.value })}
           name="password"
           label="Password"
           type={showPassword ? 'text' : 'password'}
@@ -64,9 +92,9 @@ export default function LoginView() {
         type="submit"
         variant="contained"
         color="inherit"
-        onClick={handleClick}
+        onClick={handleLogin}
       >
-        Login
+        {loading ? 'Loading...' : 'Login'}
       </LoadingButton>
     </>
   );

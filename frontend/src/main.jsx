@@ -1,4 +1,5 @@
 import { Suspense } from 'react';
+import { RecoilRoot } from 'recoil';
 import ReactDOM from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
@@ -13,7 +14,9 @@ root.render(
   <HelmetProvider>
     <BrowserRouter>
       <Suspense>
-        <App />
+        <RecoilRoot>
+          <App />
+        </RecoilRoot>
       </Suspense>
     </BrowserRouter>
   </HelmetProvider>
