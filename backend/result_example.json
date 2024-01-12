@@ -1,0 +1,56 @@
+{
+  "_id": "6075c66458c1a01234567890",
+  "nomor_urut": 1,
+  "name_candidate_1": "Joko",
+  "name_candidate_2": "Budi",
+  "results_regency": [
+    {
+      "_id": "6075c66458c1a01234567890",
+      "name": "Garut",
+      "code": "001",
+      "total_votes_regency": 900,
+      "districts": [
+        {
+          "_id": "6075c66458c1a01234567891",
+          "name": "Malangbong",
+          "code": "001",
+          "total_votes_district": 400,
+          "villages": [
+            {
+              "_id": "6075c66458c1a01234567892",
+              "name": "Lewobaru",
+              "code": "0001",
+              "total_votes_subdistrict": 100
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_id": "6075c66458c1a01234567890",
+      "name": "Bandung",
+      "code": "002",
+      "total_votes_regency": 900,
+      "districts": [
+        {
+          "_id": "6075c66458c1a01234567891",
+          "name": "Cipadung",
+          "code": "001",
+          "total_votes_district": 400,
+          "villages": [
+            {
+              "_id": "6075c66458c1a01234567892",
+              "name": "Lewobaru",
+              "code": "0001",
+              "total_votes_subdistrict": 100
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "total_votes": 900,
+  "timestamp": "2021-04-13T12:34:56.789Z",
+  "createdAt": "2021-04-13T12:34:56.789Z",
+  "updatedAt": "2021-04-13T12:34:56.789Z"
+}
