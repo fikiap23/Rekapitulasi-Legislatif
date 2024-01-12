@@ -4,6 +4,7 @@ import connectDB from './db/connectDB.js'
 import cookieParser from 'cookie-parser'
 import adminRoutes from './routes/adminRoutes.js'
 import userRoutes from './routes/userRoutes.js'
+import authRoutes from './routes/authRoutes.js'
 import cors from 'cors'
 
 dotenv.config()
@@ -22,6 +23,7 @@ app.use(express.urlencoded({ extended: true })) // for parsing application/x-www
 app.use(cookieParser())
 
 // Routes
+app.use('/api/v1/auth', authRoutes)
 app.use('/api/v1/admins', adminRoutes)
 app.use('/api/v1/users', userRoutes)
 

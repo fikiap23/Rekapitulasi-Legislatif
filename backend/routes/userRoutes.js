@@ -1,14 +1,9 @@
 import express from 'express'
-import userController from '../controllers/userController.js'
 import villageController from '../controllers/villageController.js'
 import districtController from '../controllers/districtController.js'
 import { protectUserRoute } from '../middlewares/protectRoute.js'
 
 const router = express.Router()
-
-//! route user
-router.post('/login', userController.loginUser)
-router.post('/logout', userController.logoutUser)
 
 //! route village
 // route validBallots

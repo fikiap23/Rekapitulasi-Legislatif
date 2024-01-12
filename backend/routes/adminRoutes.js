@@ -4,10 +4,6 @@ import { protectAdminRoute } from '../middlewares/protectRoute.js'
 
 const router = express.Router()
 
-router.post('/signup', adminController.signupUser)
-router.post('/login', adminController.loginUser)
-router.post('/logout', adminController.logoutUser)
-
 // Route untuk kelola user
 router.post('/users', protectAdminRoute, adminController.createNewUser)
 
