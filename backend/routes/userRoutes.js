@@ -10,7 +10,7 @@ const router = express.Router()
 router.post(
   '/validBallots',
   protectUserRoute,
-  villageController.addVotesToValidBallots
+  villageController.addVotesArrayToValidBallots
 )
 router.put(
   '/validBallots',
