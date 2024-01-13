@@ -13,7 +13,12 @@ const router = express.Router()
 router.post('/users', protectAdminRoute, adminUserController.createNewUser)
 
 // Route untuk kelola partai
-router.post('/parties', protectAdminRoute, adminPartyController.createNewParty)
+router.post(
+  '/parties',
+  protectAdminRoute,
+  adminPartyController.createMultipleParties
+)
+router.post('/party', protectAdminRoute, adminPartyController.createNewParty)
 router.get('/parties/all', adminPartyController.getAllParties)
 
 // Route untuk kelola wilayah desa
