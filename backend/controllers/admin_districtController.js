@@ -237,6 +237,32 @@ const adminDistrictController = {
       })
     }
   },
+  getAllDistricts: async (req, res) => {
+    try {
+      const allDistricts = await District.find().populate(
+        'villages',
+        'village_name'
+      )
+
+      return apiHandler({
+        res,
+        status: 'success',
+        code: 200,
+        message: 'All districts retrieved successfully',
+        data: allDistricts,
+        error: null,
+      })
+    } catch (error) {
+      return apiHandler({
+        res,
+        status: 'error',
+        code: 500,
+        message: 'Internal Server Error',
+        data: null,
+        error: { type: 'InternalServerError', details: error.message },
+      })
+    }
+  },
 }
 
 export default adminDistrictController

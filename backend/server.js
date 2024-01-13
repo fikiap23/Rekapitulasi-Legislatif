@@ -13,7 +13,13 @@ connectDB()
 
 const app = express()
 
-app.use(cors())
+app.use(
+  cors({
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    origin: 'http://localhost:3030',
+    credentials: true,
+  })
+)
 
 const PORT = process.env.PORT || 5000
 

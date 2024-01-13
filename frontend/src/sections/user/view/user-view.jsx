@@ -42,7 +42,7 @@ export default function UserPage() {
     try {
       const result = await adminUserService.getAllUsersAndAdmins();
       setUsers(result);
-      console.log('All users and admins:', result);
+      // console.log('All users and admins:', result);
       // Handle successful retrieval of users and admins
     } catch (error) {
       console.error('Get all users and admins error:', error);

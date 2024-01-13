@@ -11,7 +11,11 @@ const router = express.Router()
 
 // Route untuk kelola user
 router.post('/users', protectAdminRoute, adminUserController.createNewUser)
-router.get('/users/all', adminUserController.getAllUsersAndAdmins)
+router.get(
+  '/users/all',
+  protectAdminRoute,
+  adminUserController.getAllUsersAndAdmins
+)
 
 // Route untuk kelola partai
 router.post(
@@ -54,6 +58,12 @@ router.post(
   '/districts/regency/:regency_id',
   protectAdminRoute,
   adminDistrictController.createMultipleDistrictsByRegency
+)
+
+router.get(
+  '/districts',
+  protectAdminRoute,
+  adminDistrictController.getAllDistricts
 )
 
 // Route untuk kelola wilayah kabupaten

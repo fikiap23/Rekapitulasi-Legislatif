@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
@@ -10,6 +10,9 @@ import DialogTitle from '@mui/material/DialogTitle';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 
+import adminUserService from 'src/services/adminUserService';
+import adminDistrictService from 'src/services/adminDistrictService';
+
 import Iconify from 'src/components/iconify';
 
 export default function CreateUserDialog() {
@@ -18,8 +21,26 @@ export default function CreateUserDialog() {
     username: '',
     password: '',
     kecamatan: '',
-    kelurahan: '',
+    village_id: '',
   });
+
+  const [loading, setLoading] = useState(false);
+
+  const [kecamatans, setKecamatans] = useState([]);
+  const [kelurahans, setKelurahans] = useState([]);
+
+  useEffect(() => {
+    handleGetKecamatans();
+  }, []);
+
+  const handleGetKecamatans = async () => {
+    const getKecamatans = await adminDistrictService.getAllDistricts();
+    if (getKecamatans.code === 200) {
+      setKecamatans(getKecamatans.data);
+    } else {
+      setKecamatans([]);
+    }
+  };
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -30,7 +51,21 @@ export default function CreateUserDialog() {
   };
 
   const handleSubmit = async () => {
-    console.log(formData);
+    // await adminUserService.createNewUser(formData);
+    try {
+      setLoading(true);
+      const result = await adminUserService.createNewUser(formData);
+      if (result.code === 201) {
+        alert('User created successfully!');
+        window.location.reload();
+
+        handleClose();
+      }
+      setLoading(false);
+    } catch (error) {
+      setLoading(false);
+      console.log(error);
+    }
   };
 
   return (
@@ -78,12 +113,18 @@ export default function CreateUserDialog() {
               id="kecamatan"
               name="kecamatan"
               value={formData.kecamatan}
-              onChange={(e) => setFormData({ ...formData, kecamatan: e.target.value })}
+              onChange={(e) => {
+                setFormData({ ...formData, kecamatan: e.target.value });
+                // console.log(e.target.value);
+                setKelurahans(e.target.value.villages);
+              }}
               fullWidth
             >
-              <MenuItem value="kecamatan1">Kecamatan 1</MenuItem>
-              <MenuItem value="kecamatan2">Kecamatan 2</MenuItem>
-              {/* Add more kecamatan options as needed */}
+              {kecamatans.map((kecamatan) => (
+                <MenuItem key={kecamatan._id} value={kecamatan}>
+                  {kecamatan.district_name}
+                </MenuItem>
+              ))}
             </Select>
           </div>
 
@@ -97,19 +138,21 @@ export default function CreateUserDialog() {
               id="kelurahan"
               name="kelurahan"
               value={formData.kelurahan}
-              onChange={(e) => setFormData({ ...formData, kelurahan: e.target.value })}
+              onChange={(e) => setFormData({ ...formData, village_id: e.target.value })}
               fullWidth
             >
-              <MenuItem value="kelurahan1">Kelurahan 1</MenuItem>
-              <MenuItem value="kelurahan2">Kelurahan 2</MenuItem>
-              {/* Add more kelurahan options as needed */}
+              {kelurahans.map((kelurahan) => (
+                <MenuItem key={kelurahan._id} value={kelurahan._id}>
+                  {kelurahan.village_name}
+                </MenuItem>
+              ))}
             </Select>
           </div>
         </DialogContent>
 
         <DialogActions>
           <Button onClick={handleClose}>Batal</Button>
-          <Button onClick={handleSubmit}>Simpan</Button>
+          <Button onClick={handleSubmit}>{loading ? 'Menyimpan...' : 'Simpan'}</Button>
         </DialogActions>
       </Dialog>
     </>

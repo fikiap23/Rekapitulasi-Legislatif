@@ -15,7 +15,9 @@ const authService = {
 
   loginUser: async (userData) => {
     try {
-      const response = await axios.post(`${BASE_URL}/login`, userData);
+      const response = await axios.post(`${BASE_URL}/login`, userData, {
+        withCredentials: true,
+      });
       return response.data;
     } catch (error) {
       return error.response.data;
