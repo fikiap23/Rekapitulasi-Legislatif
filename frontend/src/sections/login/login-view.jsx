@@ -36,12 +36,13 @@ export default function LoginView() {
 
   const handleLogin = async () => {
     try {
+      setLoading(true);
       // check if username and password are not empty
       if (!userData.username || !userData.password) {
         alert('Please enter username and password');
         return;
       }
-      setLoading(true);
+
       const result = await authService.loginUser(userData);
       if (result.code === 200) {
         localStorage.setItem('user-pileg', JSON.stringify(result.data));
