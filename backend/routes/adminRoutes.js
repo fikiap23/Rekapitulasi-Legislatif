@@ -23,9 +23,19 @@ router.get('/parties/all', adminPartyController.getAllParties)
 
 // Route untuk kelola wilayah desa
 router.post(
+  '/village',
+  protectAdminRoute,
+  adminVillageController.createOneVillage
+)
+router.post(
   '/villages',
   protectAdminRoute,
-  adminVillageController.createNewVillage
+  adminVillageController.createManyVillage
+)
+router.post(
+  '/villages/district/:district_id',
+  protectAdminRoute,
+  adminVillageController.createManyVillageByDistrict
 )
 
 // Route untuk kelola wilayah kecamatan

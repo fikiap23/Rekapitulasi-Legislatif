@@ -6,6 +6,10 @@ const VillageSchema = mongoose.Schema(
       type: String,
       required: true,
     },
+    code: {
+      type: String,
+      required: true,
+    },
     district_id: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'District',
