@@ -47,38 +47,14 @@ const villageController = {
         })
       }
 
+      // Check if total votes added is less than total voters
       const totalVoters = village.total_voters
-      let totalVotesAdded = 0
+      const totalVotesBody = votes.reduce(
+        (acc, obj) => acc + obj.numberOfVotes,
+        0
+      )
 
-      for (const vote of votes) {
-        const { code, numberOfVotes } = vote
-
-        const party = await Party.findOne({ code })
-        if (!party) {
-          return apiHandler({
-            res,
-            status: 'error',
-            code: 404,
-            message: `Party with code ${code} not found`,
-            data: null,
-            error: null,
-          })
-        }
-
-        const existingBallotIndex = village.valid_ballots.findIndex(
-          (ballot) => String(ballot.code) === code
-        )
-
-        if (existingBallotIndex !== -1) {
-          totalVotesAdded += numberOfVotes
-        } else {
-          totalVotesAdded += numberOfVotes
-        }
-      }
-
-      console.log(totalVotesAdded)
-
-      if (totalVotesAdded > totalVoters) {
+      if (totalVotesBody > totalVoters) {
         return apiHandler({
           res,
           status: 'error',
@@ -131,7 +107,7 @@ const villageController = {
 
       await Village.updateOne(
         { _id: villageId },
-        { $set: { invalid_ballots: totalVoters - totalVotesAdded } }
+        { $set: { invalid_ballots: totalVoters - totalVotesBody } }
       )
 
       return apiHandler({
