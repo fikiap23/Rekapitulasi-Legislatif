@@ -127,6 +127,28 @@ const getVotesPartiesByDistrictHelper = async (districtId) => {
 }
 
 const districtController = {
+  getAllDistricts: async (req, res) => {
+    try {
+      const districts = await District.find({}, { district_name: 1, code: 1 })
+      return apiHandler({
+        res,
+        status: 'success',
+        code: 200,
+        message: 'All districts retrieved successfully',
+        data: districts,
+        error: null,
+      })
+    } catch (error) {
+      return apiHandler({
+        res,
+        status: 'error',
+        code: 500,
+        message: 'Internal Server Error',
+        data: null,
+        error: { type: 'InternalServerError', details: error.message },
+      })
+    }
+  },
   getDistricts: async (req, res) => {
     try {
       const districts = await District.find()

@@ -36,7 +36,7 @@ export default function DashboardView() {
 
   const handleGetKecamatans = async () => {
     try {
-      const getKecamatans = await districtService.getAllDistricts();
+      const getKecamatans = await districtService.getAllDistrictsWithDetail();
 
       if (getKecamatans.code === 200) {
         setKecamatans(getKecamatans.data);

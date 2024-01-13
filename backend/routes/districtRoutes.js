@@ -6,6 +6,7 @@ const router = express.Router()
 
 //! route district
 router.get('/', districtController.getDistricts)
+router.get('/all', districtController.getAllDistricts)
 router.get('/:id', districtController.getVotesSummaryByDistrict)
 
 export default router
