@@ -44,7 +44,6 @@ const authController = {
       await newAdmin.save()
 
       if (newAdmin) {
-        generateTokenAndSetCookie(newAdmin._id, res)
         return apiHandler({
           res,
           status: 'success',
