@@ -38,6 +38,11 @@ router.post(
   adminVillageController.createManyVillage
 )
 router.post(
+  '/villages/ballot/:villageId',
+  protectAdminRoute,
+  adminVillageController.addVotesArrayToValidBallots
+)
+router.post(
   '/villages/district/:district_id',
   protectAdminRoute,
   adminVillageController.createManyVillageByDistrict
