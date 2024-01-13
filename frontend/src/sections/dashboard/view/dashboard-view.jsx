@@ -154,7 +154,7 @@ export default function DashboardView() {
                       sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                     >
                       <TableCell component="th" scope="row">
-                        {row.districtName}
+                        {`Kecamatan ${row.districtName}`}
                       </TableCell>
                       <TableCell align="right">{row.totalVoters}</TableCell>
                       <TableCell align="right">{row.totalValidVotes}</TableCell>
