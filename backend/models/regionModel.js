@@ -47,6 +47,10 @@ const DistrictSchema = mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Regency',
     },
+    code: {
+      type: String,
+      required: true,
+    },
     villages: [
       {
         type: mongoose.Schema.Types.ObjectId,
@@ -60,6 +64,10 @@ const DistrictSchema = mongoose.Schema(
 const RegencySchema = mongoose.Schema(
   {
     regency_name: {
+      type: String,
+      required: true,
+    },
+    code: {
       type: String,
       required: true,
     },

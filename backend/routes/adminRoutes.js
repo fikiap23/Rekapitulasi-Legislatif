@@ -30,9 +30,19 @@ router.post(
 
 // Route untuk kelola wilayah kecamatan
 router.post(
-  '/districts',
+  '/district',
   protectAdminRoute,
   adminDistrictController.createNewDistrict
+)
+router.post(
+  '/districts',
+  protectAdminRoute,
+  adminDistrictController.createMultipleDistricts
+)
+router.post(
+  '/districts/regency/:regency_id',
+  protectAdminRoute,
+  adminDistrictController.createMultipleDistrictsByRegency
 )
 
 // Route untuk kelola wilayah kabupaten
