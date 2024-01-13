@@ -1,7 +1,9 @@
 import { Village } from '../models/regionModel.js'
 import User from '../models/userModel.js'
+import Admin from '../models/adminModel.js'
 import bcrypt from 'bcryptjs'
 import apiHandler from '../utils/apiHandler.js'
+
 const adminUserController = {
   createNewUser: async (req, res) => {
     try {
@@ -59,6 +61,34 @@ const adminUserController = {
           username: newUser.username,
           village_id: newUser.village_id,
         },
+        error: null,
+      })
+    } catch (error) {
+      return apiHandler({
+        res,
+        status: 'error',
+        code: 500,
+        message: 'Internal Server Error',
+        data: null,
+        error: { type: 'InternalServerError', details: error.message },
+      })
+    }
+  },
+
+  getAllUsersAndAdmins: async (req, res) => {
+    try {
+      const users = await User.find().select('-password')
+      const admins = await Admin.find().select('-password')
+
+      // join user and admin data
+      const allUsers = [...users, ...admins]
+
+      return apiHandler({
+        res,
+        status: 'success',
+        code: 200,
+        message: 'All users and admins retrieved successfully',
+        data: allUsers,
         error: null,
       })
     } catch (error) {

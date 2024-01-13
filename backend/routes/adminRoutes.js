@@ -11,6 +11,7 @@ const router = express.Router()
 
 // Route untuk kelola user
 router.post('/users', protectAdminRoute, adminUserController.createNewUser)
+router.get('/users/all', adminUserController.getAllUsersAndAdmins)
 
 // Route untuk kelola partai
 router.post(
