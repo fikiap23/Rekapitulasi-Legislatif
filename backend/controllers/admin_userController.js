@@ -77,18 +77,25 @@ const adminUserController = {
 
   getAllUsersAndAdmins: async (req, res) => {
     try {
-      const users = await User.find().select('-password')
+      const users = await User.find()
+        .select('-password')
+        .populate('village_id', 'village_name')
       const admins = await Admin.find().select('-password')
 
-      // join user and admin data
-      const allUsers = [...users, ...admins]
+      const allUsers = users.map((user) => ({ ...user._doc, role: 'user' }))
+      const allAdmins = admins.map((admin) => ({
+        ...admin._doc,
+        role: 'admin',
+      }))
+
+      const combinedData = [...allUsers, ...allAdmins]
 
       return apiHandler({
         res,
         status: 'success',
         code: 200,
         message: 'All users and admins retrieved successfully',
-        data: allUsers,
+        data: combinedData,
         error: null,
       })
     } catch (error) {
