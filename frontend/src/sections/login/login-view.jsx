@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useSetRecoilState } from 'recoil';
 
 import Box from '@mui/material/Box';
 import Link from '@mui/material/Link';
@@ -11,6 +12,9 @@ import LoadingButton from '@mui/lab/LoadingButton';
 import { alpha, useTheme } from '@mui/material/styles';
 import InputAdornment from '@mui/material/InputAdornment';
 
+import { useRouter } from 'src/routes/hooks';
+
+import userAtom from 'src/atoms/userAtom';
 import { bgGradient } from 'src/theme/css';
 import authService from 'src/services/authService';
 
@@ -21,8 +25,8 @@ import Iconify from 'src/components/iconify';
 
 export default function LoginView() {
   const theme = useTheme();
-
-  // const router = useRouter();
+  const setUser = useSetRecoilState(userAtom);
+  const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [userData, setUserData] = useState({
@@ -32,8 +36,6 @@ export default function LoginView() {
 
   const handleLogin = async () => {
     try {
-      // router.push('/dashboard');
-      // console.log(userData);
       // check if username and password are not empty
       if (!userData.username || !userData.password) {
         alert('Please enter username and password');
@@ -41,15 +43,17 @@ export default function LoginView() {
       }
       setLoading(true);
       const result = await authService.loginUser(userData);
-      if (!result) {
-        alert('Invalid username or password');
-        setLoading(false);
-        return;
+      if (result.code === 200) {
+        localStorage.setItem('user-pileg', JSON.stringify(result.data));
+        setUser(result.data);
+        alert('Login success');
+        router.push('/');
       }
-      console.log('Login successful:', result);
+
       setLoading(false);
     } catch (error) {
       console.error('Login error:', error);
+      alert(error.message);
       setLoading(false);
     }
   };

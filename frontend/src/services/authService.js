@@ -9,7 +9,7 @@ const authService = {
       const response = await axios.post(`${BASE_URL}/signup`, userData);
       return response.data;
     } catch (error) {
-      throw error.response.data;
+      return error.response.data;
     }
   },
 
@@ -18,7 +18,7 @@ const authService = {
       const response = await axios.post(`${BASE_URL}/login`, userData);
       return response.data;
     } catch (error) {
-      throw error.response.data;
+      return error.response.data;
     }
   },
 
@@ -27,7 +27,7 @@ const authService = {
       const response = await axios.get(`${BASE_URL}/logout`);
       return response.data;
     } catch (error) {
-      throw error.response.data;
+      return error.response.data;
     }
   },
 };
