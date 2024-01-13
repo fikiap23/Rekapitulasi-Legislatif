@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useSetRecoilState } from 'recoil';
 
 import Box from '@mui/material/Box';
 import Avatar from '@mui/material/Avatar';
@@ -9,7 +10,9 @@ import MenuItem from '@mui/material/MenuItem';
 import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 
+import userAtom from 'src/atoms/userAtom';
 import { account } from 'src/_mock/account';
+import authService from 'src/services/authService';
 
 // ----------------------------------------------------------------------
 
@@ -32,6 +35,7 @@ const MENU_OPTIONS = [
 
 export default function AccountPopover() {
   const [open, setOpen] = useState(null);
+  const setUser = useSetRecoilState(userAtom);
 
   const handleOpen = (event) => {
     setOpen(event.currentTarget);
@@ -39,6 +43,18 @@ export default function AccountPopover() {
 
   const handleClose = () => {
     setOpen(null);
+  };
+
+  const handleLogout = async () => {
+    try {
+      const result = await authService.logoutUser();
+      if (result.code === 200) {
+        localStorage.removeItem('user-pileg');
+        setUser(null);
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
@@ -105,7 +121,7 @@ export default function AccountPopover() {
         <MenuItem
           disableRipple
           disableTouchRipple
-          onClick={handleClose}
+          onClick={handleLogout}
           sx={{ typography: 'body2', color: 'error.main', py: 1.5 }}
         >
           Logout

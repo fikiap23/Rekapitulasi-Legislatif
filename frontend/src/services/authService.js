@@ -24,7 +24,7 @@ const authService = {
 
   logoutUser: async () => {
     try {
-      const response = await axios.get(`${BASE_URL}/logout`);
+      const response = await axios.post(`${BASE_URL}/logout`);
       return response.data;
     } catch (error) {
       return error.response.data;
