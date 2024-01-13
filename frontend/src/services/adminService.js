@@ -1,12 +1,12 @@
 // adminService.js
 import axios from 'axios';
 
-const BASE_URL = 'http://your-api-base-url'; // Replace with your actual API base URL
+const BASE_URL = 'http://localhost:3000/api/v1/admins';
 
 const adminService = {
   createNewUser: async (userData) => {
     try {
-      const response = await axios.post(`${BASE_URL}/createNewUser`, userData);
+      const response = await axios.post(`${BASE_URL}/users`, userData);
       return response.data;
     } catch (error) {
       throw error.response.data;
@@ -15,7 +15,7 @@ const adminService = {
 
   createNewParty: async (partyData) => {
     try {
-      const response = await axios.post(`${BASE_URL}/createNewParty`, partyData);
+      const response = await axios.post(`${BASE_URL}/parties`, partyData);
       return response.data;
     } catch (error) {
       throw error.response.data;
@@ -24,7 +24,7 @@ const adminService = {
 
   getAllParties: async () => {
     try {
-      const response = await axios.get(`${BASE_URL}/getAllParties`);
+      const response = await axios.get(`${BASE_URL}/parties/all`);
       return response.data;
     } catch (error) {
       throw error.response.data;
@@ -33,7 +33,7 @@ const adminService = {
 
   createNewVillage: async (villageData) => {
     try {
-      const response = await axios.post(`${BASE_URL}/createNewVillage`, villageData);
+      const response = await axios.post(`${BASE_URL}/villages`, villageData);
       return response.data;
     } catch (error) {
       throw error.response.data;
@@ -42,7 +42,7 @@ const adminService = {
 
   createNewDistrict: async (districtData) => {
     try {
-      const response = await axios.post(`${BASE_URL}/createNewDistrict`, districtData);
+      const response = await axios.post(`${BASE_URL}/districts`, districtData);
       return response.data;
     } catch (error) {
       throw error.response.data;
@@ -51,7 +51,7 @@ const adminService = {
 
   createNewRegency: async (regencyData) => {
     try {
-      const response = await axios.post(`${BASE_URL}/createNewRegency`, regencyData);
+      const response = await axios.post(`${BASE_URL}/regencies`, regencyData);
       return response.data;
     } catch (error) {
       throw error.response.data;
