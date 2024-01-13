@@ -5,6 +5,7 @@ import cookieParser from 'cookie-parser'
 import adminRoutes from './routes/adminRoutes.js'
 import userRoutes from './routes/userRoutes.js'
 import authRoutes from './routes/authRoutes.js'
+import districtRoutes from './routes/districtRoutes.js'
 import cors from 'cors'
 
 dotenv.config()
@@ -32,6 +33,7 @@ app.use(cookieParser())
 app.use('/api/v1/auth', authRoutes)
 app.use('/api/v1/admins', adminRoutes)
 app.use('/api/v1/users', userRoutes)
+app.use('/api/v1/districts', districtRoutes)
 
 app.listen(PORT, () => {
   console.log(`Server started at  http://localhost:${PORT}`)
