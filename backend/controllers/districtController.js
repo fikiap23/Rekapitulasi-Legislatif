@@ -110,6 +110,7 @@ const getVotesPartiesByDistrictHelper = async (districtId) => {
     if (partyDetails) {
       detailedPartyVotes.push({
         partyId: partyDetails._id,
+        logoUrl: partyDetails.logoUrl,
         code: partyDetails.code,
         partyName: partyDetails.party_name,
         votes: partyVoteCount,
