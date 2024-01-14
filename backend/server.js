@@ -2,7 +2,8 @@ import express from 'express'
 import dotenv from 'dotenv'
 import connectDB from './db/connectDB.js'
 import cookieParser from 'cookie-parser'
-import authRoutes from './routes/authRoutes.js'
+import authRoutes from './routes/auth.routes.js'
+import partyRoutes from './routes/party.routes.js'
 
 import cors from 'cors'
 
@@ -29,6 +30,7 @@ app.use(cookieParser())
 
 // Routes
 app.use('/api/v2/auth', authRoutes)
+app.use('/api/v2/parties', partyRoutes)
 
 app.listen(PORT, () => {
   console.log(`Server started at  http://localhost:${PORT}`)

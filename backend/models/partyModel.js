@@ -1,52 +1,36 @@
 import mongoose from 'mongoose'
 
-const PartySchema = mongoose.Schema({
-  code: {
-    type: String,
-    required: true,
-    unique: true,
-  },
-  name: {
-    type: String,
-    required: true,
-  },
-  number_party: {
-    type: Number,
-    required: true,
-  },
-
-  path: {
-    type: String,
-    required: true,
-  },
-
-  logoUrl: {
-    type: String,
-    required: true,
-  },
-
-  dapil: [
-    {
-      number_dapil: {
-        type: Number,
-        required: true,
-      },
-      candidates: [
-        {
-          candidate_id: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: 'Candidate',
-          },
-          candidate_name: {
-            type: String,
-            required: true,
-          },
-        },
-      ],
+const candidateSchema = mongoose.Schema(
+  {
+    name: {
+      type: String,
+      required: true,
     },
-  ],
-})
+    gender: {
+      type: String,
+      required: true,
+    },
+  },
+  { timestamps: true }
+)
 
-const Party = mongoose.model('Party', PartySchema)
+const partySchema = mongoose.Schema(
+  {
+    code: { type: String, required: true, unique: true },
+    name: { type: String, required: true },
+    number_party: { type: Number, required: true, unique: true },
+    path: { type: String, required: true },
+    logoUrl: { type: String, required: true },
+    dapil: [
+      {
+        number_dapil: { type: Number, required: true },
+        candidates: [candidateSchema], // Subschema for candidates
+      },
+    ],
+  },
+  { timestamps: true }
+)
+
+const Party = mongoose.model('Party', partySchema)
 
 export default Party
