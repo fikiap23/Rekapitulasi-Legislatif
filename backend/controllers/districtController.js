@@ -27,6 +27,18 @@ const districtController = {
         })
       }
 
+      // Check if district already exists
+      const existingDistrict = await District.findOne({ code })
+      if (existingDistrict) {
+        return apiHandler({
+          res,
+          status: 'error',
+          code: 400,
+          message: 'District already exists',
+          error: null,
+        })
+      }
+
       const newDistrict = new District({
         district_name,
         regency_id,
