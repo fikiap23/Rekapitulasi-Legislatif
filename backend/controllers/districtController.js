@@ -78,7 +78,7 @@ const districtController = {
         })
       }
 
-      //   Check if the regency exists
+      // Check if the regency exists
       const regency = await Regency.findById(regency_id)
       if (!regency) {
         return apiHandler({
@@ -100,6 +100,21 @@ const districtController = {
           status: 'error',
           code: 400,
           message: 'Invalid or missing districts data',
+          error: null,
+        })
+      }
+
+      // Check if any of the districts already exist
+      const existingDistricts = await District.find({
+        code: { $in: districtsData.map((district) => district.code) },
+      })
+
+      if (existingDistricts.length > 0) {
+        return apiHandler({
+          res,
+          status: 'error',
+          code: 400,
+          message: 'One or more districts already exist',
           error: null,
         })
       }
