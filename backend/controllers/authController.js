@@ -2,22 +2,34 @@
 import bcrypt from 'bcryptjs'
 import generateTokenAndSetCookie from '../utils/helpers/generateTokenAndSetCookie.js'
 import apiHandler from '../utils/apiHandler.js'
-import Admin from '../models/adminModel.js'
 import User from '../models/userModel.js'
 
 const authController = {
   signupAdmin: async (req, res) => {
     try {
-      const { username, password, repassword } = req.body
+      const { username, role = 'admin', password, repassword } = req.body
 
-      const admin = await Admin.findOne({ username: username })
-      if (admin) {
+      if (!username || !role || !password || !repassword) {
         return apiHandler({
           res,
           status: 'error',
           code: 400,
-          message: 'Admin already exists',
-          error: { type: 'AdminExists', details: 'Admin already exists' },
+          message: 'Username, role, password, and repassword are required',
+          error: {
+            type: 'MissingCredentials',
+            details: 'Username, role, password, and repassword are required',
+          },
+        })
+      }
+
+      const user = await User.findOne({ username: username })
+      if (user) {
+        return apiHandler({
+          res,
+          status: 'error',
+          code: 400,
+          message: 'User already exists',
+          error: { type: 'UserExists', details: 'User already exists' },
         })
       }
 
@@ -37,21 +49,23 @@ const authController = {
       const salt = await bcrypt.genSalt(10)
       const hashedPassword = await bcrypt.hash(password, salt)
 
-      const newAdmin = new Admin({
+      const newUser = new User({
         username,
+        role,
         password: hashedPassword,
       })
-      await newAdmin.save()
+      await newUser.save()
 
-      if (newAdmin) {
+      if (newUser) {
         return apiHandler({
           res,
           status: 'success',
           code: 201,
-          message: 'Admin account created successfully',
+          message: 'User account created successfully',
           data: {
-            _id: newAdmin._id,
-            username: newAdmin.username,
+            _id: newUser._id,
+            role: newUser.role,
+            username: newUser.username,
           },
         })
       } else {
@@ -92,62 +106,32 @@ const authController = {
       }
 
       username = username.toLowerCase()
-      const admin = await Admin.findOne({ username: username })
+      const user = await User.findOne({ username: username })
 
-      if (admin) {
-        const isPasswordCorrect = await bcrypt.compare(
-          password,
-          admin?.password || ''
-        )
+      const isPasswordCorrect = await bcrypt.compare(
+        password,
+        user?.password || ''
+      )
 
-        if (!isPasswordCorrect) {
-          return apiHandler({
-            res,
-            status: 'error',
-            code: 400,
-            message: 'Invalid username or password',
-            error: {
-              type: 'InvalidCredentials',
-              details: 'Invalid username or password',
-            },
-          })
-        }
+      if (!user || !isPasswordCorrect)
+        return res.status(400).json({ error: 'Invalid username or password' })
 
-        generateTokenAndSetCookie(admin._id, 'admin', res)
+      if (user.role == 'admin') {
+        generateTokenAndSetCookie(user._id, 'admin', res)
         return apiHandler({
           res,
           status: 'success',
           code: 200,
           message: 'Admin logged in successfully',
           data: {
-            _id: admin._id,
-            name: admin.name,
-            username: admin.username,
+            _id: user._id,
+            name: user.name,
+            role: user.role,
+            username: user.username,
           },
         })
-      } else {
-        const user = await User.findOne({ username: username })
-
-        const isPasswordCorrect = await bcrypt.compare(
-          password,
-          user?.password || ''
-        )
-
-        if (!user || !isPasswordCorrect) {
-          return apiHandler({
-            res,
-            status: 'error',
-            code: 400,
-            message: 'Invalid username or password',
-            error: {
-              type: 'InvalidCredentials',
-              details: 'Invalid username or password',
-            },
-          })
-        }
-
-        generateTokenAndSetCookie(user._id, 'user', res)
-
+      } else if (user.role == 'user_district') {
+        generateTokenAndSetCookie(user._id, 'user_district', res)
         return apiHandler({
           res,
           status: 'success',
@@ -155,9 +139,32 @@ const authController = {
           message: 'User logged in successfully',
           data: {
             _id: user._id,
-            village_id: user.village_id,
+            name: user.name,
+            role: user.role,
             username: user.username,
           },
+        })
+      } else if (user.role == 'user_village') {
+        generateTokenAndSetCookie(user._id, 'user_village', res)
+        return apiHandler({
+          res,
+          status: 'success',
+          code: 200,
+          message: 'User logged in successfully',
+          data: {
+            _id: user._id,
+            role: user.role,
+            name: user.name,
+            username: user.username,
+          },
+        })
+      } else {
+        return apiHandler({
+          res,
+          status: 'error',
+          code: 400,
+          message: 'Invalid role',
+          error: { type: 'InvalidRole', details: 'Invalid role' },
         })
       }
     } catch (error) {

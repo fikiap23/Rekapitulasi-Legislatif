@@ -18,25 +18,6 @@ const VillageSchema = mongoose.Schema(
       type: Number,
       required: true,
     },
-    valid_ballots: [
-      {
-        partyId: {
-          type: mongoose.Schema.Types.ObjectId,
-          ref: 'Party',
-        },
-        code: {
-          type: String,
-        },
-        numberOfVotes: {
-          type: Number,
-          default: 0,
-        },
-      },
-    ],
-    invalid_ballots: {
-      type: Number,
-      default: 0,
-    },
   },
   { timestamps: true }
 )

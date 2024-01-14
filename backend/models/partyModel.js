@@ -6,6 +6,14 @@ const PartySchema = mongoose.Schema({
     required: true,
     unique: true,
   },
+  name: {
+    type: String,
+    required: true,
+  },
+  number_party: {
+    type: Number,
+    required: true,
+  },
 
   path: {
     type: String,
@@ -17,10 +25,26 @@ const PartySchema = mongoose.Schema({
     required: true,
   },
 
-  name: {
-    type: String,
-    required: true,
-  },
+  dapil: [
+    {
+      number_dapil: {
+        type: Number,
+        required: true,
+      },
+      candidates: [
+        {
+          candidate_id: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Candidate',
+          },
+          candidate_name: {
+            type: String,
+            required: true,
+          },
+        },
+      ],
+    },
+  ],
 })
 
 const Party = mongoose.model('Party', PartySchema)

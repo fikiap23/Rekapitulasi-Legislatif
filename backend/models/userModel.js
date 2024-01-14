@@ -12,11 +12,25 @@ const userSchema = mongoose.Schema(
       minLength: 6,
       required: true,
     },
-
+    role: {
+      type: String,
+      enum: ['user_village', 'user_district', 'admin'],
+      required: true,
+      default: '',
+    },
     village_id: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Village',
-      required: true,
+      required: function () {
+        return this.role === 'user_village'
+      },
+    },
+    district_id: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'District',
+      required: function () {
+        return this.role === 'user_district'
+      },
     },
   },
   {
