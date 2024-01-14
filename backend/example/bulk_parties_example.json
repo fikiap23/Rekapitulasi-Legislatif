@@ -1,16 +1,24 @@
 [
   {
-    "code": "ABC",
-    "name": "Partai Contoh 1",
+    "code": "P1",
+    "name": "Party One",
     "number_party": 1,
-    "path": "/partai-contoh-1",
-    "logoUrl": "https://contoh.com/logo1.png"
+    "path": "/party-one",
+    "logoUrl": "https://example.com/party-one-logo.png",
+    "candidates": [
+      { "name": "Candidate 1", "gender": "Male" },
+      { "name": "Candidate 2", "gender": "Female" }
+    ]
   },
   {
-    "code": "DEF",
-    "name": "Partai Contoh 2",
+    "code": "P2",
+    "name": "Party Two",
     "number_party": 2,
-    "path": "/partai-contoh-2",
-    "logoUrl": "https://contoh.com/logo2.png"
+    "path": "/party-two",
+    "logoUrl": "https://example.com/party-two-logo.png",
+    "candidates": [
+      { "name": "Candidate A", "gender": "Male" },
+      { "name": "Candidate B", "gender": "Female" }
+    ]
   }
 ]

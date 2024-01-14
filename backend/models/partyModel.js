@@ -21,12 +21,8 @@ const partySchema = mongoose.Schema(
     number_party: { type: Number, required: true, unique: true },
     path: { type: String, required: true },
     logoUrl: { type: String, required: true },
-    dapil: [
-      {
-        number_dapil: { type: Number, required: true },
-        candidates: [candidateSchema], // Subschema for candidates
-      },
-    ],
+
+    candidates: [candidateSchema],
   },
   { timestamps: true }
 )
