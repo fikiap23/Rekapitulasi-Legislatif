@@ -1,0 +1,30 @@
+// POST /api/parties/:partyId/bulkDapils
+
+[
+  {
+    "number_dapil": 1,
+    "candidates": [
+      {
+        "name": "Candidate 1",
+        "gender": "Male"
+      },
+      {
+        "name": "Candidate 2",
+        "gender": "Female"
+      }
+    ]
+  },
+  {
+    "number_dapil": 2,
+    "candidates": [
+      {
+        "name": "Candidate 3",
+        "gender": "Male"
+      },
+      {
+        "name": "Candidate 4",
+        "gender": "Female"
+      }
+    ]
+  }
+]
