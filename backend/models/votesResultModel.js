@@ -1,135 +1,51 @@
 import mongoose from 'mongoose'
 
-const villageResultSchema = mongoose.Schema(
+const resultVoteSchema = mongoose.Schema(
   {
     village_id: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Village',
-    },
-    total_voters: {
-      type: Number,
-      required: true,
-    },
-    total_invalid_ballots: {
-      type: Number,
-      default: 0,
-    },
-    total_valid_ballots: {
-      type: Number,
-      default: 0,
-    },
-    valid_ballots_detail: [
-      {
-        partyId: {
-          type: mongoose.Schema.Types.ObjectId,
-          ref: 'Party',
-        },
-        code: {
-          type: String,
-        },
-        total_votes_party: {
-          type: Number,
-          default: 0,
-        },
-        candidates: [
-          {
-            candidate_id: {
-              type: mongoose.Schema.Types.ObjectId,
-              ref: 'Candidate',
-            },
-            number_of_votes: {
-              type: Number,
-              default: 0,
-            },
-          },
-        ],
+      required: function () {
+        return this.result_type === 'village'
       },
-    ],
-  },
-  { timestamps: true }
-)
-
-const districtResultSchema = mongoose.Schema(
-  {
+    },
     district_id: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'District',
-    },
-    total_voters: {
-      type: Number,
-      required: true,
-    },
-    total_invalid_ballots: {
-      type: Number,
-      default: 0,
-    },
-    total_valid_ballots: {
-      type: Number,
-      default: 0,
-    },
-
-    valid_ballots_detail: [
-      {
-        partyId: {
-          type: mongoose.Schema.Types.ObjectId,
-          ref: 'Party',
-        },
-        code: {
-          type: String,
-        },
-        total_votes_party: {
-          type: Number,
-          default: 0,
-        },
-        candidates: [
-          {
-            candidate_id: {
-              type: mongoose.Schema.Types.ObjectId,
-              ref: 'Candidate',
-            },
-            number_of_votes: {
-              type: Number,
-              default: 0,
-            },
-          },
-        ],
+      required: function () {
+        return this.result_type === 'district'
       },
-    ],
-
-    villages_detail: [
-      {
-        village_id: {
-          type: mongoose.Schema.Types.ObjectId,
-          ref: 'Village',
-        },
-      },
-    ],
-  },
-  { timestamps: true }
-)
-
-const regencyResultSchema = mongoose.Schema(
-  {
+    },
     regency_id: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Regency',
+      required: function () {
+        return this.result_type === 'regency'
+      },
+    },
+    result_type: {
+      type: String,
+      enum: ['regency', 'district', 'village'],
+      default: 'village',
     },
     total_voters: {
       type: Number,
       required: true,
+      min: [0, 'Total pemilih harus non-negatif.'],
     },
     total_invalid_ballots: {
       type: Number,
       default: 0,
+      min: [0, 'Total suara tidak sah harus non-negatif.'],
     },
     total_valid_ballots: {
       type: Number,
       default: 0,
+      min: [0, 'Total suara sah harus non-negatif.'],
     },
-
     valid_ballots_detail: [
       {
-        partyId: {
+        party_id: {
           type: mongoose.Schema.Types.ObjectId,
           ref: 'Party',
         },
@@ -139,6 +55,7 @@ const regencyResultSchema = mongoose.Schema(
         total_votes_party: {
           type: Number,
           default: 0,
+          min: [0, 'Total suara partai harus non-negatif.'],
         },
         candidates: [
           {
@@ -149,26 +66,20 @@ const regencyResultSchema = mongoose.Schema(
             number_of_votes: {
               type: Number,
               default: 0,
+              min: [0, 'Jumlah suara kandidat harus non-negatif.'],
             },
           },
         ],
-      },
-    ],
-
-    districts_detail: [
-      {
-        district_id: {
-          type: mongoose.Schema.Types.ObjectId,
-          ref: 'District',
-        },
       },
     ],
   },
   { timestamps: true }
 )
 
-const VillageResult = mongoose.model('VillageResult', villageResultSchema)
-const DistrictResult = mongoose.model('DistrictResult', districtResultSchema)
-const RegencyResult = mongoose.model('RegencyResult', regencyResultSchema)
+resultVoteSchema.index({ village_id: 1, result_type: 1 })
+resultVoteSchema.index({ district_id: 1, result_type: 1 })
+resultVoteSchema.index({ regency_id: 1, result_type: 1 })
 
-export { VillageResult, DistrictResult, RegencyResult }
+const VotesResult = mongoose.model('VotesResult', resultVoteSchema)
+
+export default VotesResult

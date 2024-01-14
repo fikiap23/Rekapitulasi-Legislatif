@@ -8,6 +8,7 @@ import regencyRoutes from './routes/regency.routes.js'
 import districtRoutes from './routes/district.routes.js'
 import villageRoutes from './routes/village.routes.js'
 import userRoutes from './routes/user.routes.js'
+import votesResultRoutes from './routes/votesResult.routes.js'
 
 import cors from 'cors'
 
@@ -39,6 +40,7 @@ app.use('/api/v2/regencies', regencyRoutes)
 app.use('/api/v2/districts', districtRoutes)
 app.use('/api/v2/villages', villageRoutes)
 app.use('/api/v2/users', userRoutes)
+app.use('/api/v2/result', votesResultRoutes)
 
 app.listen(PORT, () => {
   console.log(`Server started at  http://localhost:${PORT}`)
