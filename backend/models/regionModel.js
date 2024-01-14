@@ -13,6 +13,7 @@ const VillageSchema = mongoose.Schema(
     district_id: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'District',
+      required: true,
     },
     total_voters: {
       type: Number,

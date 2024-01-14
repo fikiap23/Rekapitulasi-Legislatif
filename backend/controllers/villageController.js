@@ -1,14 +1,12 @@
 import { District, Village } from '../models/regionModel.js'
-import Admin from '../models/adminModel.js'
-import Party from '../models/partyModel.js'
-
 import apiHandler from '../utils/apiHandler.js'
+
 const villageController = {
   createOneVillage: async (req, res) => {
     try {
       const { village_name, code, total_voters, district_id } = req.body
 
-      if ((!village_name || !total_voters || !district_id, !code)) {
+      if (!village_name || !total_voters || !district_id || !code) {
         return apiHandler({
           res,
           status: 'error',
@@ -65,71 +63,62 @@ const villageController = {
       })
     }
   },
-  createManyVillage: async (req, res) => {
-    try {
-      const villages = req.body
 
-      if (!villages || !Array.isArray(villages) || villages.length === 0) {
+  createBulkVillages: async (req, res) => {
+    try {
+      const villagesData = req.body
+
+      if (!villagesData || !Array.isArray(villagesData)) {
         return apiHandler({
           res,
           status: 'error',
           code: 400,
-          message: 'Invalid or empty villages data',
+          message: 'Invalid villages data format',
           error: null,
         })
       }
 
-      const createdVillages = []
+      // Ambil semua district_ids dari villagesData
+      const districtIdsSet = new Set(
+        villagesData.map((village) => village.district_id)
+      )
+      const districtIds = Array.from(districtIdsSet)
 
-      for (const villageData of villages) {
-        const { village_name, total_voters, district_id, code } = villageData
+      // Periksa apakah semua district_ids ada di database
+      const districtsExist = await District.find({ _id: { $in: districtIds } })
 
-        if ((!village_name || !total_voters || !district_id, !code)) {
-          return apiHandler({
-            res,
-            status: 'error',
-            code: 400,
-            message: 'Missing required fields',
-            error: null,
-          })
-        }
+      console.log(districtsExist)
+      console.log(districtIds)
 
-        const district = await District.findById(district_id)
-        if (!district) {
-          return apiHandler({
-            res,
-            status: 'error',
-            code: 400,
-            message: 'District not found',
-            error: null,
-          })
-        }
-
-        const newVillage = new Village({
-          village_name,
-          code,
-          district_id,
-          total_voters,
+      // Jika ada district_ids yang tidak ditemukan, kembalikan respons error
+      if (districtIds.length !== districtsExist.length) {
+        return apiHandler({
+          res,
+          status: 'error',
+          code: 400,
+          message: 'One or more districts not found',
+          error: null,
         })
+      }
 
-        await newVillage.save()
+      // Semua distrik ditemukan, lanjutkan dengan menyimpan desa
+      const createdVillages = await Village.insertMany(villagesData)
 
-        district.villages.push(newVillage._id)
+      // Loop melalui setiap desa dan tambahkan _id desa ke array villages di masing-masing distrik
+      for (const village of createdVillages) {
+        const district = districtsExist.find(
+          (d) => d._id.toString() === village.district_id.toString()
+        )
+        district.villages.push(village._id)
         await district.save()
-
-        createdVillages.push({
-          _id: newVillage._id,
-          district_id: newVillage.district_id,
-          code: newVillage.code,
-          village_name: newVillage.village_name,
-        })
       }
 
       return apiHandler({
         res,
         status: 'success',
         code: 201,
-        message: 'Villages created successfully',
+        message:
+          'Bulk villages created and associated with districts successfully',
         data: createdVillages,
         error: null,
       })
@@ -145,17 +134,17 @@ const villageController = {
     }
   },
 
-  createManyVillageByDistrict: async (req, res) => {
+  createBulkVillagesByDistrict: async (req, res) => {
     try {
+      const villagesData = req.body
       const { district_id } = req.params
-      const villages = req.body
 
-      if (!villages || !Array.isArray(villages) || villages.length === 0) {
+      if (!district_id || !villagesData || !Array.isArray(villagesData)) {
         return apiHandler({
           res,
           status: 'error',
           code: 400,
-          message: 'Invalid or empty villages data',
+          message: 'Invalid request format',
           error: null,
         })
       }
@@ -171,44 +160,26 @@ const villageController = {
         })
       }
 
-      const createdVillages = []
+      // Menambahkan district_id ke setiap objek desa
+      const villagesWithDistrictId = villagesData.map((village) => ({
+        ...village,
+        district_id,
+      }))
 
-      for (const villageData of villages) {
-        const { village_name, code, total_voters } = villageData
+      const createdVillages = await Village.insertMany(villagesWithDistrictId)
 
-        if (!village_name || !total_voters || !code) {
-          return apiHandler({
-            res,
-            status: 'error',
-            code: 400,
-            message: 'Missing required fields',
-            error: null,
-          })
-        }
+      createdVillages.forEach((village) => {
+        district.villages.push(village._id)
+      })
 
-        const newVillage = new Village({
-          village_name,
-          district_id,
-          total_voters,
-        })
-
-        await newVillage.save()
-
-        district.villages.push(newVillage._id)
-        await district.save()
-
-        createdVillages.push({
-          _id: newVillage._id,
-          district_id: newVillage.district_id,
-          village_name: newVillage.village_name,
-        })
-      }
+      await district.save()
 
       return apiHandler({
         res,
         status: 'success',
         code: 201,
-        message: 'Villages created successfully',
+        message:
+          'Bulk villages created and associated with the district successfully',
         data: createdVillages,
         error: null,
       })
