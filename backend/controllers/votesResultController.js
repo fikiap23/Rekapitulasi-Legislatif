@@ -45,6 +45,8 @@ const votesResultController = {
       }
 
       // Validate existence of parties and candidates
+      let totalVotesAllParties = 0 // Variable to track total votes for all parties
+
       for (const item of validBallotsDetail) {
         if (item.party_id) {
           // Check if party exists
@@ -84,6 +86,20 @@ const votesResultController = {
               totalVotesParty += candidate.number_of_votes || 0
             }
 
+            // Check if total votes for the party exceed maxVotes
+            if (totalVotesParty > village.total_voters) {
+              return apiHandler({
+                res,
+                status: 'error',
+                code: 400,
+                message: `Total votes for party ${item.party_id} exceed the maximum allowed votes`,
+                error: null,
+              })
+            }
+
+            // Add total votes for the party to the overall total
+            totalVotesAllParties += totalVotesParty
+
             // Set total_votes_party for the party
             item.total_votes_party = totalVotesParty
           } else {
@@ -98,10 +114,33 @@ const votesResultController = {
         }
       }
 
+      // Check if total votes for all parties exceed maxVotes
+
+      if (totalVotesAllParties > village.total_voters) {
+        return apiHandler({
+          res,
+          status: 'error',
+          code: 400,
+          message: `Total votes for all parties exceed the maximum allowed votes, total votes for all parties: ${totalVotesAllParties}, max votes: ${village.total_voters}`,
+          error: null,
+        })
+      }
+
+      //check total valid ballots number
+      //   console.log('total valid ballots', totalVotesAllParties)
+      //   console.log(
+      //     'total invalid ballots',
+      //     village.total_voters - totalVotesAllParties
+      //   )
+
       // Update VotesResult document
       const updatedVotesResult = await VotesResult.findOneAndUpdate(
         { village_id: villageId, result_type: 'village' },
-        { valid_ballots_detail: validBallotsDetail },
+        {
+          valid_ballots_detail: validBallotsDetail,
+          total_valid_ballots: totalVotesAllParties,
+          total_invalid_ballots: village.total_voters - totalVotesAllParties,
+        },
         { new: true, upsert: true }
       )
 
