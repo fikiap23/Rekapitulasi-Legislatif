@@ -4,6 +4,7 @@ import connectDB from './db/connectDB.js'
 import cookieParser from 'cookie-parser'
 import authRoutes from './routes/auth.routes.js'
 import partyRoutes from './routes/party.routes.js'
+import regencyRoutes from './routes/regency.routes.js'
 
 import cors from 'cors'
 
@@ -31,6 +32,7 @@ app.use(cookieParser())
 // Routes
 app.use('/api/v2/auth', authRoutes)
 app.use('/api/v2/parties', partyRoutes)
+app.use('/api/v2/regencies', regencyRoutes)
 
 app.listen(PORT, () => {
   console.log(`Server started at  http://localhost:${PORT}`)
