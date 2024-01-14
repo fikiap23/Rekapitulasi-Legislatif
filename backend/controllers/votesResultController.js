@@ -1,6 +1,8 @@
 import apiHandler from '../utils/apiHandler.js'
 import VotesResult from '../models/votesResultModel.js'
 import { Village } from '../models/regionModel.js'
+import Party from '../models/partyModel.js'
+import mongoose from 'mongoose'
 
 const votesResultController = {
   fillValidBallotsDetail: async (req, res) => {
@@ -42,26 +44,64 @@ const votesResultController = {
         })
       }
 
-      // Transform the input structure to match the model
-      const transformedValidBallotsDetail = validBallotsDetail.map((item) => {
-        const totalVotesParty = item.candidates.reduce(
-          (acc, candidate) => acc + candidate.number_of_votes,
-          0
-        )
-        return {
-          code: item.code,
-          total_votes_party: totalVotesParty,
-          candidates: item.candidates.map((candidate) => ({
-            candidate_id: candidate.candidate_id,
-            number_of_votes: candidate.number_of_votes || 0,
-          })),
+      // Validate existence of parties and candidates
+      for (const item of validBallotsDetail) {
+        if (item.party_id) {
+          // Check if party exists
+          const partyExists = await Party.findById(item.party_id)
+          if (!partyExists) {
+            return apiHandler({
+              res,
+              status: 'error',
+              code: 400,
+              message: `Party with ID ${item.party_id} not found`,
+              error: null,
+            })
+          }
+
+          // Check if candidates exist for the party
+          if (partyExists.candidates && partyExists.candidates.length > 0) {
+            let totalVotesParty = 0
+
+            for (const candidate of item.candidates) {
+              const candidateId = new mongoose.Types.ObjectId(
+                candidate.candidate_id
+              )
+              const candidateExists = partyExists.candidates.find((c) =>
+                c._id.equals(candidateId)
+              )
+
+              if (!candidateExists) {
+                return apiHandler({
+                  res,
+                  status: 'error',
+                  code: 400,
+                  message: `Candidate with ID ${candidate.candidate_id} not found for party ${item.party_id}`,
+                  error: null,
+                })
+              }
+
+              totalVotesParty += candidate.number_of_votes || 0
+            }
+
+            // Set total_votes_party for the party
+            item.total_votes_party = totalVotesParty
+          } else {
+            return apiHandler({
+              res,
+              status: 'error',
+              code: 400,
+              message: `No candidates found for party ${item.party_id}`,
+              error: null,
+            })
+          }
         }
-      })
+      }
 
       // Update VotesResult document
       const updatedVotesResult = await VotesResult.findOneAndUpdate(
         { village_id: villageId, result_type: 'village' },
-        { valid_ballots_detail: transformedValidBallotsDetail },
+        { valid_ballots_detail: validBallotsDetail },
         { new: true, upsert: true }
       )
 
