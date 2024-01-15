@@ -9,25 +9,6 @@ const resultVoteSchema = mongoose.Schema(
         return this.result_type === 'village'
       },
     },
-    district_id: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'District',
-      required: function () {
-        return this.result_type === 'district'
-      },
-    },
-    regency_id: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'Regency',
-      required: function () {
-        return this.result_type === 'regency'
-      },
-    },
-    result_type: {
-      type: String,
-      enum: ['regency', 'district', 'village'],
-      default: 'village',
-    },
     total_voters: {
       type: Number,
       required: true,

@@ -135,7 +135,7 @@ const votesResultController = {
 
       // Update VotesResult document
       const updatedVotesResult = await VotesResult.findOneAndUpdate(
-        { village_id: villageId, result_type: 'village' },
+        { village_id: villageId },
         {
           valid_ballots_detail: validBallotsDetail,
           total_valid_ballots: totalVotesAllParties,
