@@ -30,6 +30,11 @@ const navConfig = [
     path: '/user',
     icon: <Iconify icon="solar:user-outline" />,
   },
+  {
+    title: 'login',
+    path: '/login',
+    icon: <Iconify icon="material-symbols-light:login-sharp" />,
+  },
 ];
 
 export default navConfig;

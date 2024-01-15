@@ -17,7 +17,7 @@ import Iconify from 'src/components/iconify';
 
 export default function UserTableRow({
   selected,
-  username,
+  name,
 
   daerah,
   role,
@@ -45,7 +45,7 @@ export default function UserTableRow({
         <TableCell component="th" scope="row" padding="none">
           <Stack direction="row" alignItems="center" spacing={2}>
             <Typography variant="subtitle2" noWrap>
-              {username}
+              {name}
             </Typography>
           </Stack>
         </TableCell>
@@ -93,7 +93,7 @@ UserTableRow.propTypes = {
   daerah: PropTypes.any,
   handleClick: PropTypes.func,
 
-  username: PropTypes.any,
+  name: PropTypes.any,
   role: PropTypes.any,
   selected: PropTypes.any,
   status: PropTypes.string,

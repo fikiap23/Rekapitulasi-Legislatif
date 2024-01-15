@@ -1,8 +1,6 @@
 import { lazy, Suspense } from 'react';
-import { useRecoilValue } from 'recoil';
 import { Outlet, Navigate, useRoutes } from 'react-router-dom';
 
-import userAtom from 'src/atoms/userAtom';
 import DashboardLayout from 'src/layouts/dashboard';
 
 export const IndexPage = lazy(() => import('src/pages/app'));
@@ -16,17 +14,14 @@ export const Page404 = lazy(() => import('src/pages/page-not-found'));
 // ----------------------------------------------------------------------
 
 export default function Router() {
-  const user = useRecoilValue(userAtom);
   const routes = useRoutes([
     {
-      element: user ? (
+      element: (
         <DashboardLayout>
           <Suspense>
             <Outlet />
           </Suspense>
         </DashboardLayout>
-      ) : (
-        <Navigate to="/login" replace />
       ),
       children: [
         { element: <IndexPage />, index: true },
