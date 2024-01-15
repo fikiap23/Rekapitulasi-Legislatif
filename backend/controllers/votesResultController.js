@@ -201,9 +201,7 @@ const votesResultController = {
         village_id: { $in: villageIds },
       })
 
-      let valid_ballots_detail = await getValidBallotByDistrictHelper(
-        resultsByDistrict
-      )
+      let valid_ballots_detail = await getValidBallotsHelper(resultsByDistrict)
 
       // Combine and aggregate the results
       const aggregatedResult = {
@@ -252,7 +250,7 @@ const votesResultController = {
         village_id: { $in: villageIds },
       })
 
-      let valid_ballots_detail = await getValidBallotByDistrictHelper(result)
+      let valid_ballots_detail = await getValidBallotsHelper(result)
 
       // Combine and aggregate the results
       const aggregatedResult = {
@@ -289,7 +287,7 @@ const votesResultController = {
   },
 }
 
-const getValidBallotByDistrictHelper = async (resultsByDistrict) => {
+const getValidBallotsHelper = async (resultsByDistrict) => {
   try {
     // Object to store total votes for each party and candidate
     const totalVotes = {}
