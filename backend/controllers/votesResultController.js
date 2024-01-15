@@ -1,6 +1,6 @@
 import apiHandler from '../utils/apiHandler.js'
 import VotesResult from '../models/votesResultModel.js'
-import { Village } from '../models/regionModel.js'
+import { Village, District, Regency } from '../models/regionModel.js'
 import Party from '../models/partyModel.js'
 import mongoose from 'mongoose'
 
@@ -165,32 +165,7 @@ const votesResultController = {
       })
     }
   },
-  getAllResult: async (req, res) => {
-    try {
-      // Fetch all results from the VotesResult model
-      const allResults = await VotesResult.find()
 
-      // Return the results
-      return apiHandler({
-        res,
-        status: 'success',
-        code: 200,
-        message: 'All voting results retrieved successfully',
-        data: allResults,
-        error: null,
-      })
-    } catch (error) {
-      console.error('Error getting all voting results:', error)
-      return apiHandler({
-        res,
-        status: 'error',
-        code: 500,
-        message: 'Internal Server Error',
-        data: null,
-        error: { type: 'InternalServerError', details: error.message },
-      })
-    }
-  },
   getAllResultsByDistrict: async (req, res) => {
     try {
       const { districtId } = req.params
@@ -206,11 +181,20 @@ const votesResultController = {
         })
       }
 
-      // Find villages in the given district
-      const villagesInDistrict = await Village.find({ district_id: districtId })
+      // Check if districtId is exist
+      const district = await District.findById(districtId)
+      if (!district) {
+        return apiHandler({
+          res,
+          status: 'error',
+          code: 404,
+          message: 'District not found',
+          error: null,
+        })
+      }
 
       // Extract village IDs
-      const villageIds = villagesInDistrict.map((village) => village._id)
+      const villageIds = district.villages
 
       // Fetch all results for the villages in the given district
       const resultsByDistrict = await VotesResult.find({
@@ -220,7 +204,6 @@ const votesResultController = {
       let valid_ballots_detail = await getValidBallotByDistrictHelper(
         resultsByDistrict
       )
-      console.log(valid_ballots_detail)
 
       // Combine and aggregate the results
       const aggregatedResult = {
@@ -229,6 +212,55 @@ const votesResultController = {
           0
         ),
         total_valid_ballots: resultsByDistrict.reduce(
+          (total, result) => total + result.total_valid_ballots,
+          0
+        ),
+      }
+
+      // Return the aggregated result
+      return apiHandler({
+        res,
+        status: 'success',
+        code: 200,
+        message: 'Voting results for the district retrieved successfully',
+        data: { ...aggregatedResult, valid_ballots_detail },
+        error: null,
+      })
+    } catch (error) {
+      console.error('Error getting total results by district:', error)
+      return apiHandler({
+        res,
+        status: 'error',
+        code: 500,
+        message: 'Internal Server Error',
+        data: null,
+        error: { type: 'InternalServerError', details: error.message },
+      })
+    }
+  },
+
+  getAllResult: async (req, res) => {
+    try {
+      // Find villages all
+      const villages = await Village.find()
+
+      // Extract village IDs
+      const villageIds = villages.map((village) => village._id)
+
+      // Fetch all results for the villages
+      const result = await VotesResult.find({
+        village_id: { $in: villageIds },
+      })
+
+      let valid_ballots_detail = await getValidBallotByDistrictHelper(result)
+
+      // Combine and aggregate the results
+      const aggregatedResult = {
+        total_invalid_ballots: result.reduce(
+          (total, result) => total + result.total_invalid_ballots,
+          0
+        ),
+        total_valid_ballots: result.reduce(
           (total, result) => total + result.total_valid_ballots,
           0
         ),

@@ -16,5 +16,6 @@ router.get(
   protectAdminRoute,
   votesResultController.getAllResultsByDistrict
 )
+router.get('/regency', protectAdminRoute, votesResultController.getAllResult)
 
 export default router
