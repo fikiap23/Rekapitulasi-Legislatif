@@ -14,7 +14,7 @@ router.get('/', protectAdminRoute, votesResultController.getAllResult)
 router.get(
   '/district/:districtId',
   protectAdminRoute,
-  votesResultController.getAllResultsByDistrict
+  votesResultController.getValidBallotByDistrict
 )
 
 export default router

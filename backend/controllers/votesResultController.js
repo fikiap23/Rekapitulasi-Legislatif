@@ -217,17 +217,162 @@ const votesResultController = {
         village_id: { $in: villageIds },
       })
 
-      // Return the results
+      let valid_ballots_detail = resultsByDistrict.reduce((detail, result) => {
+        return detail.concat(result.valid_ballots_detail)
+      }, [])
+
+      console.log(valid_ballots_detail)
+
+      // Combine and aggregate the results
+      const aggregatedResult = {
+        total_invalid_ballots: resultsByDistrict.reduce(
+          (total, result) => total + result.total_invalid_ballots,
+          0
+        ),
+        total_valid_ballots: resultsByDistrict.reduce(
+          (total, result) => total + result.total_valid_ballots,
+          0
+        ),
+      }
+
+      // Return the aggregated result
       return apiHandler({
         res,
         status: 'success',
         code: 200,
         message: 'Voting results for the district retrieved successfully',
-        data: resultsByDistrict,
+        data: valid_ballots_detail,
         error: null,
       })
     } catch (error) {
-      console.error('Error getting voting results by district:', error)
+      console.error('Error getting total results by district:', error)
+      return apiHandler({
+        res,
+        status: 'error',
+        code: 500,
+        message: 'Internal Server Error',
+        data: null,
+        error: { type: 'InternalServerError', details: error.message },
+      })
+    }
+  },
+
+  getValidBallotByDistrict: async (req, res) => {
+    try {
+      const { districtId } = req.params
+
+      // Validate districtId
+      if (!districtId || !mongoose.Types.ObjectId.isValid(districtId)) {
+        return apiHandler({
+          res,
+          status: 'error',
+          code: 400,
+          message: 'Invalid or missing districtId parameter',
+          error: null,
+        })
+      }
+
+      // Find villages in the given district
+      const villagesInDistrict = await Village.find({ district_id: districtId })
+
+      // Extract village IDs
+      const villageIds = villagesInDistrict.map((village) => village._id)
+
+      // Fetch all results for the villages in the given district
+      const resultsByDistrict = await VotesResult.find({
+        village_id: { $in: villageIds },
+      })
+
+      // Object to store total votes for each party and candidate
+      const totalVotes = {}
+
+      // Iterate through each result
+      resultsByDistrict.forEach((result) => {
+        result.valid_ballots_detail.forEach((party) => {
+          const partyId = party.party_id
+
+          // Initialize total votes for the party if not exists
+          if (!totalVotes[partyId]) {
+            totalVotes[partyId] = {
+              party_id: partyId,
+              total_votes_party: 0,
+              candidates: {},
+            }
+          }
+
+          // Add total votes for the party
+          totalVotes[partyId].total_votes_party += party.total_votes_party
+
+          // Iterate through each candidate in the party
+          party.candidates.forEach((candidate) => {
+            const candidateId = candidate.candidate_id
+
+            // Initialize total votes for the candidate if not exists
+            if (!totalVotes[partyId].candidates[candidateId]) {
+              totalVotes[partyId].candidates[candidateId] = {
+                candidate_id: candidateId,
+                number_of_votes: 0,
+              }
+            }
+
+            // Add total votes for the candidate
+            totalVotes[partyId].candidates[candidateId].number_of_votes +=
+              candidate.number_of_votes
+          })
+        })
+      })
+
+      // Collect all party IDs and candidate IDs
+      const allPartyIds = Object.keys(totalVotes)
+
+      // Populate party data
+      const populatedParties = await Party.find({
+        _id: { $in: allPartyIds },
+      }).select('_id name code candidates logoUrl')
+
+      // Transform party data into a mapping for easy access
+      const partyMap = populatedParties.reduce((acc, party) => {
+        acc[party._id] = party
+        return acc
+      }, {})
+
+      // Transform the result with populated party data and candidates
+      const transformedResult = Object.values(totalVotes).map((party) => {
+        const partyData = partyMap[party.party_id]
+        return {
+          party_id: party.party_id,
+          total_votes_party: party.total_votes_party,
+          party_data: {
+            _id: partyData._id,
+            name: partyData.name,
+            code: partyData.code,
+            logoUrl: partyData.logoUrl,
+          },
+          candidates: Object.values(party.candidates).map((candidate) => {
+            // Access candidate data from the party map
+            const candidateData = partyData.candidates.find(
+              (c) => c._id.toString() === candidate.candidate_id.toString()
+            )
+            return {
+              candidate_id: candidate.candidate_id,
+              number_of_votes: candidate.number_of_votes,
+              candidate_data: candidateData,
+            }
+          }),
+        }
+      })
+
+      // Return the aggregated result
+      return apiHandler({
+        res,
+        status: 'success',
+        code: 200,
+        message: 'Voting results for the district retrieved successfully',
+        data: transformedResult,
+        error: null,
+      })
+    } catch (error) {
+      console.error('Error getting total results by district:', error)
       return apiHandler({
         res,
         status: 'error',
