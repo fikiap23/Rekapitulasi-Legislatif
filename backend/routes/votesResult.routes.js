@@ -10,4 +10,11 @@ router.post(
   votesResultController.fillValidBallotsDetail
 )
 
+router.get('/', protectAdminRoute, votesResultController.getAllResult)
+router.get(
+  '/district/:districtId',
+  protectAdminRoute,
+  votesResultController.getAllResultsByDistrict
+)
+
 export default router

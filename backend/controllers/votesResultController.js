@@ -165,6 +165,79 @@ const votesResultController = {
       })
     }
   },
+  getAllResult: async (req, res) => {
+    try {
+      // Fetch all results from the VotesResult model
+      const allResults = await VotesResult.find()
+
+      // Return the results
+      return apiHandler({
+        res,
+        status: 'success',
+        code: 200,
+        message: 'All voting results retrieved successfully',
+        data: allResults,
+        error: null,
+      })
+    } catch (error) {
+      console.error('Error getting all voting results:', error)
+      return apiHandler({
+        res,
+        status: 'error',
+        code: 500,
+        message: 'Internal Server Error',
+        data: null,
+        error: { type: 'InternalServerError', details: error.message },
+      })
+    }
+  },
+  getAllResultsByDistrict: async (req, res) => {
+    try {
+      const { districtId } = req.params
+
+      // Check if districtId is provided
+      if (!districtId) {
+        return apiHandler({
+          res,
+          status: 'error',
+          code: 400,
+          message: 'Missing districtId parameter',
+          error: null,
+        })
+      }
+
+      // Find villages in the given district
+      const villagesInDistrict = await Village.find({ district_id: districtId })
+
+      // Extract village IDs
+      const villageIds = villagesInDistrict.map((village) => village._id)
+
+      // Fetch all results for the villages in the given district
+      const resultsByDistrict = await VotesResult.find({
+        village_id: { $in: villageIds },
+      })
+
+      // Return the results
+      return apiHandler({
+        res,
+        status: 'success',
+        code: 200,
+        message: 'Voting results for the district retrieved successfully',
+        data: resultsByDistrict,
+        error: null,
+      })
+    } catch (error) {
+      console.error('Error getting voting results by district:', error)
+      return apiHandler({
+        res,
+        status: 'error',
+        code: 500,
+        message: 'Internal Server Error',
+        data: null,
+        error: { type: 'InternalServerError', details: error.message },
+      })
+    }
+  },
 }
 
 export default votesResultController
