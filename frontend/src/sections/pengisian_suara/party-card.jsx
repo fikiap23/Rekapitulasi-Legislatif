@@ -45,7 +45,7 @@ export default function PartyCard() {
                   <TableCell>HENDRA GUNTARA, S. Hum., M.Ud.</TableCell>
                   <TableCell>
                     <TextField
-                      type="number"
+                      type="text"
                       placeholder="Input Suara"
                       variant="outlined"
                       size="small"
