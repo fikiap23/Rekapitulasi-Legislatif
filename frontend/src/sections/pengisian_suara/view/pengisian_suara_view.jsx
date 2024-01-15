@@ -3,7 +3,6 @@ import { useState } from 'react';
 import Container from '@mui/material/Container';
 import {
   Grid,
-  Card,
   Table,
   Paper,
   Button,
@@ -14,27 +13,16 @@ import {
   TableCell,
   TableHead,
   Typography,
-  CardContent,
   TableContainer,
 } from '@mui/material';
 
 import { dummyKecamatan, dummyKelurahan } from 'src/_mock/kecamatan';
 
+import PartyCard from '../party-card';
+
 // ----------------------------------------------------------------------
 
 export default function PengisianSuaraView() {
-  const [selectedParty, setSelectedParty] = useState(null);
-
-  const calegData = {
-    PKB: [{ name: 'Caleg PKB 1' }, { name: 'Caleg PKB 2' }, { name: 'Caleg PKB 3' }],
-    PDI: [{ name: 'Caleg PDI 1' }, { name: 'Caleg PDI 2' }, { name: 'Caleg PDI 3' }],
-    // ... tambahkan data partai dan caleg lainnya sesuai kebutuhan
-  };
-
-  const handlePartyClick = (party) => {
-    setSelectedParty(party);
-  };
-
   const [kecamatan, setKecamatan] = useState('');
   const [kelurahan, setKelurahan] = useState('');
 
@@ -49,7 +37,6 @@ export default function PengisianSuaraView() {
       <Typography variant="h4" sx={{ mb: 5 }}>
         Pengisian Suara
       </Typography>
-
       <Grid container spacing={3} mb={5}>
         <Grid item xs={12}>
           <TextField
@@ -101,46 +88,19 @@ export default function PengisianSuaraView() {
           </TextField>
         </Grid>
       </Grid>
-
-      <div>
-        <Grid container spacing={2} mb={5}>
-          {Object.keys(calegData).map((party) => (
-            <Grid key={party} item md={4}>
-              <Card onClick={() => handlePartyClick(party)} style={{ cursor: 'pointer' }}>
-                <CardContent>
-                  <Typography variant="h6">{`Partai ${party}`}</Typography>
-                </CardContent>
-              </Card>
-            </Grid>
-          ))}
-        </Grid>
-
-        {selectedParty && (
-          <Grid container spacing={2} mb={5}>
-            {calegData[selectedParty].map((caleg, index) => (
-              <Grid key={index} item md={4}>
-                <Card>
-                  <CardContent>
-                    <Typography variant="subtitle2" style={{ fontSize: '12px' }}>
-                      {caleg.name}
-                    </Typography>
-                    <div style={{ display: 'flex', alignItems: 'center' }}>
-                      <TextField variant="outlined" fullWidth type="number" label="Jumlah Vote" />
-                    </div>
-                  </CardContent>
-                </Card>
-              </Grid>
-            ))}
+      <Grid container spacing={2} mb={5}>
+        {/* map dummy */}
+        {Array.from({ length: 18 }).map((_, index) => (
+          <Grid item xs={12} sm={6} md={4} key={index}>
+            <PartyCard />
           </Grid>
-        )}
-      </div>
-
+        ))}
+      </Grid>
       <Grid item xs={12} mb={5}>
         <Button type="submit" variant="contained" color="primary">
           Submit
         </Button>
       </Grid>
-
       <Grid container spacing={3} mb={5}>
         <Grid item xs={12}>
           <Typography variant="h5" sx={{ mb: 3 }}>

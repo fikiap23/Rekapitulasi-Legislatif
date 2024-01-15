@@ -225,7 +225,6 @@ export default function KelurahanView() {
     })),
   };
 
-  console.log(KECAMATAN);
   return (
     <Container maxWidth="xl">
       <Typography variant="h4" mb={5}>
