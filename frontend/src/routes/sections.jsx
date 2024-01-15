@@ -10,6 +10,7 @@ export const UserPage = lazy(() => import('src/pages/user'));
 export const LoginPage = lazy(() => import('src/pages/login'));
 export const PengisianSuaraPage = lazy(() => import('src/pages/pengisian_suara'));
 export const Page404 = lazy(() => import('src/pages/page-not-found'));
+export const SuaraCaleg = lazy(() => import('src/pages/suara-caleg'));
 
 // ----------------------------------------------------------------------
 
@@ -29,6 +30,7 @@ export default function Router() {
         { path: 'pengisian-suara', element: <PengisianSuaraPage /> },
         { path: 'kecamatan', element: <KecamatanPage /> },
         { path: 'kelurahan', element: <KelurahanPage /> },
+        { path: 'suara-caleg', element: <SuaraCaleg /> },
       ],
     },
     {

@@ -24,6 +24,11 @@ const navConfig = [
     path: '/kelurahan',
     icon: <Iconify icon="healthicons:village-outline" />,
   },
+  {
+    title: 'data suara caleg',
+    path: '/suara-caleg',
+    icon: <Iconify icon="healthicons:village-outline" />,
+  },
 
   {
     title: 'pengguna',
