@@ -27,6 +27,18 @@ const villageController = {
         })
       }
 
+      // Check if code already exists
+      const existingVillage = await Village.findOne({ code })
+      if (existingVillage) {
+        return apiHandler({
+          res,
+          status: 'error',
+          code: 400,
+          message: 'Village already exists',
+          error: null,
+        })
+      }
+
       const newVillage = new Village({
         village_name,
         code,
@@ -87,9 +99,6 @@ const villageController = {
       // Periksa apakah semua district_ids ada di database
       const districtsExist = await District.find({ _id: { $in: districtIds } })
 
-      console.log(districtsExist)
-      console.log(districtIds)
-
       // Jika ada district_ids yang tidak ditemukan, kembalikan respons error
       if (districtIds.length !== districtsExist.length) {
         return apiHandler({
@@ -97,6 +106,20 @@ const villageController = {
           status: 'error',
           code: 400,
           message: 'One or more districts not found',
+          error: null,
+        })
+      }
+
+      const villageIds = villagesData.map((village) => village.code)
+
+      const foundVillages = await Village.find({ code: { $in: villageIds } })
+
+      if (foundVillages.length > 0) {
+        return apiHandler({
+          res,
+          status: 'error',
+          code: 400,
+          message: 'One or more villages already exist',
           error: null,
         })
       }
@@ -165,6 +188,22 @@ const villageController = {
         ...village,
         district_id,
       }))
+
+      const villageIds = villagesData.map((village) => village.code)
+
+      const foundVillages = await Village.find({
+        code: { $in: villageIds },
+      })
+
+      if (foundVillages.length > 0) {
+        return apiHandler({
+          res,
+          status: 'error',
+          code: 400,
+          message: 'One or more villages already exist',
+          error: null,
+        })
+      }
 
       const createdVillages = await Village.insertMany(villagesWithDistrictId)
 
