@@ -1,6 +1,8 @@
 import { lazy, Suspense } from 'react';
+import { useRecoilValue } from 'recoil';
 import { Outlet, Navigate, useRoutes } from 'react-router-dom';
 
+import userAtom from 'src/atoms/userAtom';
 import DashboardLayout from 'src/layouts/dashboard';
 
 export const IndexPage = lazy(() => import('src/pages/app'));
@@ -15,14 +17,17 @@ export const SuaraCaleg = lazy(() => import('src/pages/suara-caleg'));
 // ----------------------------------------------------------------------
 
 export default function Router() {
+  const user = useRecoilValue(userAtom);
   const routes = useRoutes([
     {
-      element: (
+      element: user ? (
         <DashboardLayout>
           <Suspense>
             <Outlet />
           </Suspense>
         </DashboardLayout>
+      ) : (
+        <Navigate to="/login" replace />
       ),
       children: [
         { element: <IndexPage />, index: true },
