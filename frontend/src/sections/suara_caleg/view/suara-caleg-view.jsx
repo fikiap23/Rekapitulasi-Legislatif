@@ -36,159 +36,23 @@ export default function KelurahanView() {
     setPage(0);
   };
 
-  const data = [
-    {
-      Kelurahan: 'Kelurahan 1',
-      votes: [500, 10, 450, 600, 200, 300, 150, 80, 200, 120, 40, 180, 240, 120, 120, 50, 80],
-    },
-    {
-      Kelurahan: 'Kelurahan 2',
-      votes: [700, 15, 600, 450, 300, 150, 200, 100, 250, 180, 60, 250, 320, 160, 160, 80, 80],
-    },
-    // Add more data as needed
-  ];
-
-  const parties = [
-    'https://goodkind-bucket04939-dev.s3.ap-southeast-1.amazonaws.com/public/assets/constant/partai/1/PKB.svg',
-    'https://goodkind-bucket04939-dev.s3.ap-southeast-1.amazonaws.com/public/assets/constant/partai/2/Gerindra.svg',
-    'https://goodkind-bucket04939-dev.s3.ap-southeast-1.amazonaws.com/public/assets/constant/partai/3/PDIP.svg',
-    'https://goodkind-bucket04939-dev.s3.ap-southeast-1.amazonaws.com/public/assets/constant/PARTY/golkar/party%3Dgolkar.png',
-    'https://goodkind-bucket04939-dev.s3.ap-southeast-1.amazonaws.com/public/assets/constant/partai/5/Nasdem.svg',
-    'https://goodkind-bucket04939-dev.s3.ap-southeast-1.amazonaws.com/public/assets/constant/partai/6/Buruh.svg',
-    'https://goodkind-bucket04939-dev.s3.ap-southeast-1.amazonaws.com/public/assets/constant/partai/7/Gelora.svg',
-    'https://goodkind-bucket04939-dev.s3.ap-southeast-1.amazonaws.com/public/assets/constant/partai/8/PKS.svg',
-    'https://goodkind-bucket04939-dev.s3.ap-southeast-1.amazonaws.com/public/assets/constant/partai/9/PKN.svg',
-    'https://goodkind-bucket04939-dev.s3.ap-southeast-1.amazonaws.com/public/assets/constant/partai/10/Hanura.svg',
-    'https://goodkind-bucket04939-dev.s3.ap-southeast-1.amazonaws.com/public/assets/constant/partai/12/PAN.svg',
-    'https://goodkind-bucket04939-dev.s3.ap-southeast-1.amazonaws.com/public/assets/constant/partai/13/PBB.svg',
-    'https://goodkind-bucket04939-dev.s3.ap-southeast-1.amazonaws.com/public/assets/constant/partai/14/Demokrat.svg',
-    'https://goodkind-bucket04939-dev.s3.ap-southeast-1.amazonaws.com/public/assets/constant/partai/15/PSI.svg',
-    'https://goodkind-bucket04939-dev.s3.ap-southeast-1.amazonaws.com/public/assets/constant/partai/16/Perindo.svg',
-    'https://goodkind-bucket04939-dev.s3.ap-southeast-1.amazonaws.com/public/assets/constant/partai/17/PPP.svg',
-    'https://goodkind-bucket04939-dev.s3.ap-southeast-1.amazonaws.com/public/assets/constant/partai/24/Ummat.svg',
-  ];
   const SuaraCalegData = [
     {
       id: 1,
-      name: 'Kelurahan Cibiru',
+      name: 'Asep',
       totalVotes: 100000,
       validVotes: 50000,
+      party: 'Party A',
     },
     {
       id: 2,
-      name: 'Kelurahan Babelan',
+      name: 'Asep',
       totalVotes: 80000,
       validVotes: 40000,
-    },
-    {
-      id: 3,
-      name: 'Kelurahan Rancaekek',
-      totalVotes: 120000,
-      validVotes: 60000,
-    },
-    {
-      id: 4,
-      name: 'Kelurahan Bojongsoang',
-      totalVotes: 95000,
-      validVotes: 47500,
-    },
-    {
-      id: 5,
-      name: 'Kelurahan Majalaya',
-      totalVotes: 110000,
-      validVotes: 55000,
-    },
-    {
-      id: 6,
-      name: 'Kelurahan Katapang',
-      totalVotes: 75000,
-      validVotes: 37500,
-    },
-    {
-      id: 7,
-      name: 'Kelurahan Dayeuhkolot',
-      totalVotes: 105000,
-      validVotes: 52500,
-    },
-    {
-      id: 8,
-      name: 'Kelurahan Arcamanik',
-      totalVotes: 88000,
-      validVotes: 44000,
-    },
-    {
-      id: 9,
-      name: 'Kelurahan Cileunyi',
-      totalVotes: 102000,
-      validVotes: 51000,
-    },
-    {
-      id: 10,
-      name: 'Kelurahan Cicalengka',
-      totalVotes: 90000,
-      validVotes: 45000,
-    },
-    {
-      id: 11,
-      name: 'Kelurahan Pacet',
-      totalVotes: 85000,
-      validVotes: 42500,
-    },
-    {
-      id: 12,
-      name: 'Kelurahan Sumedang Selatan',
-      totalVotes: 98000,
-      validVotes: 49000,
-    },
-    {
-      id: 13,
-      name: 'Kelurahan Lembang',
-      totalVotes: 115000,
-      validVotes: 57500,
-    },
-    {
-      id: 14,
-      name: 'Kelurahan Padalarang',
-      totalVotes: 92000,
-      validVotes: 46000,
-    },
-    {
-      id: 15,
-      name: 'Kelurahan Cikarang Barat',
-      totalVotes: 100500,
-      validVotes: 50250,
-    },
-    {
-      id: 16,
-      name: 'Kelurahan Tambun Utara',
-      totalVotes: 86000,
-      validVotes: 43000,
-    },
-    {
-      id: 17,
-      name: 'Kelurahan Kuningan',
-      totalVotes: 94000,
-      validVotes: 47000,
-    },
-    {
-      id: 18,
-      name: 'Kelurahan Karawang Timur',
-      totalVotes: 99000,
-      validVotes: 49500,
-    },
-    {
-      id: 19,
-      name: 'Kelurahan Subang',
-      totalVotes: 107000,
-      validVotes: 53500,
-    },
-    {
-      id: 20,
-      name: 'Kelurahan Purwakarta',
-      totalVotes: 89000,
-      validVotes: 44500,
+      party: 'Party B',
     },
   ];
+
   const partyData = [
     { name: 'Independen', votes: 2000 },
     { name: 'Partai Aceh', votes: 3500 },
@@ -228,7 +92,7 @@ export default function KelurahanView() {
   return (
     <Container maxWidth="xl">
       <Typography variant="h4" mb={5}>
-        Data Kecamatan A
+        Data Suara Caleg
       </Typography>
 
       <Stack mb={5} direction="row" alignItems="center" justifyContent="space-between">
@@ -241,21 +105,25 @@ export default function KelurahanView() {
             <Table aria-label="simple table">
               <TableHead>
                 <TableRow>
-                  <TableCell>Kelurahan</TableCell>
-                  <TableCell align="right">Suara yang diperoleh</TableCell>
+                  <TableCell>No</TableCell>
+                  <TableCell>Nama Caleg</TableCell>
+                  <TableCell>Partai</TableCell>
+                  <TableCell align="right">Suara Sah</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
                 {SuaraCalegData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map(
-                  (row) => (
+                  (row, index) => (
                     <TableRow
                       key={row.name}
                       sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                     >
                       <TableCell component="th" scope="row">
-                        {row.name}
+                        {index + 1}
                       </TableCell>
-                      <TableCell align="right">{row.totalVotes}</TableCell>
+                      <TableCell>{row.name}</TableCell>
+                      <TableCell>{row.party}</TableCell>{' '}
+                      <TableCell align="right">{row.validVotes}</TableCell>
                     </TableRow>
                   )
                 )}
@@ -279,33 +147,6 @@ export default function KelurahanView() {
 
         <Grid xs={12} md={12} lg={12}>
           <BarChart title="Perolehan Suara Per Partai" chart={partyChartData} />
-        </Grid>
-
-        <Grid container item xs={12} md={12} lg={12}>
-          <TableContainer component={Paper} style={{ overflowX: 'auto' }}>
-            <Table>
-              <TableHead>
-                <TableRow>
-                  <TableCell>Kelurahan</TableCell>
-                  {parties.map((partyImage, index) => (
-                    <TableCell key={index}>
-                      <img src={partyImage} alt={`Party ${index + 1}`} style={{ width: '20px' }} />
-                    </TableCell>
-                  ))}
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {data.map((row, index) => (
-                  <TableRow key={index}>
-                    <TableCell>{row.Kelurahan}</TableCell>
-                    {row.votes.map((vote, voteIndex) => (
-                      <TableCell key={voteIndex}>{vote}</TableCell>
-                    ))}
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
         </Grid>
       </Grid>
     </Container>
