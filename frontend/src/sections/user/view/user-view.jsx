@@ -1,18 +1,16 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 import Card from '@mui/material/Card';
 import Stack from '@mui/material/Stack';
 import Table from '@mui/material/Table';
-import Button from '@mui/material/Button';
 import Container from '@mui/material/Container';
 import TableBody from '@mui/material/TableBody';
 import Typography from '@mui/material/Typography';
 import TableContainer from '@mui/material/TableContainer';
 import TablePagination from '@mui/material/TablePagination';
 
-import { users } from 'src/_mock/user';
+import userService from 'src/services/userService';
 
-import Iconify from 'src/components/iconify';
 import Scrollbar from 'src/components/scrollbar';
 
 import TableNoData from '../table-no-data';
@@ -20,22 +18,37 @@ import UserTableRow from '../user-table-row';
 import UserTableHead from '../user-table-head';
 import TableEmptyRows from '../table-empty-rows';
 import UserTableToolbar from '../user-table-toolbar';
+// import CreateUserDialog from '../create-user-dialog';
 import { emptyRows, applyFilter, getComparator } from '../utils';
 
 // ----------------------------------------------------------------------
 
 export default function UserPage() {
   const [page, setPage] = useState(0);
-
   const [order, setOrder] = useState('asc');
-
   const [selected, setSelected] = useState([]);
-
-  const [orderBy, setOrderBy] = useState('name');
-
-  const [filterName, setFilterName] = useState('');
-
+  const [orderBy, setOrderBy] = useState('username');
+  const [filterUsername, setFilterUsername] = useState(''); // Change to filter by username
   const [rowsPerPage, setRowsPerPage] = useState(5);
+
+  const [users, setUsers] = useState([]);
+
+  // Get all users and admins
+  useEffect(() => {
+    handleGetAllUsersAndAdmins();
+  }, []);
+
+  const handleGetAllUsersAndAdmins = async () => {
+    try {
+      const result = await userService.getAllUsers();
+      setUsers(result);
+      console.log('All users and admins:', result);
+      // Handle successful retrieval of users and admins
+    } catch (error) {
+      console.error('Get all users and admins error:', error);
+      // Handle error in retrieving users and admins
+    }
+  };
 
   const handleSort = (event, id) => {
     const isAsc = orderBy === id && order === 'asc';
@@ -47,18 +60,18 @@ export default function UserPage() {
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelecteds = users.map((n) => n.name);
+      const newSelecteds = users.map((n) => n.username); // Change to filter by username
       setSelected(newSelecteds);
       return;
     }
     setSelected([]);
   };
 
-  const handleClick = (event, name) => {
-    const selectedIndex = selected.indexOf(name);
+  const handleClick = (event, username) => {
+    const selectedIndex = selected.indexOf(username);
     let newSelected = [];
     if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, name);
+      newSelected = newSelected.concat(selected, username);
     } else if (selectedIndex === 0) {
       newSelected = newSelected.concat(selected.slice(1));
     } else if (selectedIndex === selected.length - 1) {
@@ -81,34 +94,31 @@ export default function UserPage() {
     setRowsPerPage(parseInt(event.target.value, 10));
   };
 
-  const handleFilterByName = (event) => {
+  const handleFilterByUsername = (event) => {
     setPage(0);
-    setFilterName(event.target.value);
+    setFilterUsername(event.target.value);
   };
 
   const dataFiltered = applyFilter({
     inputData: users,
     comparator: getComparator(order, orderBy),
-    filterName,
+    filterUsername,
   });
 
-  const notFound = !dataFiltered.length && !!filterName;
+  const notFound = !dataFiltered.length && !!filterUsername;
 
   return (
     <Container>
       <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
         <Typography variant="h4">Users</Typography>
-
-        <Button variant="contained" color="inherit" startIcon={<Iconify icon="eva:plus-fill" />}>
-          New User
-        </Button>
+        {/* <CreateUserDialog /> */}
       </Stack>
 
       <Card>
         <UserTableToolbar
           numSelected={selected.length}
-          filterName={filterName}
-          onFilterName={handleFilterByName}
+          filterUsername={filterUsername}
+          onFilterUsername={handleFilterByUsername}
         />
 
         <Scrollbar>
@@ -122,10 +132,9 @@ export default function UserPage() {
                 onRequestSort={handleSort}
                 onSelectAllClick={handleSelectAllClick}
                 headLabel={[
-                  { id: 'name', label: 'Nama' },
+                  { id: 'username', label: 'Username' }, // Change to filter by username
                   { id: 'daerah', label: 'Daerah' },
                   { id: 'role', label: 'Peran' },
-
                   { id: 'status', label: 'Status' },
                   { id: '' },
                 ]}
@@ -135,13 +144,17 @@ export default function UserPage() {
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map((row) => (
                     <UserTableRow
-                      key={row.id}
-                      name={row.name}
+                      key={row._id}
+                      username={row.username} // Change to filter by username
                       role={row.role}
-                      status={row.status}
-                      daerah={row.daerah}
-                      selected={selected.indexOf(row.name) !== -1}
-                      handleClick={(event) => handleClick(event, row.name)}
+                      status="Aktif"
+                      daerah={
+                        row.village_id?.village_name ??
+                        row.district_id?.district_name ??
+                        'Super Admin'
+                      }
+                      selected={selected.indexOf(row.username) !== -1} // Change to filter by username
+                      handleClick={(event) => handleClick(event, row.username)} // Change to filter by username
                     />
                   ))}
 
@@ -150,7 +163,7 @@ export default function UserPage() {
                   emptyRows={emptyRows(page, rowsPerPage, users.length)}
                 />
 
-                {notFound && <TableNoData query={filterName} />}
+                {notFound && <TableNoData query={filterUsername} />}
               </TableBody>
             </Table>
           </TableContainer>

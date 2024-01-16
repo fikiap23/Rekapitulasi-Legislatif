@@ -1,9 +1,9 @@
 // authService.js
 import axios from 'axios';
 
-const BASE_URL = 'localhost:3000/api/v2/users';
+const BASE_URL = 'http://localhost:3000/api/v2/users';
 
-const authService = {
+const userService = {
   createNewUser: async (userData) => {
     try {
       const response = await axios.post(`${BASE_URL}`, userData, {
@@ -17,12 +17,16 @@ const authService = {
 
   getAllUsers: async () => {
     try {
-      const response = await axios.get(`${BASE_URL}`);
-      return response.data;
+      console.log('get all users');
+      const response = await axios.get(`${BASE_URL}`, {
+        withCredentials: true,
+      });
+
+      return response.data.data;
     } catch (error) {
       return error.response.data;
     }
   },
 };
 
-export default authService;
+export default userService;
