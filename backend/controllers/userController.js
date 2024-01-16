@@ -178,6 +178,32 @@ const userController = {
       })
     }
   },
+   getAllUsers: async (req, res) => {
+    try {
+      // Fetch all users
+      const users = await User.find().select('-password');
+
+      // Return the list of users
+      return apiHandler({
+        res,
+        status: 'success',
+        code: 200,
+        message: 'List of all users retrieved successfully',
+        data:users,
+        error: null,
+      });
+    } catch (error) {
+      // Handle errors
+      return apiHandler({
+        res,
+        status: 'error',
+        code: 500,
+        message: 'Internal Server Error',
+        data: null,
+        error: { type: 'InternalServerError', details: error.message },
+      });
+    }
+  },
 }
 
 export default userController
