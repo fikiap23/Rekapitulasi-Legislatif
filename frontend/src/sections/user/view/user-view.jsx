@@ -18,7 +18,7 @@ import UserTableRow from '../user-table-row';
 import UserTableHead from '../user-table-head';
 import TableEmptyRows from '../table-empty-rows';
 import UserTableToolbar from '../user-table-toolbar';
-// import CreateUserDialog from '../create-user-dialog';
+import CreateUserDialog from '../create-user-dialog';
 import { emptyRows, applyFilter, getComparator } from '../utils';
 
 // ----------------------------------------------------------------------
@@ -42,7 +42,7 @@ export default function UserPage() {
     try {
       const result = await userService.getAllUsers();
       setUsers(result);
-      console.log('All users and admins:', result);
+      // console.log('All users and admins:', result);
       // Handle successful retrieval of users and admins
     } catch (error) {
       console.error('Get all users and admins error:', error);
@@ -111,7 +111,7 @@ export default function UserPage() {
     <Container>
       <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
         <Typography variant="h4">Users</Typography>
-        {/* <CreateUserDialog /> */}
+        <CreateUserDialog />
       </Stack>
 
       <Card>

@@ -17,7 +17,6 @@ const userService = {
 
   getAllUsers: async () => {
     try {
-      console.log('get all users');
       const response = await axios.get(`${BASE_URL}`, {
         withCredentials: true,
       });
