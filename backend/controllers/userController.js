@@ -181,7 +181,7 @@ const userController = {
    getAllUsers: async (req, res) => {
     try {
       // Fetch all users
-      const users = await User.find().select('-password');
+      const users = await User.find().select('-password').populate('village_id', 'village_name').populate('district_id', 'district_name');
 
       // Return the list of users
       return apiHandler({
