@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useSnackbar } from 'notistack';
-import { useSetRecoilState } from 'recoil';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
 
 import Box from '@mui/material/Box';
 import Avatar from '@mui/material/Avatar';
@@ -37,6 +37,7 @@ const MENU_OPTIONS = [
 // ----------------------------------------------------------------------
 
 export default function AccountPopover() {
+  const user = useRecoilValue(userAtom);
   const [open, setOpen] = useState(null);
   const setUser = useSetRecoilState(userAtom);
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
@@ -94,14 +95,14 @@ export default function AccountPopover() {
       >
         <Avatar
           src={account.photoURL}
-          alt={account.displayName}
+          alt={user.username}
           sx={{
             width: 36,
             height: 36,
             border: (theme) => `solid 2px ${theme.palette.background.default}`,
           }}
         >
-          {account.displayName.charAt(0).toUpperCase()}
+          {user.username.charAt(0).toUpperCase()}
         </Avatar>
       </IconButton>
 
@@ -122,10 +123,10 @@ export default function AccountPopover() {
       >
         <Box sx={{ my: 1.5, px: 2 }}>
           <Typography variant="subtitle2" noWrap>
-            {account.displayName}
+            {user.username}
           </Typography>
           <Typography variant="body2" sx={{ color: 'text.secondary' }} noWrap>
-            {account.email}
+            {user.role}
           </Typography>
         </Box>
 
