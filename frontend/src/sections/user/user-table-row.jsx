@@ -16,15 +16,17 @@ import userService from 'src/services/userService';
 import Label from 'src/components/label';
 import Iconify from 'src/components/iconify';
 
+import EditUserDialog from './edit-user-dialog';
+
 // ----------------------------------------------------------------------
 
 export default function UserTableRow({
+  user,
   selected,
   username,
   id,
   daerah,
   role,
-
   status,
   handleClick,
 }) {
@@ -151,11 +153,7 @@ export default function UserTableRow({
           sx: { width: 140 },
         }}
       >
-        <MenuItem onClick={handleCloseMenu}>
-          <Iconify icon="eva:edit-fill" sx={{ mr: 2 }} />
-          Edit
-        </MenuItem>
-
+        <EditUserDialog user={user} />
         <MenuItem onClick={handleDeleteUser} sx={{ color: 'error.main' }}>
           <Iconify icon="eva:trash-2-outline" sx={{ mr: 2 }} />
           {loading ? 'Loading...' : 'Delete'}
@@ -166,6 +164,7 @@ export default function UserTableRow({
 }
 
 UserTableRow.propTypes = {
+  user: PropTypes.any,
   daerah: PropTypes.any,
   handleClick: PropTypes.func,
   id: PropTypes.any,

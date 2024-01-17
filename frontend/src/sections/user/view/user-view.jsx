@@ -144,6 +144,7 @@ export default function UserPage() {
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map((row) => (
                     <UserTableRow
+                      user={row}
                       id={row._id}
                       key={row._id}
                       username={row.username} // Change to filter by username

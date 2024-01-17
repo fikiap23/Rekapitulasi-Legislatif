@@ -10,6 +10,9 @@ router.post('/', protectAdminRoute, userController.createNewUser);
 // Get all users
 router.get('/', protectAdminRoute, userController.getAllUsers);
 
+// Update a user
+router.put('/:userId', protectAdminRoute, userController.updateUser);
+
 // Delete a user
 router.delete('/:userId', protectAdminRoute, userController.deleteUser);
 

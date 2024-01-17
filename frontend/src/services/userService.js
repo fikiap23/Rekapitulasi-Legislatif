@@ -27,6 +27,17 @@ const userService = {
     }
   },
 
+  editUser: async (userId, userData) => {
+    try {
+      const response = await axios.put(`${BASE_URL}/${userId}`, userData, {
+        withCredentials: true,
+      });
+      return response.data;
+    } catch (error) {
+      return error.response.data;
+    }
+  },
+
   deleteUser: async (userId) => {
     try {
       const response = await axios.delete(`${BASE_URL}/${userId}`, {

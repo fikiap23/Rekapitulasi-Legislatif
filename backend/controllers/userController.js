@@ -204,7 +204,93 @@ const userController = {
       });
     }
   },
-  
+
+  updateUser: async (req, res) => {
+    try {
+      const userId = req.params.userId;
+      const { password, role, village_id, district_id } = req.body;
+      let { username } = req.body;
+
+      // Check if userId is provided
+      if (!userId) {
+        return apiHandler({
+          res,
+          status: 'error',
+          code: 400,
+          message: 'User ID is required for update',
+          error: null,
+        });
+      }
+
+      // Find the user by ID
+      const user = await User.findById(userId);
+
+      // Check if the user exists
+      if (!user) {
+        return apiHandler({
+          res,
+          status: 'error',
+          code: 404,
+          message: 'User not found',
+          error: null,
+        });
+      }
+
+      // Check if the username is being updated and not already taken
+      if (username && username !== user.username) {
+        const userExists = await User.findOne({ username });
+        if (userExists) {
+          return apiHandler({
+            res,
+            status: 'error',
+            code: 400,
+            message: 'Username already exists',
+            error: null,
+          });
+        }
+        username = username.toLowerCase();
+      }
+
+      // Update user properties if provided
+      if (username) user.username = username;
+      if (password) {
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(password, salt);
+        user.password = hashedPassword;
+      }
+      if (role) user.role = role;
+      if (district_id) user.district_id = district_id;
+      if (village_id) user.village_id = village_id;
+
+      // Save the updated user
+      await user.save();
+
+      return apiHandler({
+        res,
+        status: 'success',
+        code: 200,
+        message: 'User updated successfully',
+        data: {
+          _id: user._id,
+          username: user.username,
+          role: user.role,
+          district_id: user.district_id,
+          village_id: user.village_id,
+        },
+        error: null,
+      });
+    } catch (error) {
+      return apiHandler({
+        res,
+        status: 'error',
+        code: 500,
+        message: 'Internal Server Error',
+        data: null,
+        error: { type: 'InternalServerError', details: error.message },
+      });
+    }
+  },
+
   deleteUser: async (req, res) => {
     try {
       const userId = req.params.userId;
