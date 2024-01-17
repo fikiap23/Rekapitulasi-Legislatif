@@ -31,7 +31,8 @@ export default function PengisianSuaraView() {
   const [kecamatans, setKecamatans] = useState([]);
   const [kelurahans, setKelurahans] = useState([]);
   const [loading, setLoading] = useState(false);
-
+  const [votesResult, setVotesResult] = useState([]);
+  console.log(votesResult);
   const [history] = useState([
     { id: 1, date: '2022-01-01', user: 'John Doe', action: 'Submitted' },
     { id: 2, date: '2022-01-02', user: 'Jane Smith', action: 'Updated' },
@@ -124,7 +125,7 @@ export default function PengisianSuaraView() {
           <Grid container spacing={2} mb={5}>
             {parties.map((party) => (
               <Grid item xs={12} sm={6} md={4} key={party._id}>
-                <PartyCard party={party} />
+                <PartyCard party={party} setVotesResult={setVotesResult} />
               </Grid>
             ))}
           </Grid>

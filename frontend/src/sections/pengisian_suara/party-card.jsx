@@ -14,7 +14,35 @@ import CardHeader from '@mui/material/CardHeader';
 import CardContent from '@mui/material/CardContent';
 import TableContainer from '@mui/material/TableContainer';
 
-export default function PartyCard({ party }) {
+export default function PartyCard({ party, setVotesResult }) {
+  const [votes, setVotes] = React.useState([]);
+  const [, setVotesData] = React.useState([]);
+
+  const handleChange = (event, candidateIndex) => {
+    const updatedVotes = [...votes];
+    const value = parseInt(event.target.value, 10) || 0;
+
+    updatedVotes[candidateIndex] = {
+      candidate_id: party.candidates[candidateIndex]._id,
+      number_of_votes: value,
+    };
+
+    setVotes(updatedVotes);
+
+    const updatedVotesData = {
+      party_id: party._id,
+      candidates: updatedVotes,
+    };
+
+    setVotesData(updatedVotesData);
+
+    // Use the updatedVotesData directly in setVotesResult
+    setVotesResult((prevVotesResult) => [
+      ...prevVotesResult.filter((result) => result.party_id !== party._id),
+      updatedVotesData,
+    ]);
+  };
+
   return (
     <Card sx={{ maxWidth: 345 }}>
       <CardHeader
@@ -43,10 +71,11 @@ export default function PartyCard({ party }) {
                   <TableCell>{candidate.name}</TableCell>
                   <TableCell>
                     <TextField
-                      type="text"
+                      type="number"
                       placeholder="Input Suara"
                       variant="outlined"
                       size="small"
+                      onChange={(event) => handleChange(event, index)}
                       fullWidth
                     />
                   </TableCell>
@@ -62,4 +91,5 @@ export default function PartyCard({ party }) {
 
 PartyCard.propTypes = {
   party: PropTypes.any,
+  setVotesResult: PropTypes.any,
 };
