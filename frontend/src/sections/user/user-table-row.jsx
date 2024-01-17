@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import PropTypes from 'prop-types';
+import { useSnackbar } from 'notistack';
 
 import Stack from '@mui/material/Stack';
 import Popover from '@mui/material/Popover';
@@ -10,6 +11,8 @@ import TableCell from '@mui/material/TableCell';
 import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 
+import userService from 'src/services/userService';
+
 import Label from 'src/components/label';
 import Iconify from 'src/components/iconify';
 
@@ -18,7 +21,7 @@ import Iconify from 'src/components/iconify';
 export default function UserTableRow({
   selected,
   username,
-
+  id,
   daerah,
   role,
 
@@ -26,6 +29,79 @@ export default function UserTableRow({
   handleClick,
 }) {
   const [open, setOpen] = useState(null);
+  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
+  const [loading, setLoading] = useState(false);
+  const handleDeleteUser = async () => {
+    try {
+      setLoading(true);
+      const deleteUser = await userService.deleteUser(id);
+      if (deleteUser.code === 200) {
+        enqueueSnackbar('Delete success', {
+          variant: 'success',
+          anchorOrigin: {
+            vertical: 'bottom',
+            horizontal: 'center',
+          },
+          action: (key) => (
+            <IconButton
+              key="close"
+              aria-label="Close"
+              color="inherit"
+              onClick={() => closeSnackbar(key)}
+            >
+              <Iconify icon="eva:close-fill" />
+            </IconButton>
+          ),
+        });
+        setLoading(false);
+        window.location.reload();
+      } else {
+        enqueueSnackbar(
+          'Delete failed',
+          { variant: 'error' },
+          {
+            anchorOrigin: {
+              vertical: 'bottom',
+              horizontal: 'center',
+            },
+            action: (key) => (
+              <IconButton
+                key="close"
+                aria-label="Close"
+                color="inherit"
+                onClick={() => closeSnackbar(key)}
+              >
+                <Iconify icon="eva:close-fill" />
+              </IconButton>
+            ),
+          }
+        );
+        setLoading(false);
+      }
+    } catch (error) {
+      enqueueSnackbar(
+        'Delete failed',
+        { variant: 'error' },
+        {
+          anchorOrigin: {
+            vertical: 'bottom',
+            horizontal: 'center',
+          },
+          action: (key) => (
+            <IconButton
+              key="close"
+              aria-label="Close"
+              color="inherit"
+              onClick={() => closeSnackbar(key)}
+            >
+              <Iconify icon="eva:close-fill" />
+            </IconButton>
+          ),
+        }
+      );
+      setLoading(false);
+    }
+  };
 
   const handleOpenMenu = (event) => {
     setOpen(event.currentTarget);
@@ -80,9 +156,9 @@ export default function UserTableRow({
           Edit
         </MenuItem>
 
-        <MenuItem onClick={handleCloseMenu} sx={{ color: 'error.main' }}>
+        <MenuItem onClick={handleDeleteUser} sx={{ color: 'error.main' }}>
           <Iconify icon="eva:trash-2-outline" sx={{ mr: 2 }} />
-          Delete
+          {loading ? 'Loading...' : 'Delete'}
         </MenuItem>
       </Popover>
     </>
@@ -92,7 +168,7 @@ export default function UserTableRow({
 UserTableRow.propTypes = {
   daerah: PropTypes.any,
   handleClick: PropTypes.func,
-
+  id: PropTypes.any,
   username: PropTypes.any,
   role: PropTypes.any,
   selected: PropTypes.any,

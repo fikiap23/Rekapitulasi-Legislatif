@@ -26,6 +26,17 @@ const userService = {
       return error.response.data;
     }
   },
+
+  deleteUser: async (userId) => {
+    try {
+      const response = await axios.delete(`${BASE_URL}/${userId}`, {
+        withCredentials: true,
+      });
+      return response.data;
+    } catch (error) {
+      return error.response.data;
+    }
+  },
 };
 
 export default userService;

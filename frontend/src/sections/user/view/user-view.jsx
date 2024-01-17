@@ -35,10 +35,10 @@ export default function UserPage() {
 
   // Get all users and admins
   useEffect(() => {
-    handleGetAllUsersAndAdmins();
+    handleGetAllUsers();
   }, []);
 
-  const handleGetAllUsersAndAdmins = async () => {
+  const handleGetAllUsers = async () => {
     try {
       const result = await userService.getAllUsers();
       setUsers(result);
@@ -144,6 +144,7 @@ export default function UserPage() {
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map((row) => (
                     <UserTableRow
+                      id={row._id}
                       key={row._id}
                       username={row.username} // Change to filter by username
                       role={row.role}

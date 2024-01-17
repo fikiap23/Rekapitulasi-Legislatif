@@ -204,6 +204,58 @@ const userController = {
       });
     }
   },
+  
+  deleteUser: async (req, res) => {
+    try {
+      const userId = req.params.userId;
+
+      // Check if userId is provided
+      if (!userId) {
+        return apiHandler({
+          res,
+          status: 'error',
+          code: 400,
+          message: 'User ID is required for deletion',
+          error: null,
+        });
+      }
+
+      // Find the user by ID
+      const user = await User.findById(userId);
+
+      // Check if the user exists
+      if (!user) {
+        return apiHandler({
+          res,
+          status: 'error',
+          code: 404,
+          message: 'User not found',
+          error: null,
+        });
+      }
+
+      // Perform the deletion
+      await User.findByIdAndDelete(userId);
+
+      return apiHandler({
+        res,
+        status: 'success',
+        code: 200,
+        message: 'User deleted successfully',
+        data: null,
+        error: null,
+      });
+    } catch (error) {
+      return apiHandler({
+        res,
+        status: 'error',
+        code: 500,
+        message: 'Internal Server Error',
+        data: null,
+        error: { type: 'InternalServerError', details: error.message },
+      });
+    }
+  },
 }
 
 export default userController
