@@ -1,3 +1,4 @@
+import { useSnackbar } from 'notistack';
 import { useState, useEffect } from 'react';
 
 import Container from '@mui/material/Container';
@@ -13,12 +14,16 @@ import {
   TableCell,
   TableHead,
   Typography,
+  IconButton,
   TableContainer,
   LinearProgress,
 } from '@mui/material';
 
 import partyService from 'src/services/partyService';
+import resultService from 'src/services/resultService';
 import districtService from 'src/services/districtService';
+
+import Iconify from 'src/components/iconify';
 
 import PartyCard from '../party-card';
 
@@ -32,7 +37,7 @@ export default function PengisianSuaraView() {
   const [kelurahans, setKelurahans] = useState([]);
   const [loading, setLoading] = useState(false);
   const [votesResult, setVotesResult] = useState([]);
-  console.log(votesResult);
+  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
   const [history] = useState([
     { id: 1, date: '2022-01-01', user: 'John Doe', action: 'Submitted' },
     { id: 2, date: '2022-01-02', user: 'Jane Smith', action: 'Updated' },
@@ -55,6 +60,38 @@ export default function PengisianSuaraView() {
     } catch (error) {
       setKecamatans([]);
       setParties([]);
+      setLoading(false);
+    }
+  };
+
+  const handleSubmit = async () => {
+    try {
+      setLoading(true);
+      // console.log(kelurahan);
+      const result = await resultService.fillBallots(kelurahan, votesResult);
+      if (result.code === 200) {
+        enqueueSnackbar('Voting success', {
+          variant: 'success',
+          anchorOrigin: {
+            vertical: 'bottom',
+            horizontal: 'center',
+          },
+          action: (key) => (
+            <IconButton
+              key="close"
+              aria-label="Close"
+              color="inherit"
+              onClick={() => closeSnackbar(key)}
+            >
+              <Iconify icon="eva:close-fill" />
+            </IconButton>
+          ),
+        });
+      }
+
+      setLoading(false);
+    } catch (error) {
+      setVotesResult([]);
       setLoading(false);
     }
   };
@@ -86,7 +123,7 @@ export default function PengisianSuaraView() {
                 onChange={(e) => {
                   setKecamatan(e.target.value);
                   setKelurahans(e.target.value.villages);
-                  console.log(e.target.value);
+                  // console.log(e.target.value);
                 }}
                 variant="outlined"
               >
@@ -131,7 +168,7 @@ export default function PengisianSuaraView() {
           </Grid>
 
           <Grid item xs={12} mb={5}>
-            <Button type="submit" variant="contained" color="primary">
+            <Button type="button" variant="contained" color="primary" onClick={handleSubmit}>
               Submit
             </Button>
           </Grid>
