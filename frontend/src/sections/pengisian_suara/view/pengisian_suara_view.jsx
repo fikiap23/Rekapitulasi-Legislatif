@@ -87,6 +87,24 @@ export default function PengisianSuaraView() {
             </IconButton>
           ),
         });
+      } else {
+        enqueueSnackbar(result.message, {
+          variant: 'error',
+          anchorOrigin: {
+            vertical: 'bottom',
+            horizontal: 'center',
+          },
+          action: (key) => (
+            <IconButton
+              key="close"
+              aria-label="Close"
+              color="inherit"
+              onClick={() => closeSnackbar(key)}
+            >
+              <Iconify icon="eva:close-fill" />
+            </IconButton>
+          ),
+        });
       }
 
       setLoading(false);
