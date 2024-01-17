@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import PropTypes from 'prop-types';
+import { useRecoilValue } from 'recoil';
 
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
@@ -14,6 +15,7 @@ import { RouterLink } from 'src/routes/components';
 
 import { useResponsive } from 'src/hooks/use-responsive';
 
+import userAtom from 'src/atoms/userAtom';
 import { account } from 'src/_mock/account';
 
 import Logo from 'src/components/logo';
@@ -25,6 +27,7 @@ import navConfig from './config-navigation';
 // ----------------------------------------------------------------------
 
 export default function Nav({ openNav, onCloseNav }) {
+  const user = useRecoilValue(userAtom);
   const pathname = usePathname();
 
   const upLg = useResponsive('up', 'lg');
@@ -63,9 +66,11 @@ export default function Nav({ openNav, onCloseNav }) {
 
   const renderMenu = (
     <Stack component="nav" spacing={0.5} sx={{ px: 2 }}>
-      {navConfig.map((item) => (
-        <NavItem key={item.title} item={item} />
-      ))}
+      {navConfig.map(
+        (item) =>
+          user &&
+          item.accessibleRoles.includes(user.role) && <NavItem key={item.title} item={item} />
+      )}
     </Stack>
   );
 

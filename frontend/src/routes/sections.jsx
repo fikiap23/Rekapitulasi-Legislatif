@@ -31,11 +31,27 @@ export default function Router() {
       ),
       children: [
         { element: <IndexPage />, index: true },
-        { path: 'user', element: <UserPage /> },
         { path: 'pengisian-suara', element: <PengisianSuaraPage /> },
-        { path: 'kecamatan', element: <KecamatanPage /> },
-        { path: 'kelurahan', element: <KelurahanPage /> },
-        { path: 'suara-caleg', element: <SuaraCaleg /> },
+
+        {
+          path: 'user',
+          element: user?.role === 'admin' ? <UserPage /> : <Navigate to="/404" replace />,
+        },
+
+        {
+          path: 'kecamatan',
+          element: user?.role === 'admin' ? <KecamatanPage /> : <Navigate to="/404" replace />,
+        },
+
+        {
+          path: 'kelurahan',
+          element: user?.role === 'admin' ? <KelurahanPage /> : <Navigate to="/404" replace />,
+        },
+
+        {
+          path: 'suara-caleg',
+          element: user?.role === 'admin' ? <SuaraCaleg /> : <Navigate to="/404" replace />,
+        },
       ],
     },
     {
