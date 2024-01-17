@@ -1,4 +1,5 @@
 import * as React from 'react';
+import PropTypes from 'prop-types';
 
 import Card from '@mui/material/Card';
 import Table from '@mui/material/Table';
@@ -13,19 +14,16 @@ import CardHeader from '@mui/material/CardHeader';
 import CardContent from '@mui/material/CardContent';
 import TableContainer from '@mui/material/TableContainer';
 
-export default function PartyCard() {
+export default function PartyCard({ party }) {
   return (
     <Card sx={{ maxWidth: 345 }}>
       <CardHeader
         avatar={
           <Avatar aria-label="recipe">
-            <img
-              src="https://goodkind-bucket04939-dev.s3.ap-southeast-1.amazonaws.com/public/assets/constant/partai/3/PDIP.svg"
-              alt="pdip"
-            />
+            <img src={party.logoUrl} alt={party.name} />
           </Avatar>
         }
-        subheader="Partai Demokrasi Indonesia Perjuangan"
+        subheader={party.name}
       />
 
       <CardContent>
@@ -39,10 +37,10 @@ export default function PartyCard() {
               </TableRow>
             </TableHead>
             <TableBody>
-              {[...Array(5)].map((_, index) => (
+              {party.candidates.map((candidate, index) => (
                 <TableRow key={index}>
                   <TableCell>{index + 1}</TableCell>
-                  <TableCell>HENDRA GUNTARA, S. Hum., M.Ud.</TableCell>
+                  <TableCell>{candidate.name}</TableCell>
                   <TableCell>
                     <TextField
                       type="text"
@@ -61,3 +59,7 @@ export default function PartyCard() {
     </Card>
   );
 }
+
+PartyCard.propTypes = {
+  party: PropTypes.any,
+};
