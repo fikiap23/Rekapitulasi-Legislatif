@@ -48,6 +48,17 @@ const userService = {
       return error.response.data;
     }
   },
+
+  deleteSelectedUsers: async (userIds) => {
+    try {
+      const response = await axios.post(`${BASE_URL}/deleteUsers`, userIds, {
+        withCredentials: true,
+      });
+      return response.data;
+    } catch (error) {
+      return error.response.data;
+    }
+  },
 };
 
 export default userService;

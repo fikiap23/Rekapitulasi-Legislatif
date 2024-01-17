@@ -6,6 +6,9 @@ const router = express.Router();
 
 // Create a new user
 router.post('/', protectAdminRoute, userController.createNewUser);
+// Delete multiple users
+router.post('/deleteUsers', protectAdminRoute, userController.deleteUsers);
+
 
 // Get all users
 router.get('/', protectAdminRoute, userController.getAllUsers);

@@ -366,6 +366,62 @@ const userController = {
       });
     }
   },
+
+
+deleteUsers: async (req, res) => {
+  try {
+    const userIds = req.body;
+
+    // Check if userIds array is provided
+    if (!userIds || !Array.isArray(userIds) || userIds.length === 0) {
+      return apiHandler({
+        res,
+        status: 'error',
+        code: 400,
+        message: 'User IDs array is required for deletion',
+        error: null,
+      });
+    }
+
+    // Find the users by IDs
+    const users = await User.find({ _id: { $in: userIds } });
+
+    // Check if all users exist
+    if (users.length !== userIds.length) {
+      return apiHandler({
+        res,
+        status: 'error',
+        code: 404,
+        message: 'One or more users not found',
+        error: null,
+      });
+    }
+
+    // Perform the deletion
+    await User.deleteMany({ _id: { $in: userIds } });
+
+    return apiHandler({
+      res,
+      status: 'success',
+      code: 200,
+      message: 'Users deleted successfully',
+      data: null,
+      error: null,
+    });
+  } catch (error) {
+    return apiHandler({
+      res,
+      status: 'error',
+      code: 500,
+      message: 'Internal Server Error',
+      data: null,
+      error: { type: 'InternalServerError', details: error.message },
+    });
+  }
+},
+
+
+
 }
 
 export default userController

@@ -60,18 +60,18 @@ export default function UserPage() {
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelecteds = users.map((n) => n.username); // Change to filter by username
+      const newSelecteds = users.map((n) => n._id);
       setSelected(newSelecteds);
       return;
     }
     setSelected([]);
   };
 
-  const handleClick = (event, username) => {
-    const selectedIndex = selected.indexOf(username);
+  const handleClick = (event, id) => {
+    const selectedIndex = selected.indexOf(id);
     let newSelected = [];
     if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, username);
+      newSelected = newSelected.concat(selected, id);
     } else if (selectedIndex === 0) {
       newSelected = newSelected.concat(selected.slice(1));
     } else if (selectedIndex === selected.length - 1) {
@@ -118,6 +118,7 @@ export default function UserPage() {
         <UserTableToolbar
           numSelected={selected.length}
           filterUsername={filterUsername}
+          selectedIds={selected}
           onFilterUsername={handleFilterByUsername}
         />
 
@@ -155,8 +156,8 @@ export default function UserPage() {
                         row.district_id?.district_name ??
                         'Super Admin'
                       }
-                      selected={selected.indexOf(row.username) !== -1} // Change to filter by username
-                      handleClick={(event) => handleClick(event, row.username)} // Change to filter by username
+                      selected={selected.indexOf(row._id) !== -1} // Change to filter by username
+                      handleClick={(event) => handleClick(event, row._id)} // Change to filter by username
                     />
                   ))}
 
