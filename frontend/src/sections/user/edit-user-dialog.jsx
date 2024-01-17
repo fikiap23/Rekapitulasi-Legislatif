@@ -88,7 +88,7 @@ export default function EditUserDialog({ user }) {
         setLoading(false);
         window.location.reload();
       } else {
-        enqueueSnackbar('Edit failed', {
+        enqueueSnackbar(result.message, {
           variant: 'error',
           anchorOrigin: {
             vertical: 'bottom',

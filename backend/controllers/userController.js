@@ -19,6 +19,17 @@ const userController = {
         })
       }
 
+       // Pemeriksaan spasi dalam username
+    if (username.includes(' ')) {
+      return apiHandler({
+        res,
+        status: 'error',
+        code: 400,
+        message: 'Username cannot contain spaces',
+        error: null,
+      });
+    }
+
       username = username.toLowerCase()
 
       //   Check if user already exists
@@ -222,6 +233,17 @@ const userController = {
         });
       }
 
+       // Pemeriksaan spasi dalam username
+    if (username.includes(' ')) {
+      return apiHandler({
+        res,
+        status: 'error',
+        code: 400,
+        message: 'Username cannot contain spaces',
+        error: null,
+      });
+    }
+
       // Find the user by ID
       const user = await User.findById(userId);
 
@@ -235,6 +257,8 @@ const userController = {
           error: null,
         });
       }
+
+
 
       // Check if the username is being updated and not already taken
       if (username && username !== user.username) {

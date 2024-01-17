@@ -93,6 +93,24 @@ export default function CreateUserDialog() {
         window.location.reload();
 
         handleClose();
+      } else {
+        enqueueSnackbar(result.message, {
+          variant: 'error',
+          anchorOrigin: {
+            vertical: 'bottom',
+            horizontal: 'center',
+          },
+          action: (key) => (
+            <IconButton
+              key="close"
+              aria-label="Close"
+              color="inherit"
+              onClick={() => closeSnackbar(key)}
+            >
+              <Iconify icon="eva:close-fill" />
+            </IconButton>
+          ),
+        });
       }
       setLoading(false);
     } catch (error) {
