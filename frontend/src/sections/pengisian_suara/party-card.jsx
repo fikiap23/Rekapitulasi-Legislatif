@@ -71,7 +71,7 @@ export default function PartyCard({ party, setVotesResult }) {
                   <TableCell>{candidate.name}</TableCell>
                   <TableCell>
                     <TextField
-                      type="number"
+                      type="text"
                       placeholder="Input Suara"
                       variant="outlined"
                       size="small"
