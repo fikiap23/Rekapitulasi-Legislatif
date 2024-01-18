@@ -413,12 +413,9 @@ const getValidBallotsHelper = async (resultsByDistrict) => {
       return {
         party_id: party.party_id,
         total_votes_party: party.total_votes_party,
-        party_data: {
-          _id: partyData._id,
-          name: partyData.name,
-          code: partyData.code,
-          logoUrl: partyData.logoUrl,
-        },
+        name: partyData.name,
+        code: partyData.code,
+        logoUrl: partyData.logoUrl,
         candidates: Object.values(party.candidates).map((candidate) => {
           // Access candidate data from the party map
           const candidateData = partyData.candidates.find(
