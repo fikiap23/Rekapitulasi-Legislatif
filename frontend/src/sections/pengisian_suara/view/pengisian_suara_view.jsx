@@ -67,7 +67,28 @@ export default function PengisianSuaraView() {
   const handleSubmit = async () => {
     try {
       setLoading(true);
-      console.log(votesResult);
+      if (kelurahan === '') {
+        enqueueSnackbar('Please select kelurahan', {
+          variant: 'error',
+          anchorOrigin: {
+            vertical: 'bottom',
+            horizontal: 'center',
+          },
+          action: (key) => (
+            <IconButton
+              key="close"
+              aria-label="Close"
+              color="inherit"
+              onClick={() => closeSnackbar(key)}
+            >
+              <Iconify icon="eva:close-fill" />
+            </IconButton>
+          ),
+        });
+        setLoading(false);
+        return;
+      }
+
       const result = await resultService.fillBallots(kelurahan, votesResult);
       if (result.code === 200) {
         enqueueSnackbar('Voting success', {
@@ -141,7 +162,7 @@ export default function PengisianSuaraView() {
                 onChange={(e) => {
                   setKecamatan(e.target.value);
                   setKelurahans(e.target.value.villages);
-                  console.log(e.target.value);
+                  // console.log(e.target.value);
                 }}
                 variant="outlined"
               >

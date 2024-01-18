@@ -42,7 +42,7 @@
     "number_party": 3,
     "name": "Partai Demokrasi Indonesia Perjuangan (PDI)",
     "path": "/partai-demokrasi-indonesia-perjuangan",
-    "logoUrl": "https://goodkind-bucket04939-dev.s3.ap-southeast-1.amazonaws.com/public/assets/constant/partai/3/PDI.svg",
+    "logoUrl": "https://goodkind-bucket04939-dev.s3.ap-southeast-1.amazonaws.com/public/assets/constant/partai/3/PDIP.svg",
     "candidates": [
       { "name": "S. Apriyanto Wijaya", "gender": "Male" },
       { "name": "Hj. Nia Purnakania, S.H., M.Kn.", "gender": "Female" },
@@ -161,7 +161,7 @@
     "number_party": 9,
     "name": "Partai Kebangkitan Nusantara",
     "path": "/partai-kebangkitan-nusantara",
-    "logoUrl": "https://goodkind-bucket04939-dev.s3.ap-southeast-1.amazonaws.com/public/assets/constant/partai/9/Kebangkitan_Nusantara.svg",
+    "logoUrl": "https://goodkind-bucket04939-dev.s3.ap-southeast-1.amazonaws.com/public/assets/constant/partai/9/PKN.svg",
     "candidates": [
       { "name": "Mohamad Romli", "gender": "Male" },
       { "name": "Rika Nuraini, S.E.", "gender": "Female" },
@@ -288,7 +288,7 @@
     "number_party": 16,
     "name": "Partai Persatuan Indonesia (PERINDO)",
     "path": "/partai-persatuan-indonesia",
-    "logoUrl": "URL_LOGO_PERINDO",
+    "logoUrl": "https://goodkind-bucket04939-dev.s3.ap-southeast-1.amazonaws.com/public/assets/constant/partai/16/Perindo.svg",
     "candidates": [
       { "name": "Triawibawa, S.E., M.M.", "gender": "Male" },
       { "name": "Heri Rusli, S.H., M.Kn.", "gender": "Male" },
