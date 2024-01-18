@@ -362,6 +362,88 @@ const votesResultController = {
       })
     }
   },
+
+  getAllVillageByDistrictId: async (req, res) => {
+    try {
+      const { districtId } = req.params
+
+      // Check if districtId is provided
+      if (!districtId) {
+        return apiHandler({
+          res,
+          status: 'error',
+          code: 400,
+          message: 'Missing districtId parameter',
+          error: null,
+        })
+      }
+
+      // Check if districtId exists
+      const district = await District.findById(districtId)
+      if (!district) {
+        return apiHandler({
+          res,
+          status: 'error',
+          code: 404,
+          message: 'District not found',
+          error: null,
+        })
+      }
+
+      // Extract village IDs
+      const villageIds = district.villages
+
+      // Fetch all villages for the given district
+      const villages = await Village.find({ _id: { $in: villageIds } })
+
+      // Fetch results for the villages in the district
+      const resultsByDistrict = await VotesResult.find({
+        village_id: { $in: villageIds },
+      })
+
+      // Map results to village IDs for easier lookup
+      const resultsMap = resultsByDistrict.reduce((acc, result) => {
+        acc[result.village_id] = result
+        return acc
+      }, {})
+
+      // Combine village data with voting results
+      const villagesWithResults = villages.map((village) => {
+        const result = resultsMap[village._id.toString()] || {
+          total_invalid_ballots: 0,
+          total_valid_ballots: 0,
+        }
+
+        return {
+          village_id: village._id,
+          village_name: village.village_name,
+          total_voters: village.total_voters,
+          total_invalid_ballots: result.total_invalid_ballots,
+          total_valid_ballots: result.total_valid_ballots,
+        }
+      })
+
+      // Return the villages with voting results
+      return apiHandler({
+        res,
+        status: 'success',
+        code: 200,
+        message: 'Villages for the district retrieved successfully',
+        data: villagesWithResults,
+        error: null,
+      })
+    } catch (error) {
+      console.error('Error getting villages by district:', error)
+      return apiHandler({
+        res,
+        status: 'error',
+        code: 500,
+        message: 'Internal Server Error',
+        data: null,
+        error: { type: 'InternalServerError', details: error.message },
+      })
+    }
+  },
 }
 
 const getValidBallotsHelper = async (resultsByDistrict) => {
