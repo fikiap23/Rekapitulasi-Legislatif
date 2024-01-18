@@ -24,9 +24,30 @@ const resultService = {
     }
   },
 
+  getAllBallotsByDistrictId: async (districtId) => {
+    try {
+      const response = await axios.get(`${BASE_URL}/district/${districtId}`, {
+        withCredentials: true,
+      });
+      return response.data.data;
+    } catch (error) {
+      return error.response.data;
+    }
+  },
+
   getAllDistricts: async () => {
     try {
       const response = await axios.get(`${BASE_URL}/districts`, {
+        withCredentials: true,
+      });
+      return response.data;
+    } catch (error) {
+      return error.response.data;
+    }
+  },
+  getAllVillagesByDistrict: async (districtId) => {
+    try {
+      const response = await axios.get(`${BASE_URL}/villages/${districtId}`, {
         withCredentials: true,
       });
       return response.data;
