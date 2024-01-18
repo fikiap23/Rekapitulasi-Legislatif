@@ -87,7 +87,7 @@ export default function DashboardView() {
           <Grid xs={12} sm={6} md={3}>
             <CardWidget
               title="Total Hak Suara"
-              total={dataAllVotes.total_invalid_ballots + dataAllVotes.total_valid_ballots}
+              total={dataAllVotes.total_voters}
               color="success"
               icon={
                 <Iconify
@@ -149,9 +149,7 @@ export default function DashboardView() {
                         <TableCell component="th" scope="row">
                           KECAMATAN {row.district_name}
                         </TableCell>
-                        <TableCell align="right">
-                          {row.total_valid_ballots + row.total_invalid_ballots}
-                        </TableCell>
+                        <TableCell align="right">{row.total_voters}</TableCell>
                         <TableCell align="right">{row.total_valid_ballots}</TableCell>
                         <TableCell align="right">{row.total_invalid_ballots}</TableCell>
                       </TableRow>
