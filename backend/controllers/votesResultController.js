@@ -242,7 +242,7 @@ const votesResultController = {
 
   getAllResult: async (req, res) => {
     try {
-      // Find villages all
+      // Find all villages
       const villages = await Village.find()
 
       // Extract village IDs
@@ -255,6 +255,12 @@ const votesResultController = {
 
       let valid_ballots_detail = await getValidBallotsHelper(result)
 
+      // Sum up the total_voters from all villages
+      const total_voters = villages.reduce(
+        (total, village) => total + village.total_voters,
+        0
+      )
+
       // Combine and aggregate the results
       const aggregatedResult = {
         total_invalid_ballots: result.reduce(
@@ -265,6 +271,7 @@ const votesResultController = {
           (total, result) => total + result.total_valid_ballots,
           0
         ),
+        total_voters: total_voters,
       }
 
       // Return the aggregated result
@@ -272,7 +279,7 @@ const votesResultController = {
         res,
         status: 'success',
         code: 200,
-        message: 'Voting results for the district retrieved successfully',
+        message: 'Voting results for all villages retrieved successfully',
         data: { ...aggregatedResult, valid_ballots_detail },
         error: null,
       })
