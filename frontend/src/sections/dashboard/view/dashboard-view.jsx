@@ -41,26 +41,6 @@ export default function DashboardView() {
     setPage(0);
   };
 
-  const parties = [
-    'https://goodkind-bucket04939-dev.s3.ap-southeast-1.amazonaws.com/public/assets/constant/partai/1/PKB.svg',
-    'https://goodkind-bucket04939-dev.s3.ap-southeast-1.amazonaws.com/public/assets/constant/partai/2/Gerindra.svg',
-    'https://goodkind-bucket04939-dev.s3.ap-southeast-1.amazonaws.com/public/assets/constant/partai/3/PDIP.svg',
-    'https://goodkind-bucket04939-dev.s3.ap-southeast-1.amazonaws.com/public/assets/constant/PARTY/golkar/party%3Dgolkar.png',
-    'https://goodkind-bucket04939-dev.s3.ap-southeast-1.amazonaws.com/public/assets/constant/partai/5/Nasdem.svg',
-    'https://goodkind-bucket04939-dev.s3.ap-southeast-1.amazonaws.com/public/assets/constant/partai/6/Buruh.svg',
-    'https://goodkind-bucket04939-dev.s3.ap-southeast-1.amazonaws.com/public/assets/constant/partai/7/Gelora.svg',
-    'https://goodkind-bucket04939-dev.s3.ap-southeast-1.amazonaws.com/public/assets/constant/partai/8/PKS.svg',
-    'https://goodkind-bucket04939-dev.s3.ap-southeast-1.amazonaws.com/public/assets/constant/partai/9/PKN.svg',
-    'https://goodkind-bucket04939-dev.s3.ap-southeast-1.amazonaws.com/public/assets/constant/partai/10/Hanura.svg',
-    'https://goodkind-bucket04939-dev.s3.ap-southeast-1.amazonaws.com/public/assets/constant/partai/12/PAN.svg',
-    'https://goodkind-bucket04939-dev.s3.ap-southeast-1.amazonaws.com/public/assets/constant/partai/13/PBB.svg',
-    'https://goodkind-bucket04939-dev.s3.ap-southeast-1.amazonaws.com/public/assets/constant/partai/14/Demokrat.svg',
-    'https://goodkind-bucket04939-dev.s3.ap-southeast-1.amazonaws.com/public/assets/constant/partai/15/PSI.svg',
-    'https://goodkind-bucket04939-dev.s3.ap-southeast-1.amazonaws.com/public/assets/constant/partai/16/Perindo.svg',
-    'https://goodkind-bucket04939-dev.s3.ap-southeast-1.amazonaws.com/public/assets/constant/partai/17/PPP.svg',
-    'https://goodkind-bucket04939-dev.s3.ap-southeast-1.amazonaws.com/public/assets/constant/partai/24/Ummat.svg',
-  ];
-
   useEffect(() => {
     handleGetAllVotes();
   }, []);
@@ -190,37 +170,6 @@ export default function DashboardView() {
                 })),
               }}
             />
-          </Grid>
-
-          <Grid container item xs={12} md={12} lg={12}>
-            <TableContainer component={Paper} style={{ overflowX: 'auto' }}>
-              <Table>
-                <TableHead>
-                  <TableRow>
-                    <TableCell>Kecamatan</TableCell>
-                    {parties.map((partyImage, index) => (
-                      <TableCell key={index}>
-                        <img
-                          src={partyImage}
-                          alt={`Party ${index + 1}`}
-                          style={{ width: '20px' }}
-                        />
-                      </TableCell>
-                    ))}
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {dataKecamatans.map((row) => (
-                    <TableRow key={row.district_name}>
-                      <TableCell>KECAMATAN {row.district_name}</TableCell>
-                      {/* {row.votes.map((vote, voteIndex) => (
-                      <TableCell key={voteIndex}>{vote}</TableCell>
-                    ))} */}
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </TableContainer>
           </Grid>
         </Grid>
       )}
