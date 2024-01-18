@@ -1,6 +1,8 @@
 import { lazy, Suspense } from 'react';
+import { useRecoilValue } from 'recoil';
 import { Outlet, Navigate, useRoutes } from 'react-router-dom';
 
+import userAtom from 'src/atoms/userAtom';
 import DashboardLayout from 'src/layouts/dashboard';
 
 export const IndexPage = lazy(() => import('src/pages/app'));
@@ -15,22 +17,41 @@ export const SuaraCaleg = lazy(() => import('src/pages/suara-caleg'));
 // ----------------------------------------------------------------------
 
 export default function Router() {
+  const user = useRecoilValue(userAtom);
   const routes = useRoutes([
     {
-      element: (
+      element: user ? (
         <DashboardLayout>
           <Suspense>
             <Outlet />
           </Suspense>
         </DashboardLayout>
+      ) : (
+        <Navigate to="/login" replace />
       ),
       children: [
         { element: <IndexPage />, index: true },
-        { path: 'user', element: <UserPage /> },
         { path: 'pengisian-suara', element: <PengisianSuaraPage /> },
-        { path: 'kecamatan', element: <KecamatanPage /> },
-        { path: 'kelurahan', element: <KelurahanPage /> },
-        { path: 'suara-caleg', element: <SuaraCaleg /> },
+
+        {
+          path: 'user',
+          element: user?.role === 'admin' ? <UserPage /> : <Navigate to="/404" replace />,
+        },
+
+        {
+          path: 'kecamatan',
+          element: user?.role === 'admin' ? <KecamatanPage /> : <Navigate to="/404" replace />,
+        },
+
+        {
+          path: 'kelurahan',
+          element: user?.role === 'admin' ? <KelurahanPage /> : <Navigate to="/404" replace />,
+        },
+
+        {
+          path: 'suara-caleg',
+          element: user?.role === 'admin' ? <SuaraCaleg /> : <Navigate to="/404" replace />,
+        },
       ],
     },
     {

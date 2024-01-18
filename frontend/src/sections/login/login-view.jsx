@@ -1,4 +1,6 @@
 import { useState } from 'react';
+import { useSnackbar } from 'notistack';
+import { useSetRecoilState } from 'recoil';
 
 import Box from '@mui/material/Box';
 import Link from '@mui/material/Link';
@@ -13,7 +15,9 @@ import InputAdornment from '@mui/material/InputAdornment';
 
 import { useRouter } from 'src/routes/hooks';
 
+import userAtom from 'src/atoms/userAtom';
 import { bgGradient } from 'src/theme/css';
+import authService from 'src/services/authService';
 
 import Logo from 'src/components/logo';
 import Iconify from 'src/components/iconify';
@@ -22,21 +26,102 @@ import Iconify from 'src/components/iconify';
 
 export default function LoginView() {
   const theme = useTheme();
-
+  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
+  const setUser = useSetRecoilState(userAtom);
   const router = useRouter();
-
+  const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [userData, setUserData] = useState({
+    username: '',
+    password: '',
+  });
 
-  const handleClick = () => {
-    router.push('/dashboard');
+  const handleLogin = async () => {
+    try {
+      setLoading(true);
+      // check if username and password are not empty
+      if (!userData.username || !userData.password) {
+        enqueueSnackbar('Username and password cannot be empty', {
+          variant: 'error',
+          anchorOrigin: {
+            vertical: 'bottom',
+            horizontal: 'center',
+          },
+          action: (key) => (
+            <IconButton
+              key="close"
+              aria-label="Close"
+              color="inherit"
+              onClick={() => closeSnackbar(key)}
+            >
+              <Iconify icon="eva:close-fill" />
+            </IconButton>
+          ),
+        });
+        setLoading(false);
+        return;
+      }
+
+      const result = await authService.loginUser(userData);
+      if (result.code === 200) {
+        localStorage.setItem('user-pileg', JSON.stringify(result.data));
+        setUser(result.data);
+        enqueueSnackbar('Login successful', {
+          variant: 'success',
+          anchorOrigin: {
+            vertical: 'bottom',
+            horizontal: 'center',
+          },
+          action: (key) => (
+            <IconButton
+              key="close"
+              aria-label="Close"
+              color="inherit"
+              onClick={() => closeSnackbar(key)}
+            >
+              <Iconify icon="eva:close-fill" />
+            </IconButton>
+          ),
+        });
+        router.push('/');
+      } else {
+        enqueueSnackbar(result.error, {
+          variant: 'error',
+          anchorOrigin: {
+            vertical: 'bottom',
+            horizontal: 'center',
+          },
+          action: (key) => (
+            <IconButton
+              key="close"
+              aria-label="Close"
+              color="inherit"
+              onClick={() => closeSnackbar(key)}
+            >
+              <Iconify icon="eva:close-fill" />
+            </IconButton>
+          ),
+        });
+        setLoading(false);
+      }
+    } catch (error) {
+      console.error('Login error:', error);
+      alert(error.message);
+      setLoading(false);
+    }
   };
 
   const renderForm = (
     <>
       <Stack spacing={3}>
-        <TextField name="username" label="Username" />
+        <TextField
+          name="username"
+          label="Username"
+          onChange={(e) => setUserData({ ...userData, username: e.target.value })}
+        />
 
         <TextField
+          onChange={(e) => setUserData({ ...userData, password: e.target.value })}
           name="password"
           label="Password"
           type={showPassword ? 'text' : 'password'}
@@ -64,7 +149,8 @@ export default function LoginView() {
         type="submit"
         variant="contained"
         color="inherit"
-        onClick={handleClick}
+        onClick={handleLogin}
+        loading={loading}
       >
         Login
       </LoadingButton>

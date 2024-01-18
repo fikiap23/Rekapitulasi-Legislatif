@@ -48,6 +48,29 @@ const partyController = {
       })
     }
   },
+  getAllParties: async (req, res) => {
+    try {
+      // Fetch all parties from the database
+      const allParties = await Party.find();
+
+      return apiHandler({
+        res,
+        status: 'success',
+        code: 200,
+        message: 'All parties retrieved successfully',
+        data: allParties,
+        error: null,
+      });
+    } catch (error) {
+      return apiHandler({
+        res,
+        status: 'error',
+        code: 500,
+        message: 'Internal Server Error',
+        error: { type: 'InternalServerError', details: error.message },
+      });
+    }
+  },
 }
 
 export default partyController

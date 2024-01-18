@@ -1,4 +1,5 @@
 import * as React from 'react';
+import PropTypes from 'prop-types';
 
 import Card from '@mui/material/Card';
 import Table from '@mui/material/Table';
@@ -13,19 +14,44 @@ import CardHeader from '@mui/material/CardHeader';
 import CardContent from '@mui/material/CardContent';
 import TableContainer from '@mui/material/TableContainer';
 
-export default function PartyCard() {
+export default function PartyCard({ party, setVotesResult }) {
+  const [votes, setVotes] = React.useState([]);
+  const [, setVotesData] = React.useState([]);
+
+  const handleChange = (event, candidateIndex) => {
+    const updatedVotes = [...votes];
+    const value = parseInt(event.target.value, 10) || 0;
+
+    updatedVotes[candidateIndex] = {
+      candidate_id: party.candidates[candidateIndex]._id,
+      number_of_votes: value,
+    };
+
+    setVotes(updatedVotes);
+
+    const updatedVotesData = {
+      party_id: party._id,
+      candidates: updatedVotes,
+    };
+
+    setVotesData(updatedVotesData);
+
+    // Use the updatedVotesData directly in setVotesResult
+    setVotesResult((prevVotesResult) => [
+      ...prevVotesResult.filter((result) => result.party_id !== party._id),
+      updatedVotesData,
+    ]);
+  };
+
   return (
     <Card sx={{ maxWidth: 345 }}>
       <CardHeader
         avatar={
           <Avatar aria-label="recipe">
-            <img
-              src="https://goodkind-bucket04939-dev.s3.ap-southeast-1.amazonaws.com/public/assets/constant/partai/3/PDIP.svg"
-              alt="pdip"
-            />
+            <img src={party.logoUrl} alt={party.name} />
           </Avatar>
         }
-        subheader="Partai Demokrasi Indonesia Perjuangan"
+        subheader={party.name}
       />
 
       <CardContent>
@@ -39,16 +65,17 @@ export default function PartyCard() {
               </TableRow>
             </TableHead>
             <TableBody>
-              {[...Array(5)].map((_, index) => (
+              {party.candidates.map((candidate, index) => (
                 <TableRow key={index}>
                   <TableCell>{index + 1}</TableCell>
-                  <TableCell>HENDRA GUNTARA, S. Hum., M.Ud.</TableCell>
+                  <TableCell>{candidate.name}</TableCell>
                   <TableCell>
                     <TextField
-                      type="text"
+                      type="number"
                       placeholder="Input Suara"
                       variant="outlined"
                       size="small"
+                      onChange={(event) => handleChange(event, index)}
                       fullWidth
                     />
                   </TableCell>
@@ -61,3 +88,8 @@ export default function PartyCard() {
     </Card>
   );
 }
+
+PartyCard.propTypes = {
+  party: PropTypes.any,
+  setVotesResult: PropTypes.any,
+};

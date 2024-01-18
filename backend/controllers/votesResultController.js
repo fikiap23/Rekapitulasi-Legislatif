@@ -9,17 +9,16 @@ const votesResultController = {
     try {
       const { villageId } = req.params
       const validBallotsDetail = req.body
-
-      // Check if validBallotsDetail is an array
-      if (!Array.isArray(validBallotsDetail)) {
-        return apiHandler({
-          res,
-          status: 'error',
-          code: 400,
-          message: 'Invalid validBallotsDetail format',
-          error: null,
-        })
-      }
+// Check if validBallotsDetail is an array and not empty
+if (!Array.isArray(validBallotsDetail) || validBallotsDetail.length === 0) {
+  return apiHandler({
+    res,
+    status: 'error',
+    code: 400,
+    message: 'Invalid or empty validBallotsDetail format',
+    error: null,
+  });
+}
 
       // Check villageId
       if (!villageId) {
