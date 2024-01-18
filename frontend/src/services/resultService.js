@@ -23,6 +23,17 @@ const resultService = {
       return error.response.data;
     }
   },
+
+  getAllDistricts: async () => {
+    try {
+      const response = await axios.get(`${BASE_URL}/districts`, {
+        withCredentials: true,
+      });
+      return response.data;
+    } catch (error) {
+      return error.response.data;
+    }
+  },
 };
 
 export default resultService;

@@ -16,7 +16,6 @@ import {
 
 import partyService from 'src/services/partyService';
 import resultService from 'src/services/resultService';
-import districtService from 'src/services/districtService';
 
 import Iconify from 'src/components/iconify';
 
@@ -67,7 +66,7 @@ export default function DashboardView() {
 
   const [dataKecamatans, setKecamatans] = useState([]);
   const handleGetAllRegency = async () => {
-    const getKecamatans = await districtService.getAllDistricts();
+    const getKecamatans = await resultService.getAllDistricts();
     setKecamatans(getKecamatans.data);
   };
 
@@ -159,9 +158,11 @@ export default function DashboardView() {
                       <TableCell component="th" scope="row">
                         KECAMATAN {row.district_name}
                       </TableCell>
-                      {/* <TableCell align="right">{row.totalVotes}</TableCell>
-                      <TableCell align="right">{row.validVotes}</TableCell>
-                      <TableCell align="right">{row.invalidVotes}</TableCell> */}
+                      <TableCell align="right">
+                        {row.total_valid_ballots + row.total_invalid_ballots}
+                      </TableCell>
+                      <TableCell align="right">{row.total_valid_ballots}</TableCell>
+                      <TableCell align="right">{row.total_invalid_ballots}</TableCell>
                     </TableRow>
                   ))}
               </TableBody>
