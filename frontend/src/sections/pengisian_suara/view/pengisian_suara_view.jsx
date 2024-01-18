@@ -141,7 +141,7 @@ export default function PengisianSuaraView() {
                 onChange={(e) => {
                   setKecamatan(e.target.value);
                   setKelurahans(e.target.value.villages);
-                  // console.log(e.target.value);
+                  console.log(e.target.value);
                 }}
                 variant="outlined"
               >

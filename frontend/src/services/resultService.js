@@ -13,6 +13,16 @@ const resultService = {
       return error.response.data;
     }
   },
+  getAllBallots: async () => {
+    try {
+      const response = await axios.get(`${BASE_URL}`, {
+        withCredentials: true,
+      });
+      return response.data;
+    } catch (error) {
+      return error.response.data;
+    }
+  },
 };
 
 export default resultService;
