@@ -67,7 +67,7 @@ export default function PengisianSuaraView() {
   const handleSubmit = async () => {
     try {
       setLoading(true);
-      // console.log(kelurahan);
+      console.log(votesResult);
       const result = await resultService.fillBallots(kelurahan, votesResult);
       if (result.code === 200) {
         enqueueSnackbar('Voting success', {

@@ -51,8 +51,8 @@ const votesResultController = {
 
       for (const item of validBallotsDetail) {
         if (item.party_id) {
-          // Check if party exists
           const partyExists = await Party.findById(item.party_id)
+
           if (!partyExists) {
             return apiHandler({
               res,
@@ -63,42 +63,30 @@ const votesResultController = {
             })
           }
 
-          // Check if candidates exist for the party
           if (partyExists.candidates && partyExists.candidates.length > 0) {
             let totalVotesParty = 0
 
             for (const candidate of item.candidates) {
               const candidateId = new mongoose.Types.ObjectId(
-                candidate.candidate_id
+                candidate?.candidate_id
               )
               const candidateExists = partyExists.candidates.find((c) =>
                 c._id.equals(candidateId)
               )
 
               if (!candidateExists) {
-                return apiHandler({
-                  res,
-                  status: 'error',
-                  code: 400,
-                  message: `Candidate with ID ${candidate.candidate_id} not found for party ${item.party_id}`,
-                  error: null,
-                })
+                console.warn(
+                  `Candidate with ID ${candidate?.candidate_id} not found for party ${item.party_id}. Skipping...`
+                )
+
+                // Skip to the next iteration if candidate is not found
+                continue
               }
 
               totalVotesParty += candidate.number_of_votes || 0
             }
 
-            // Check if total votes for the party exceed maxVotes
-            if (totalVotesParty > village.total_voters) {
-              return apiHandler({
-                res,
-                status: 'error',
-                code: 400,
-                message: `Total votes for party ${item.party_id} exceed the maximum allowed votes`,
-                error: null,
-              })
-            }
-
+            // Rest of the code for processing totalVotesParty
             // Add total votes for the party to the overall total
             totalVotesAllParties += totalVotesParty
 
@@ -456,7 +444,6 @@ const getValidBallotsHelper = async (resultsByDistrict) => {
       result.valid_ballots_detail.forEach((party) => {
         const partyId = party.party_id
 
-        // Initialize total votes for the party if not exists
         if (!totalVotes[partyId]) {
           totalVotes[partyId] = {
             party_id: partyId,
@@ -465,27 +452,34 @@ const getValidBallotsHelper = async (resultsByDistrict) => {
           }
         }
 
-        // Add total votes for the party
-        totalVotes[partyId].total_votes_party += party.total_votes_party
+        console.log(
+          `Party ID: ${partyId}, Total Votes Party: ${totalVotes[partyId].total_votes_party}`
+        )
 
-        // Iterate through each candidate in the party
         party.candidates.forEach((candidate) => {
-          const candidateId = candidate.candidate_id
+          if (candidate) {
+            const candidateId = candidate.candidate_id
 
-          // Initialize total votes for the candidate if not exists
-          if (!totalVotes[partyId].candidates[candidateId]) {
-            totalVotes[partyId].candidates[candidateId] = {
-              candidate_id: candidateId,
-              number_of_votes: 0,
+            if (!totalVotes[partyId].candidates[candidateId]) {
+              totalVotes[partyId].candidates[candidateId] = {
+                candidate_id: candidateId,
+                number_of_votes: 0,
+              }
             }
-          }
 
-          // Add total votes for the candidate
-          totalVotes[partyId].candidates[candidateId].number_of_votes +=
-            candidate.number_of_votes
+            totalVotes[partyId].candidates[candidateId].number_of_votes +=
+              candidate.number_of_votes
+
+            console.log(
+              `Candidate ID: ${candidateId}, Number of Votes: ${totalVotes[partyId].candidates[candidateId].number_of_votes}`
+            )
+            // add total votes party
+            totalVotes[partyId].total_votes_party += candidate.number_of_votes
+          }
         })
       })
     })
+    console.log('Total Votes:', totalVotes)
 
     // Collect all party IDs and candidate IDs
     const allPartyIds = Object.keys(totalVotes)
