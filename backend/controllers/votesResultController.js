@@ -9,16 +9,19 @@ const votesResultController = {
     try {
       const { villageId } = req.params
       const validBallotsDetail = req.body
-// Check if validBallotsDetail is an array and not empty
-if (!Array.isArray(validBallotsDetail) || validBallotsDetail.length === 0) {
-  return apiHandler({
-    res,
-    status: 'error',
-    code: 400,
-    message: 'Invalid or empty validBallotsDetail format',
-    error: null,
-  });
-}
+      // Check if validBallotsDetail is an array and not empty
+      if (
+        !Array.isArray(validBallotsDetail) ||
+        validBallotsDetail.length === 0
+      ) {
+        return apiHandler({
+          res,
+          status: 'error',
+          code: 400,
+          message: 'Invalid or empty validBallotsDetail format',
+          error: null,
+        })
+      }
 
       // Check villageId
       if (!villageId) {
@@ -270,6 +273,63 @@ if (!Array.isArray(validBallotsDetail) || validBallotsDetail.length === 0) {
         code: 200,
         message: 'Voting results for the district retrieved successfully',
         data: { ...aggregatedResult, valid_ballots_detail },
+        error: null,
+      })
+    } catch (error) {
+      console.error('Error getting total results by district:', error)
+      return apiHandler({
+        res,
+        status: 'error',
+        code: 500,
+        message: 'Internal Server Error',
+        data: null,
+        error: { type: 'InternalServerError', details: error.message },
+      })
+    }
+  },
+
+  getAllDistricts: async (req, res) => {
+    try {
+      // Find all districts
+      const districts = await District.find()
+
+      // Array to store results for each district
+      const resultsByDistricts = []
+
+      // Iterate through each district
+      for (const district of districts) {
+        // Extract village IDs for the district
+        const villageIds = district.villages
+
+        // Fetch results for the villages in the district
+        const resultsByDistrict = await VotesResult.find({
+          village_id: { $in: villageIds },
+        })
+
+        // Aggregate the results for the district
+        const aggregatedResult = {
+          district_id: district._id,
+          district_name: district.district_name, // Assuming there is a 'name' field in the District model
+          total_invalid_ballots: resultsByDistrict.reduce(
+            (total, result) => total + result.total_invalid_ballots,
+            0
+          ),
+          total_valid_ballots: resultsByDistrict.reduce(
+            (total, result) => total + result.total_valid_ballots,
+            0
+          ),
+        }
+
+        resultsByDistricts.push(aggregatedResult)
+      }
+
+      // Return the results for all districts
+      return apiHandler({
+        res,
+        status: 'success',
+        code: 200,
+        message: 'Voting results for all districts retrieved successfully',
+        data: resultsByDistricts,
         error: null,
       })
     } catch (error) {

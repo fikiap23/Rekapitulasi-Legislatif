@@ -12,6 +12,11 @@ router.post(
 
 router.get('/', protectAdminRoute, votesResultController.getAllResult)
 router.get(
+  '/districts',
+  protectAdminRoute,
+  votesResultController.getAllDistricts
+)
+router.get(
   '/district/:districtId',
   protectAdminRoute,
   votesResultController.getAllResultsByDistrict
