@@ -36,37 +36,6 @@ export default function KelurahanView() {
     setPage(0);
   };
 
-  const data = [
-    {
-      Kelurahan: 'Kelurahan 1',
-      votes: [500, 10, 450, 600, 200, 300, 150, 80, 200, 120, 40, 180, 240, 120, 120, 50, 80],
-    },
-    {
-      Kelurahan: 'Kelurahan 2',
-      votes: [700, 15, 600, 450, 300, 150, 200, 100, 250, 180, 60, 250, 320, 160, 160, 80, 80],
-    },
-    // Add more data as needed
-  ];
-
-  const parties = [
-    'https://goodkind-bucket04939-dev.s3.ap-southeast-1.amazonaws.com/public/assets/constant/partai/1/PKB.svg',
-    'https://goodkind-bucket04939-dev.s3.ap-southeast-1.amazonaws.com/public/assets/constant/partai/2/Gerindra.svg',
-    'https://goodkind-bucket04939-dev.s3.ap-southeast-1.amazonaws.com/public/assets/constant/partai/3/PDIP.svg',
-    'https://goodkind-bucket04939-dev.s3.ap-southeast-1.amazonaws.com/public/assets/constant/PARTY/golkar/party%3Dgolkar.png',
-    'https://goodkind-bucket04939-dev.s3.ap-southeast-1.amazonaws.com/public/assets/constant/partai/5/Nasdem.svg',
-    'https://goodkind-bucket04939-dev.s3.ap-southeast-1.amazonaws.com/public/assets/constant/partai/6/Buruh.svg',
-    'https://goodkind-bucket04939-dev.s3.ap-southeast-1.amazonaws.com/public/assets/constant/partai/7/Gelora.svg',
-    'https://goodkind-bucket04939-dev.s3.ap-southeast-1.amazonaws.com/public/assets/constant/partai/8/PKS.svg',
-    'https://goodkind-bucket04939-dev.s3.ap-southeast-1.amazonaws.com/public/assets/constant/partai/9/PKN.svg',
-    'https://goodkind-bucket04939-dev.s3.ap-southeast-1.amazonaws.com/public/assets/constant/partai/10/Hanura.svg',
-    'https://goodkind-bucket04939-dev.s3.ap-southeast-1.amazonaws.com/public/assets/constant/partai/12/PAN.svg',
-    'https://goodkind-bucket04939-dev.s3.ap-southeast-1.amazonaws.com/public/assets/constant/partai/13/PBB.svg',
-    'https://goodkind-bucket04939-dev.s3.ap-southeast-1.amazonaws.com/public/assets/constant/partai/14/Demokrat.svg',
-    'https://goodkind-bucket04939-dev.s3.ap-southeast-1.amazonaws.com/public/assets/constant/partai/15/PSI.svg',
-    'https://goodkind-bucket04939-dev.s3.ap-southeast-1.amazonaws.com/public/assets/constant/partai/16/Perindo.svg',
-    'https://goodkind-bucket04939-dev.s3.ap-southeast-1.amazonaws.com/public/assets/constant/partai/17/PPP.svg',
-    'https://goodkind-bucket04939-dev.s3.ap-southeast-1.amazonaws.com/public/assets/constant/partai/24/Ummat.svg',
-  ];
   const KelurahanData = [
     {
       id: 1,
@@ -304,33 +273,6 @@ export default function KelurahanView() {
 
         <Grid xs={12} md={12} lg={12}>
           <BarChart title="Perolehan Suara Per Partai" chart={partyChartData} />
-        </Grid>
-
-        <Grid container item xs={12} md={12} lg={12}>
-          <TableContainer component={Paper} style={{ overflowX: 'auto' }}>
-            <Table>
-              <TableHead>
-                <TableRow>
-                  <TableCell>Kelurahan</TableCell>
-                  {parties.map((partyImage, index) => (
-                    <TableCell key={index}>
-                      <img src={partyImage} alt={`Party ${index + 1}`} style={{ width: '20px' }} />
-                    </TableCell>
-                  ))}
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {data.map((row, index) => (
-                  <TableRow key={index}>
-                    <TableCell>{row.Kelurahan}</TableCell>
-                    {row.votes.map((vote, voteIndex) => (
-                      <TableCell key={voteIndex}>{vote}</TableCell>
-                    ))}
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
         </Grid>
       </Grid>
     </Container>
