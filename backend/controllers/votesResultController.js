@@ -432,6 +432,70 @@ const votesResultController = {
       })
     }
   },
+  getVillageByVillageId: async (req, res) => {
+    try {
+      const { villageId } = req.params
+
+      // Check if villageId is provided
+      if (!villageId) {
+        return apiHandler({
+          res,
+          status: 'error',
+          code: 400,
+          message: 'Missing villageId parameter',
+          error: null,
+        })
+      }
+
+      // Check if villageId exists
+      const village = await Village.findById(villageId)
+
+      if (!village) {
+        return apiHandler({
+          res,
+          status: 'error',
+          code: 404,
+          message: 'Village not found',
+          error: null,
+        })
+      }
+
+      // Fetch voting results for the village with populated party details (_id, code, name)
+      const results = await VotesResult.findOne({
+        village_id: villageId,
+      }).populate({
+        path: 'valid_ballots_detail.party_id',
+        select: '_id code name',
+      })
+
+      // Return the village with populated voting results
+      return apiHandler({
+        res,
+        status: 'success',
+        code: 200,
+        message: 'Village retrieved successfully',
+        data: {
+          village_id: village._id,
+          village_name: village.village_name,
+          total_voters: village.total_voters,
+          total_invalid_ballots: results ? results.total_invalid_ballots : 0,
+          total_valid_ballots: results ? results.total_valid_ballots : 0,
+          valid_ballots_detail: results ? results.valid_ballots_detail : [],
+        },
+        error: null,
+      })
+    } catch (error) {
+      console.error('Error getting village by villageId:', error)
+      return apiHandler({
+        res,
+        status: 'error',
+        code: 500,
+        message: 'Internal Server Error',
+        data: null,
+        error: { type: 'InternalServerError', details: error.message },
+      })
+    }
+  },
 }
 
 const getValidBallotsHelper = async (resultsByDistrict) => {

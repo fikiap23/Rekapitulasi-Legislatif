@@ -55,6 +55,17 @@ const resultService = {
       return error.response.data;
     }
   },
+
+  getVillageByVillageId: async (villageId) => {
+    try {
+      const response = await axios.get(`${BASE_URL}/village/${villageId}`, {
+        withCredentials: true,
+      });
+      return response.data;
+    } catch (error) {
+      return error.response.data;
+    }
+  },
 };
 
 export default resultService;

@@ -26,5 +26,10 @@ router.get(
   protectAdminRoute,
   votesResultController.getAllVillageByDistrictId
 )
+router.get(
+  '/village/:villageId',
+  protectAdminRoute,
+  votesResultController.getVillageByVillageId
+)
 
 export default router
