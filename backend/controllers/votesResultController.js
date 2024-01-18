@@ -307,23 +307,28 @@ const votesResultController = {
           village_id: { $in: villageIds },
         })
 
-        const total_valid_ballots = resultsByDistrict.reduce(
-          (total, result) => total + result.total_valid_ballots,
-          0
-        )
-
-        const total_invalid_ballots = resultsByDistrict.reduce(
-          (total, result) => total + result.total_invalid_ballots,
-          0
-        )
-
         // Aggregate the results for the district
         const aggregatedResult = {
           district_id: district._id,
           district_name: district.district_name,
-          total_voters: total_invalid_ballots + total_valid_ballots,
-          total_invalid_ballots: total_invalid_ballots,
-          total_valid_ballots: total_valid_ballots,
+          total_voters: 0, // Initialize total_voters to 0
+
+          total_invalid_ballots: resultsByDistrict.reduce(
+            (total, result) => total + result.total_invalid_ballots,
+            0
+          ),
+          total_valid_ballots: resultsByDistrict.reduce(
+            (total, result) => total + result.total_valid_ballots,
+            0
+          ),
+        }
+
+        // Retrieve total_voters directly from the villages
+        for (const villageId of villageIds) {
+          const village = await Village.findById(villageId)
+          if (village) {
+            aggregatedResult.total_voters += village.total_voters
+          }
         }
 
         resultsByDistricts.push(aggregatedResult)
