@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 import Container from '@mui/material/Container';
 import Grid from '@mui/material/Unstable_Grid2';
@@ -13,6 +13,10 @@ import {
   TableContainer,
   TablePagination,
 } from '@mui/material';
+
+import partyService from 'src/services/partyService';
+import resultService from 'src/services/resultService';
+import districtService from 'src/services/districtService';
 
 import Iconify from 'src/components/iconify';
 
@@ -35,18 +39,6 @@ export default function DashboardView() {
     setPage(0);
   };
 
-  const data = [
-    {
-      kecamatan: 'Kecamatan 1',
-      votes: [500, 10, 450, 600, 200, 300, 150, 80, 200, 120, 40, 180, 240, 120, 120, 50, 80],
-    },
-    {
-      kecamatan: 'Kecamatan 2',
-      votes: [700, 15, 600, 450, 300, 150, 200, 100, 250, 180, 60, 250, 320, 160, 160, 80, 80],
-    },
-    // Add more data as needed
-  ];
-
   const parties = [
     'https://goodkind-bucket04939-dev.s3.ap-southeast-1.amazonaws.com/public/assets/constant/partai/1/PKB.svg',
     'https://goodkind-bucket04939-dev.s3.ap-southeast-1.amazonaws.com/public/assets/constant/partai/2/Gerindra.svg',
@@ -66,164 +58,34 @@ export default function DashboardView() {
     'https://goodkind-bucket04939-dev.s3.ap-southeast-1.amazonaws.com/public/assets/constant/partai/17/PPP.svg',
     'https://goodkind-bucket04939-dev.s3.ap-southeast-1.amazonaws.com/public/assets/constant/partai/24/Ummat.svg',
   ];
-  const kecamatanData = [
-    { id: 1, name: 'Kecamatan Cibiru', totalVotes: 100000, validVotes: 50000, invalidVotes: 50000 },
-    { id: 2, name: 'Kecamatan Babelan', totalVotes: 80000, validVotes: 40000, invalidVotes: 40000 },
-    {
-      id: 3,
-      name: 'Kecamatan Rancaekek',
-      totalVotes: 120000,
-      validVotes: 60000,
-      invalidVotes: 60000,
-    },
-    {
-      id: 4,
-      name: 'Kecamatan Bojongsoang',
-      totalVotes: 95000,
-      validVotes: 47500,
-      invalidVotes: 47500,
-    },
-    {
-      id: 5,
-      name: 'Kecamatan Majalaya',
-      totalVotes: 110000,
-      validVotes: 55000,
-      invalidVotes: 55000,
-    },
-    {
-      id: 6,
-      name: 'Kecamatan Katapang',
-      totalVotes: 75000,
-      validVotes: 37500,
-      invalidVotes: 37500,
-    },
-    {
-      id: 7,
-      name: 'Kecamatan Dayeuhkolot',
-      totalVotes: 105000,
-      validVotes: 52500,
-      invalidVotes: 52500,
-    },
-    {
-      id: 8,
-      name: 'Kecamatan Arcamanik',
-      totalVotes: 88000,
-      validVotes: 44000,
-      invalidVotes: 44000,
-    },
-    {
-      id: 9,
-      name: 'Kecamatan Cileunyi',
-      totalVotes: 102000,
-      validVotes: 51000,
-      invalidVotes: 51000,
-    },
-    {
-      id: 10,
-      name: 'Kecamatan Cicalengka',
-      totalVotes: 90000,
-      validVotes: 45000,
-      invalidVotes: 45000,
-    },
-    { id: 11, name: 'Kecamatan Pacet', totalVotes: 85000, validVotes: 42500, invalidVotes: 42500 },
-    {
-      id: 12,
-      name: 'Kecamatan Sumedang Selatan',
-      totalVotes: 98000,
-      validVotes: 49000,
-      invalidVotes: 49000,
-    },
-    {
-      id: 13,
-      name: 'Kecamatan Lembang',
-      totalVotes: 115000,
-      validVotes: 57500,
-      invalidVotes: 57500,
-    },
-    {
-      id: 14,
-      name: 'Kecamatan Padalarang',
-      totalVotes: 92000,
-      validVotes: 46000,
-      invalidVotes: 46000,
-    },
-    {
-      id: 15,
-      name: 'Kecamatan Cikarang Barat',
-      totalVotes: 100500,
-      validVotes: 50250,
-      invalidVotes: 50250,
-    },
-    {
-      id: 16,
-      name: 'Kecamatan Tambun Utara',
-      totalVotes: 86000,
-      validVotes: 43000,
-      invalidVotes: 43000,
-    },
-    {
-      id: 17,
-      name: 'Kecamatan Kuningan',
-      totalVotes: 94000,
-      validVotes: 47000,
-      invalidVotes: 47000,
-    },
-    {
-      id: 18,
-      name: 'Kecamatan Karawang Timur',
-      totalVotes: 99000,
-      validVotes: 49500,
-      invalidVotes: 49500,
-    },
-    {
-      id: 19,
-      name: 'Kecamatan Subang',
-      totalVotes: 107000,
-      validVotes: 53500,
-      invalidVotes: 53500,
-    },
-    {
-      id: 20,
-      name: 'Kecamatan Purwakarta',
-      totalVotes: 89000,
-      validVotes: 44500,
-      invalidVotes: 44500,
-    },
-  ];
-  const partyData = [
-    { name: 'Independen', votes: 2000 },
-    { name: 'Partai Aceh', votes: 3500 },
-    { name: 'Partai Adil Sejahtera Aceh', votes: 1800 },
-    { name: 'Partai Amanat Nasional (PAN)', votes: 2500 },
-    { name: 'Partai Bulan Bintang (PBB)', votes: 1200 },
-    { name: 'Partai Buruh', votes: 3000 },
-    { name: 'Partai Darul Aceh', votes: 900 },
-    { name: 'Partai Demokrasi Indonesia Perjuangan (PDIP)', votes: 4500 },
-    { name: 'Partai Demokrat', votes: 3200 },
-    { name: 'Partai Garda Republik Indonesia (GARUDA)', votes: 2800 },
-    { name: 'Partai Gelombang Rakyat Indonesia (GELORA)', votes: 1500 },
-    { name: "Partai Generasi Atjeh Beusaboh Tha'at Dan Taqwa (GABTHAT)", votes: 2000 },
-    { name: 'Partai Gerakan Indonesia Raya (GERINDRA)', votes: 4000 },
-    { name: 'Partai Golongan Karya (GOLKAR)', votes: 5000 },
-    { name: 'Partai Hati Nurani Rakyat (HANURA)', votes: 1200 },
-    { name: 'Partai Keadilan Sejahtera (PKS)', votes: 3500 },
-    { name: 'Partai Keadilan dan Persatuan Indonesia (PKPI)', votes: 1800 },
-    { name: 'Partai Kebangkitan Bangsa (PKB)', votes: 2500 },
-    { name: 'Partai Kebangkitan Nusantara (PKN)', votes: 900 },
-    { name: 'Partai Nanggroe Aceh (PNA)', votes: 4500 },
-    { name: 'Partai Nasional Demokrat (NASDEM)', votes: 3200 },
-    { name: 'Partai Persatuan Indonesia (PERINDO)', votes: 2800 },
-    { name: 'Partai Persatuan Pembangunan (PPP)', votes: 1500 },
-    { name: 'Partai Solidaritas Indonesia (PSI)', votes: 2000 },
-    { name: 'Partai Soliditas Independen Rakyat Aceh (SIRA)', votes: 3500 },
-    { name: 'Partai Ummat', votes: 1800 },
-  ];
 
+  useEffect(() => {
+    handleGetAllRegency();
+    handleGetAllParties();
+    handleGetAllVotes();
+  }, []);
+
+  const [dataKecamatans, setKecamatans] = useState([]);
+  const handleGetAllRegency = async () => {
+    const getKecamatans = await districtService.getAllDistricts();
+    setKecamatans(getKecamatans.data);
+  };
+
+  const [dataParties, setParties] = useState([]);
+  const handleGetAllParties = async () => {
+    const getParties = await partyService.getAllParties();
+    setParties(getParties);
+  };
   const partyChartData = {
-    series: partyData.map(({ name, votes }) => ({
+    series: dataParties.map(({ name, __v }) => ({
       label: name,
-      value: votes,
+      value: 100,
     })),
+  };
+  const [dataAllVotes, setAllVotes] = useState([]);
+  const handleGetAllVotes = async () => {
+    const getVotes = await resultService.getAllBallots();
+    setAllVotes(getVotes.data);
   };
   return (
     <Container maxWidth="xl">
@@ -235,7 +97,7 @@ export default function DashboardView() {
         <Grid xs={12} sm={6} md={3}>
           <CardWidget
             title="Total Hak Suara"
-            total={714000}
+            total={dataAllVotes.total_invalid_ballots + dataAllVotes.total_valid_ballots}
             color="success"
             icon={
               <Iconify
@@ -249,7 +111,7 @@ export default function DashboardView() {
         <Grid xs={12} sm={6} md={3}>
           <CardWidget
             title="Total Suara Sah"
-            total={1352831}
+            total={dataAllVotes.total_valid_ballots}
             color="info"
             icon={
               <Iconify icon="emojione-v1:ballot-box-bold-check" sx={{ width: 64, height: 64 }} />
@@ -260,7 +122,7 @@ export default function DashboardView() {
         <Grid xs={12} sm={6} md={3}>
           <CardWidget
             title="Total Suara Tidak Sah"
-            total={1723315}
+            total={dataAllVotes.total_invalid_ballots}
             color="warning"
             icon={<Iconify icon="fxemoji:ballottscriptx" sx={{ width: 64, height: 64 }} />}
           />
@@ -269,7 +131,7 @@ export default function DashboardView() {
         <Grid xs={12} sm={6} md={3}>
           <CardWidget
             title="Total Kecamatan"
-            total={234}
+            total={dataKecamatans.length}
             color="error"
             icon={<Iconify icon="teenyicons:building-outline" sx={{ width: 64, height: 64 }} />}
           />
@@ -287,19 +149,19 @@ export default function DashboardView() {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {kecamatanData
+                {dataKecamatans
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map((row) => (
                     <TableRow
-                      key={row.name}
+                      key={row.district_name}
                       sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                     >
                       <TableCell component="th" scope="row">
-                        {row.name}
+                        KECAMATAN {row.district_name}
                       </TableCell>
-                      <TableCell align="right">{row.totalVotes}</TableCell>
+                      {/* <TableCell align="right">{row.totalVotes}</TableCell>
                       <TableCell align="right">{row.validVotes}</TableCell>
-                      <TableCell align="right">{row.invalidVotes}</TableCell>
+                      <TableCell align="right">{row.invalidVotes}</TableCell> */}
                     </TableRow>
                   ))}
               </TableBody>
@@ -307,7 +169,7 @@ export default function DashboardView() {
             <TablePagination
               rowsPerPageOptions={rowsPerPageOptions}
               component="div"
-              count={kecamatanData.length}
+              count={dataKecamatans.length}
               rowsPerPage={rowsPerPage}
               page={page}
               onPageChange={handleChangePage}
@@ -338,12 +200,12 @@ export default function DashboardView() {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {data.map((row, index) => (
-                  <TableRow key={index}>
-                    <TableCell>{row.kecamatan}</TableCell>
-                    {row.votes.map((vote, voteIndex) => (
+                {dataKecamatans.map((row) => (
+                  <TableRow key={row.district_name}>
+                    <TableCell>KECAMATAN {row.district_name}</TableCell>
+                    {/* {row.votes.map((vote, voteIndex) => (
                       <TableCell key={voteIndex}>{vote}</TableCell>
-                    ))}
+                    ))} */}
                   </TableRow>
                 ))}
               </TableBody>
