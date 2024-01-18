@@ -26,7 +26,7 @@ export default function CardWidget({ title, total, icon, color = 'primary', sx, 
       {icon && <Box sx={{ width: 64, height: 64 }}>{icon}</Box>}
 
       <Stack spacing={0.5}>
-        <Typography variant="h4">{fShortenNumber(total)}</Typography>
+        <Typography variant="h4">{total === 0 ? '0' : fShortenNumber(total)}</Typography>
 
         <Typography variant="subtitle2" sx={{ color: 'text.disabled' }}>
           {title}
