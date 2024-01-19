@@ -1,47 +1,50 @@
 import express from 'express'
 import votesResultController from '../controllers/votesResultController.js'
 import calegController from '../controllers/calegController.js'
-import { protectAdminRoute } from '../middlewares/protectRoute.js'
+import {
+  protectAdminRoute,
+  protectUserVillageRoute,
+} from '../middlewares/protectRoute.js'
 
 const router = express.Router()
 
 router.post(
   '/validBallots/:villageId',
-  protectAdminRoute,
+  protectUserVillageRoute,
   votesResultController.fillValidBallotsDetail
 )
 
-router.get('/', protectAdminRoute, votesResultController.getAllResult)
+router.get('/', protectUserVillageRoute, votesResultController.getAllResult)
 router.get(
   '/districts',
-  protectAdminRoute,
+  protectUserVillageRoute,
   votesResultController.getAllDistricts
 )
 router.get(
   '/district/:districtId',
-  protectAdminRoute,
+  protectUserVillageRoute,
   votesResultController.getAllResultsByDistrict
 )
 router.get(
   '/villages/:districtId',
-  protectAdminRoute,
+  protectUserVillageRoute,
   votesResultController.getAllVillageByDistrictId
 )
 router.get(
   '/village/:villageId',
-  protectAdminRoute,
+  protectUserVillageRoute,
   votesResultController.getVillageByVillageId
 )
 
-router.get('/calegs', protectAdminRoute, calegController.getAllCalegs)
+router.get('/calegs', protectUserVillageRoute, calegController.getAllCalegs)
 router.get(
   '/calegs/district/:districtId',
-  protectAdminRoute,
+  protectUserVillageRoute,
   calegController.getAllCalegByDistrict
 )
 router.get(
   '/calegs/village/:villageId',
-  protectAdminRoute,
+  protectUserVillageRoute,
   calegController.getAllCalegByVillage
 )
 

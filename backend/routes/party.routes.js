@@ -1,13 +1,13 @@
-import express from 'express';
-import partyController from '../controllers/partyController.js';
-import { protectAdminRoute } from '../middlewares/protectRoute.js';
+import express from 'express'
+import partyController from '../controllers/partyController.js'
+import { protectAdminRoute } from '../middlewares/protectRoute.js'
 
-const router = express.Router();
+const router = express.Router()
 
 // Route for bulk party creation
-router.post('/bulk', protectAdminRoute, partyController.createBulkParties);
+router.post('/bulk', protectAdminRoute, partyController.createBulkParties)
 
 // Route for getting all parties
-router.get('/', protectAdminRoute, partyController.getAllParties);
+router.get('/', partyController.getAllParties)
 
-export default router;
+export default router
