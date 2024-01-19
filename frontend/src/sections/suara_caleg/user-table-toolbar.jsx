@@ -22,7 +22,7 @@ export default function UserTableToolbar({ filterName, onFilterName }) {
       <OutlinedInput
         value={filterName}
         onChange={onFilterName}
-        placeholder="Search user..."
+        placeholder="Cari caleg..."
         startAdornment={
           <InputAdornment position="start">
             <Iconify
