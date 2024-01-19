@@ -77,6 +77,26 @@ const resultService = {
       return error.response.data;
     }
   },
+  getCalegByDistrictId: async (districtId) => {
+    try {
+      const response = await axios.get(`${BASE_URL}/calegs/district/${districtId}`, {
+        withCredentials: true,
+      });
+      return response.data;
+    } catch (error) {
+      return error.response.data;
+    }
+  },
+  getCalegByVillageId: async (villageId) => {
+    try {
+      const response = await axios.get(`${BASE_URL}/calegs/village/${villageId}`, {
+        withCredentials: true,
+      });
+      return response.data;
+    } catch (error) {
+      return error.response.data;
+    }
+  },
 };
 
 export default resultService;

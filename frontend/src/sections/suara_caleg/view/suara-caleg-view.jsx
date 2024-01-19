@@ -38,7 +38,7 @@ export default function SuaraCalegView() {
   const [kelurahans, setKelurahans] = useState([]);
   const [kecamatan, setKecamatan] = useState('');
   const [kelurahan, setKelurahan] = useState('');
-  const [selectedKelurahan, setSelectedKelurahan] = useState({});
+
   const [calegs, setCalegs] = useState([]);
   const [loading, setLoading] = useState(false);
 
@@ -53,7 +53,6 @@ export default function SuaraCalegView() {
       const getCalegs = await resultService.getAllCalegs();
       setKecamatans(getKecamatans.data);
       setCalegs(getCalegs.data);
-      console.log(getCalegs.data);
 
       setLoading(false);
     } catch (error) {
@@ -62,17 +61,30 @@ export default function SuaraCalegView() {
     }
   };
 
+  const handleCalegByKecamatan = async (districtId) => {
+    try {
+      setCalegs([]);
+      setLoading(true);
+      const getCalegs = await resultService.getCalegByDistrictId(districtId);
+      setCalegs(getCalegs.data);
+      setLoading(false);
+    } catch (error) {
+      setCalegs([]);
+      setLoading(false);
+    }
+  };
+
   const handleSelectedKelurahan = async (village_id) => {
     try {
       setLoading(true);
-      const getKelurahan = await resultService.getVillageByVillageId(village_id);
-
-      setSelectedKelurahan(getKelurahan.data);
-      // setParties(getKelurahan.data.valid_ballots_detail);
-      console.log(getKelurahan.data.valid_ballots_detail);
+      setCalegs([]);
+      setLoading(true);
+      const getCalegs = await resultService.getCalegByVillageId(village_id);
+      setCalegs(getCalegs.data);
+      setLoading(false);
       setLoading(false);
     } catch (error) {
-      setSelectedKelurahan({});
+      setCalegs([]);
       setLoading(false);
     }
   };
@@ -109,9 +121,24 @@ export default function SuaraCalegView() {
 
   return (
     <Container>
-      <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
+      <Stack direction="row" alignItems="center" justifyContent="space-between" mb={3}>
         <Typography variant="h4">Calon Legislatif</Typography>
       </Stack>
+
+      <Stack direction="row" alignItems="center" justifyContent="space-between" mb={3}>
+        {kelurahan ? (
+          <Typography variant="h6" sx={{ mb: 2, color: 'primary.main' }}>
+            Data di Kelurahan {kelurahan.village_name}
+          </Typography>
+        ) : (
+          kecamatan && (
+            <Typography variant="h6" sx={{ mb: 2, color: 'primary.main' }}>
+              Data di Kecamatan {kecamatan.district_name}
+            </Typography>
+          )
+        )}
+      </Stack>
+
       {loading && <LinearProgress color="primary" variant="query" />}
       {!loading && (
         <>
@@ -125,6 +152,7 @@ export default function SuaraCalegView() {
                 onChange={(e) => {
                   setKecamatan(e.target.value);
                   setKelurahans(e.target.value.villages);
+                  handleCalegByKecamatan(e.target.value._id);
                   // console.log(e.target.value);
                 }}
                 variant="outlined"
