@@ -41,6 +41,121 @@ const calegController = {
       })
     }
   },
+
+  getAllCalegByDistrict: async (req, res) => {
+    try {
+      const { districtId } = req.params
+
+      // Check if districtId is provided
+      if (!districtId) {
+        return apiHandler({
+          res,
+          status: 'error',
+          code: 400,
+          message: 'Missing districtId parameter',
+          error: null,
+        })
+      }
+
+      // Check if districtId is exist
+      const district = await District.findById(districtId)
+      if (!district) {
+        return apiHandler({
+          res,
+          status: 'error',
+          code: 404,
+          message: 'District not found',
+          error: null,
+        })
+      }
+
+      // Extract village IDs
+      const villageIds = district.villages
+
+      // Fetch all results for the villages in the given district
+      const resultsByDistrict = await VotesResult.find({
+        village_id: { $in: villageIds },
+      })
+
+      let valid_ballots_detail = await getValidBallotsHelper(resultsByDistrict)
+
+      // Return the aggregated result
+      return apiHandler({
+        res,
+        status: 'success',
+        code: 200,
+        message: 'Voting results for the district retrieved successfully',
+        data: valid_ballots_detail,
+        error: null,
+      })
+    } catch (error) {
+      console.error('Error getting total results by district:', error)
+      return apiHandler({
+        res,
+        status: 'error',
+        code: 500,
+        message: 'Internal Server Error',
+        data: null,
+        error: { type: 'InternalServerError', details: error.message },
+      })
+    }
+  },
+
+  getAllCalegByVillage: async (req, res) => {
+    try {
+      const { villageId } = req.params
+
+      // Check if villageId is provided
+      if (!villageId) {
+        return apiHandler({
+          res,
+          status: 'error',
+          code: 400,
+          message: 'Missing villageId parameter',
+          error: null,
+        })
+      }
+
+      // Check if villageId exists
+      const village = await Village.findById(villageId)
+      if (!village) {
+        return apiHandler({
+          res,
+          status: 'error',
+          code: 404,
+          message: 'Village not found',
+          error: null,
+        })
+      }
+
+      // Fetch results for the specified village
+      const resultsByVillage = await VotesResult.find({
+        village_id: villageId,
+      })
+
+      let valid_ballots_detail = await getValidBallotsHelper(resultsByVillage)
+
+      // Return the aggregated result
+      return apiHandler({
+        res,
+        status: 'success',
+        code: 200,
+        message: 'Voting results for the village retrieved successfully',
+        data: valid_ballots_detail,
+        error: null,
+      })
+    } catch (error) {
+      console.error('Error getting total results by village:', error)
+      return apiHandler({
+        res,
+        status: 'error',
+        code: 500,
+        message: 'Internal Server Error',
+        data: null,
+        error: { type: 'InternalServerError', details: error.message },
+      })
+    }
+  },
 }
 
 const getValidBallotsHelper = async (resultsByDistrict) => {

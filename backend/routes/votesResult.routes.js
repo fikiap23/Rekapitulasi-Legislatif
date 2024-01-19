@@ -34,5 +34,15 @@ router.get(
 )
 
 router.get('/calegs', protectAdminRoute, calegController.getAllCalegs)
+router.get(
+  '/calegs/district/:districtId',
+  protectAdminRoute,
+  calegController.getAllCalegByDistrict
+)
+router.get(
+  '/calegs/village/:villageId',
+  protectAdminRoute,
+  calegController.getAllCalegByVillage
+)
 
 export default router
