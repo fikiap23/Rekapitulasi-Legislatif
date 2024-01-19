@@ -48,7 +48,7 @@ export default function PieChart({ title, subheader, chart, ...other }) {
     legend: {
       floating: true,
       position: 'bottom',
-      horizontalAlign: 'center',
+      horizontalAlign: 'left',
     },
     dataLabels: {
       enabled: true,
