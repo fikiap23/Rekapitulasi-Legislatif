@@ -1,0 +1,1514 @@
+[
+  {
+    "village_name": "ARJASARI",
+    "code": "ARJASARI_CODE",
+    "district_id": "65a8dad5d394440a658eab44",
+    "total_voters": 8933
+  },
+  {
+    "village_name": "LEBAKWANGI",
+    "code": "LEBAKWANGI_CODE",
+    "district_id": "65a8dad5d394440a658eab44",
+    "total_voters": 9686
+  },
+  {
+    "village_name": "BATUKARUT",
+    "code": "BATUKARUT_CODE",
+    "district_id": "65a8dad5d394440a658eab44",
+    "total_voters": 8402
+  },
+  {
+    "village_name": "ANCOLMEKAR",
+    "code": "ANCOLMEKAR_CODE",
+    "district_id": "65a8dad5d394440a658eab44",
+    "total_voters": 3873
+  },
+  {
+    "village_name": "BAROS",
+    "code": "BAROS_CODE",
+    "district_id": "65a8dad5d394440a658eab44",
+    "total_voters": 7832
+  },
+  {
+    "village_name": "MANGUNJAYA",
+    "code": "MANGUNJAYA_CODE",
+    "district_id": "65a8dad5d394440a658eab44",
+    "total_voters": 6276
+  },
+  {
+    "village_name": "MEKARJAYA",
+    "code": "MEKARJAYA_CODE",
+    "district_id": "65a8dad5d394440a658eab44",
+    "total_voters": 17958
+  },
+  {
+    "village_name": "PINGGIRSARI",
+    "code": "PINGGIRSARI_CODE",
+    "district_id": "65a8dad5d394440a658eab44",
+    "total_voters": 8515
+  },
+  {
+    "village_name": "PATROLSARI",
+    "code": "PATROLSARI_CODE",
+    "district_id": "65a8dad5d394440a658eab44",
+    "total_voters": 6826
+  },
+  {
+    "village_name": "RANCAKOLE",
+    "code": "RANCAKOLE_CODE",
+    "district_id": "65a8dad5d394440a658eab44",
+    "total_voters": 7769
+  },
+  {
+    "village_name": "WARGALUYU",
+    "code": "WARGALUYU_CODE",
+    "district_id": "65a8dad5d394440a658eab44",
+    "total_voters": 6376
+  },
+  {
+    "village_name": "BALEENDAH",
+    "code": "BALEENDAH_CODE",
+    "district_id": "65a8dad5d394440a658eab43",
+    "total_voters": 43304
+  },
+  {
+    "village_name": "ANDIR",
+    "code": "ANDIR_CODE",
+    "district_id": "65a8dad5d394440a658eab43",
+    "total_voters": 24709
+  },
+  {
+    "village_name": "MANGGAHANG",
+    "code": "MANGGAHANG_CODE",
+    "district_id": "65a8dad5d394440a658eab43",
+    "total_voters": 28455
+  },
+  {
+    "village_name": "JELEKONG",
+    "code": "JELEKONG_CODE",
+    "district_id": "65a8dad5d394440a658eab43",
+    "total_voters": 18844
+  },
+  {
+    "village_name": "WARGAMEKAR",
+    "code": "WARGAMEKAR_CODE",
+    "district_id": "65a8dad5d394440a658eab43",
+    "total_voters": 17817
+  },
+  {
+    "village_name": "BOJONGMALAKA",
+    "code": "BOJONGMALAKA_CODE",
+    "district_id": "65a8dad5d394440a658eab43",
+    "total_voters": 17252
+  },
+  {
+    "village_name": "RANCAMANYAR",
+    "code": "RANCAMANYAR_CODE",
+    "district_id": "65a8dad5d394440a658eab43",
+    "total_voters": 29001
+  },
+  {
+    "village_name": "MALAKASARI",
+    "code": "MALAKASARI_CODE",
+    "district_id": "65a8dad5d394440a658eab43",
+    "total_voters": 10648
+  },
+  {
+    "village_name": "KAMASAN",
+    "code": "KAMASAN_CODE",
+    "district_id": "65a8dad5d394440a658eab45",
+    "total_voters": 6532
+  },
+  {
+    "village_name": "BANJARAN WETAN",
+    "code": "BANJARAN WETAN_CODE",
+    "district_id": "65a8dad5d394440a658eab45",
+    "total_voters": 13442
+  },
+  {
+    "village_name": "BANJARAN",
+    "code": "BANJARAN_CODE",
+    "district_id": "65a8dad5d394440a658eab45",
+    "total_voters": 9037
+  },
+  {
+    "village_name": "CIAPUS",
+    "code": "CIAPUS_CODE",
+    "district_id": "65a8dad5d394440a658eab45",
+    "total_voters": 12135
+  },
+  {
+    "village_name": "SINDANGPANON",
+    "code": "SINDANGPANON_CODE",
+    "district_id": "65a8dad5d394440a658eab45",
+    "total_voters": 11798
+  },
+  {
+    "village_name": "KIANGROKE",
+    "code": "KIANGROKE_CODE",
+    "district_id": "65a8dad5d394440a658eab45",
+    "total_voters": 7847
+  },
+  {
+    "village_name": "TARAJUSARI",
+    "code": "TARAJUSARI_CODE",
+    "district_id": "65a8dad5d394440a658eab45",
+    "total_voters": 8954
+  },
+  {
+    "village_name": "MARGAHURIP",
+    "code": "MARGAHURIP_CODE",
+    "district_id": "65a8dad5d394440a658eab45",
+    "total_voters": 9065
+  },
+  {
+    "village_name": "NEGLASARI",
+    "code": "NEGLASARI_CODE",
+    "district_id": "65a8dad5d394440a658eab45",
+    "total_voters": 19512
+  },
+  {
+    "village_name": "PASIRMULYA",
+    "code": "PASIRMULYA_CODE",
+    "district_id": "65a8dad5d394440a658eab45",
+    "total_voters": 4636
+  },
+  {
+    "village_name": "LENGKONG",
+    "code": "LENGKONG_CODE",
+    "district_id": "65a8dad5d394440a658eab4e",
+    "total_voters": 10928
+  },
+  {
+    "village_name": "BOJONGSOANG",
+    "code": "BOJONGSOANG_CODE",
+    "district_id": "65a8dad5d394440a658eab4e",
+    "total_voters": 15720
+  },
+  {
+    "village_name": "BUAHBATU",
+    "code": "BUAHBATU_CODE",
+    "district_id": "65a8dad5d394440a658eab4e",
+    "total_voters": 11063
+  },
+  {
+    "village_name": "CIPAGALO",
+    "code": "CIPAGALO_CODE",
+    "district_id": "65a8dad5d394440a658eab4e",
+    "total_voters": 15474
+  },
+  {
+    "village_name": "BOJONGSARI",
+    "code": "BOJONGSARI_CODE",
+    "district_id": "65a8dad5d394440a658eab4e",
+    "total_voters": 13361
+  },
+  {
+    "village_name": "TEGALLUAR",
+    "code": "TEGALLUAR_CODE",
+    "district_id": "65a8dad5d394440a658eab4e",
+    "total_voters": 12620
+  },
+  {
+    "village_name": "CANGKUANG",
+    "code": "CANGKUANG_CODE",
+    "district_id": "65a8dad5d394440a658eab46",
+    "total_voters": 17518
+  },
+  {
+    "village_name": "CILUNCAT",
+    "code": "CILUNCAT_CODE",
+    "district_id": "65a8dad5d394440a658eab46",
+    "total_voters": 10862
+  },
+  {
+    "village_name": "NAGRAK",
+    "code": "NAGRAK_CODE",
+    "district_id": "65a8dad5d394440a658eab46",
+    "total_voters": 21582
+  },
+  {
+    "village_name": "BANDASARI",
+    "code": "BANDASARI_CODE",
+    "district_id": "65a8dad5d394440a658eab46",
+    "total_voters": 7389
+  },
+  {
+    "village_name": "PANANJUNG",
+    "code": "PANANJUNG_CODE",
+    "district_id": "65a8dad5d394440a658eab46",
+    "total_voters": 8090
+  },
+  {
+    "village_name": "JATISARI",
+    "code": "JATISARI_CODE",
+    "district_id": "65a8dad5d394440a658eab46",
+    "total_voters": 14810
+  },
+  {
+    "village_name": "TANJUNGSARI",
+    "code": "TANJUNGSARI_CODE",
+    "district_id": "65a8dad5d394440a658eab46",
+    "total_voters": 6454
+  },
+  {
+    "village_name": "CICALENGKA KULON",
+    "code": "CICALENGKA KULON_CODE",
+    "district_id": "65a8dad5d394440a658eab3d",
+    "total_voters": 5352
+  },
+  {
+    "village_name": "CICALENGKA WETAN",
+    "code": "CICALENGKA WETAN_CODE",
+    "district_id": "65a8dad5d394440a658eab3d",
+    "total_voters": 10696
+  },
+  {
+    "village_name": "BABAKAN PEUTEUY",
+    "code": "BABAKAN PEUTEUY_CODE",
+    "district_id": "65a8dad5d394440a658eab3d",
+    "total_voters": 8668
+  },
+  {
+    "village_name": "CIKUYA",
+    "code": "CIKUYA_CODE",
+    "district_id": "65a8dad5d394440a658eab3d",
+    "total_voters": 9035
+  },
+  {
+    "village_name": "DAMPIT",
+    "code": "DAMPIT_CODE",
+    "district_id": "65a8dad5d394440a658eab3d",
+    "total_voters": 4360
+  },
+  {
+    "village_name": "MARGAASIH",
+    "code": "MARGAASIH_CODE",
+    "district_id": "65a8dad5d394440a658eab3d",
+    "total_voters": 25828
+  },
+  {
+    "village_name": "NARAWITA",
+    "code": "NARAWITA_CODE",
+    "district_id": "65a8dad5d394440a658eab3d",
+    "total_voters": 4900
+  },
+  {
+    "village_name": "PANENJOAN",
+    "code": "PANENJOAN_CODE",
+    "district_id": "65a8dad5d394440a658eab3d",
+    "total_voters": 10167
+  },
+  {
+    "village_name": "TANJUNGWANGI",
+    "code": "TANJUNGWANGI_CODE",
+    "district_id": "65a8dad5d394440a658eab3d",
+    "total_voters": 9195
+  },
+  {
+    "village_name": "TENJOLAYA",
+    "code": "TENJOLAYA_CODE",
+    "district_id": "65a8dad5d394440a658eab3d",
+    "total_voters": 18748
+  },
+  {
+    "village_name": "WALUYA",
+    "code": "WALUYA_CODE",
+    "district_id": "65a8dad5d394440a658eab3d",
+    "total_voters": 8826
+  },
+  {
+    "village_name": "NAGROG",
+    "code": "NAGROG_CODE",
+    "district_id": "65a8dad5d394440a658eab3d",
+    "total_voters": 9630
+  },
+  {
+    "village_name": "MANDALASARI",
+    "code": "MANDALASARI_CODE",
+    "district_id": "65a8dad5d394440a658eab3c",
+    "total_voters": 7098
+  },
+  {
+    "village_name": "CIKANCUNG",
+    "code": "CIKANCUNG_CODE",
+    "district_id": "65a8dad5d394440a658eab3c",
+    "total_voters": 6348
+  },
+  {
+    "village_name": "CIKASUNGKA",
+    "code": "CIKASUNGKA_CODE",
+    "district_id": "65a8dad5d394440a658eab3c",
+    "total_voters": 9791
+  },
+  {
+    "village_name": "CIHANYIR",
+    "code": "CIHANYIR_CODE",
+    "district_id": "65a8dad5d394440a658eab3c",
+    "total_voters": 5861
+  },
+  {
+    "village_name": "CILULUK",
+    "code": "CILULUK_CODE",
+    "district_id": "65a8dad5d394440a658eab3c",
+    "total_voters": 8647
+  },
+  {
+    "village_name": "HEGARMANAH",
+    "code": "HEGARMANAH_CODE",
+    "district_id": "65a8dad5d394440a658eab3c",
+    "total_voters": 10338
+  },
+  {
+    "village_name": "MEKARLAKSANA",
+    "code": "MEKARLAKSANA_CODE",
+    "district_id": "65a8dad5d394440a658eab3c",
+    "total_voters": 12814
+  },
+  {
+    "village_name": "TANJUNGLAYA",
+    "code": "TANJUNGLAYA_CODE",
+    "district_id": "65a8dad5d394440a658eab3c",
+    "total_voters": 9106
+  },
+  {
+    "village_name": "SRIRAHAYU",
+    "code": "SRIRAHAYU_CODE",
+    "district_id": "65a8dad5d394440a658eab3c",
+    "total_voters": 8000
+  },
+  {
+    "village_name": "JATIENDAH",
+    "code": "JATIENDAH_CODE",
+    "district_id": "65a8dad5d394440a658eab50",
+    "total_voters": 13609
+  },
+  {
+    "village_name": "CILENGKRANG",
+    "code": "CILENGKRANG_CODE",
+    "district_id": "65a8dad5d394440a658eab50",
+    "total_voters": 3257
+  },
+  {
+    "village_name": "CIPANJALU",
+    "code": "CIPANJALU_CODE",
+    "district_id": "65a8dad5d394440a658eab50",
+    "total_voters": 4319
+  },
+  {
+    "village_name": "MELATIWANGI",
+    "code": "MELATIWANGI_CODE",
+    "district_id": "65a8dad5d394440a658eab50",
+    "total_voters": 3716
+  },
+  {
+    "village_name": "CIPOREAT",
+    "code": "CIPOREAT_CODE",
+    "district_id": "65a8dad5d394440a658eab50",
+    "total_voters": 4244
+  },
+  {
+    "village_name": "GIRIMEKAR",
+    "code": "GIRIMEKAR_CODE",
+    "district_id": "65a8dad5d394440a658eab50",
+    "total_voters": 9871
+  },
+  {
+    "village_name": "CILEUNYI KULON",
+    "code": "CILEUNYI KULON_CODE",
+    "district_id": "65a8dad5d394440a658eab4f",
+    "total_voters": 18532
+  },
+  {
+    "village_name": "CILEUNYI WETAN",
+    "code": "CILEUNYI WETAN_CODE",
+    "district_id": "65a8dad5d394440a658eab4f",
+    "total_voters": 24031
+  },
+  {
+    "village_name": "CIMEKAR",
+    "code": "CIMEKAR_CODE",
+    "district_id": "65a8dad5d394440a658eab4f",
+    "total_voters": 26123
+  },
+  {
+    "village_name": "CINUNUK",
+    "code": "CINUNUK_CODE",
+    "district_id": "65a8dad5d394440a658eab4f",
+    "total_voters": 36430
+  },
+  {
+    "village_name": "CIBIRU HILIR",
+    "code": "CIBIRU HILIR_CODE",
+    "district_id": "65a8dad5d394440a658eab4f",
+    "total_voters": 9906
+  },
+  {
+    "village_name": "CIBIRU WETAN",
+    "code": "CIBIRU WETAN_CODE",
+    "district_id": "65a8dad5d394440a658eab4f",
+    "total_voters": 14056
+  },
+  {
+    "village_name": "CIMAUNG",
+    "code": "CIMAUNG_CODE",
+    "district_id": "65a8dad5d394440a658eab36",
+    "total_voters": 8627
+  },
+  {
+    "village_name": "JAGABAYA",
+    "code": "JAGABAYA_CODE",
+    "district_id": "65a8dad5d394440a658eab36",
+    "total_voters": 12092
+  },
+  {
+    "village_name": "PASIRHUNI",
+    "code": "PASIRHUNI_CODE",
+    "district_id": "65a8dad5d394440a658eab36",
+    "total_voters": 6025
+  },
+  {
+    "village_name": "CAMPAKAMULYA",
+    "code": "CAMPAKAMULYA_CODE",
+    "district_id": "65a8dad5d394440a658eab36",
+    "total_voters": 7040
+  },
+  {
+    "village_name": "CIPINANG",
+    "code": "CIPINANG_CODE",
+    "district_id": "65a8dad5d394440a658eab36",
+    "total_voters": 7330
+  },
+  {
+    "village_name": "MEKARSARI",
+    "code": "MEKARSARI_CODE",
+    "district_id": "65a8dad5d394440a658eab36",
+    "total_voters": 25769
+  },
+  {
+    "village_name": "SUKAMAJU",
+    "code": "SUKAMAJU_CODE",
+    "district_id": "65a8dad5d394440a658eab36",
+    "total_voters": 18785
+  },
+  {
+    "village_name": "CIKALONG",
+    "code": "CIKALONG_CODE",
+    "district_id": "65a8dad5d394440a658eab36",
+    "total_voters": 5076
+  },
+  {
+    "village_name": "MALASARI",
+    "code": "MALASARI_CODE",
+    "district_id": "65a8dad5d394440a658eab36",
+    "total_voters": 5039
+  },
+  {
+    "village_name": "WARJABAKTI",
+    "code": "WARJABAKTI_CODE",
+    "district_id": "65a8dad5d394440a658eab36",
+    "total_voters": 4579
+  },
+  {
+    "village_name": "PADASUKA",
+    "code": "PADASUKA_CODE",
+    "district_id": "65a8dad5d394440a658eab51",
+    "total_voters": 20113
+  },
+  {
+    "village_name": "CIBEUNYING",
+    "code": "CIBEUNYING_CODE",
+    "district_id": "65a8dad5d394440a658eab51",
+    "total_voters": 21312
+  },
+  {
+    "village_name": "CIMENYAN",
+    "code": "CIMENYAN_CODE",
+    "district_id": "65a8dad5d394440a658eab51",
+    "total_voters": 11374
+  },
+  {
+    "village_name": "MANDALAMEKAR",
+    "code": "MANDALAMEKAR_CODE",
+    "district_id": "65a8dad5d394440a658eab51",
+    "total_voters": 5204
+  },
+  {
+    "village_name": "CIKADUT",
+    "code": "CIKADUT_CODE",
+    "district_id": "65a8dad5d394440a658eab51",
+    "total_voters": 7710
+  },
+  {
+    "village_name": "CIBURIAL",
+    "code": "CIBURIAL_CODE",
+    "district_id": "65a8dad5d394440a658eab51",
+    "total_voters": 9393
+  },
+  {
+    "village_name": "SINDANGLAYA",
+    "code": "SINDANGLAYA_CODE",
+    "district_id": "65a8dad5d394440a658eab51",
+    "total_voters": 4647
+  },
+  {
+    "village_name": "MEKARSALUYU",
+    "code": "MEKARSALUYU_CODE",
+    "district_id": "65a8dad5d394440a658eab51",
+    "total_voters": 3118
+  },
+  {
+    "village_name": "MEKARMANIK",
+    "code": "MEKARMANIK_CODE",
+    "district_id": "65a8dad5d394440a658eab51",
+    "total_voters": 6480
+  },
+  {
+    "village_name": "CIPARAY",
+    "code": "CIPARAY_CODE",
+    "district_id": "65a8dad5d394440a658eab42",
+    "total_voters": 5971
+  },
+  {
+    "village_name": "GUNUNGLEUTIK",
+    "code": "GUNUNGLEUTIK_CODE",
+    "district_id": "65a8dad5d394440a658eab42",
+    "total_voters": 9134
+  },
+  {
+    "village_name": "CIKONENG",
+    "code": "CIKONENG_CODE",
+    "district_id": "65a8dad5d394440a658eab42",
+    "total_voters": 10381
+  },
+  {
+    "village_name": "CIHEULANG",
+    "code": "CIHEULANG_CODE",
+    "district_id": "65a8dad5d394440a658eab42",
+    "total_voters": 12195
+  },
+  {
+    "village_name": "PAKUTANDANG",
+    "code": "PAKUTANDANG_CODE",
+    "district_id": "65a8dad5d394440a658eab42",
+    "total_voters": 13990
+  },
+  {
+    "village_name": "SUMBERSARI",
+    "code": "SUMBERSARI_CODE",
+    "district_id": "65a8dad5d394440a658eab42",
+    "total_voters": 12904
+  },
+  {
+    "village_name": "MANGGUNGHARJA",
+    "code": "MANGGUNGHARJA_CODE",
+    "district_id": "65a8dad5d394440a658eab42",
+    "total_voters": 9356
+  },
+  {
+    "village_name": "SAGARACIPTA",
+    "code": "SAGARACIPTA_CODE",
+    "district_id": "65a8dad5d394440a658eab42",
+    "total_voters": 6844
+  },
+  {
+    "village_name": "SARIMAHI",
+    "code": "SARIMAHI_CODE",
+    "district_id": "65a8dad5d394440a658eab42",
+    "total_voters": 7457
+  },
+  {
+    "village_name": "SERANGMEKAR",
+    "code": "SERANGMEKAR_CODE",
+    "district_id": "65a8dad5d394440a658eab42",
+    "total_voters": 8922
+  },
+  {
+    "village_name": "BABAKAN",
+    "code": "BABAKAN_CODE",
+    "district_id": "65a8dad5d394440a658eab42",
+    "total_voters": 6024
+  },
+  {
+    "village_name": "BUMIWANGI",
+    "code": "BUMIWANGI_CODE",
+    "district_id": "65a8dad5d394440a658eab42",
+    "total_voters": 12266
+  },
+  {
+    "village_name": "LEBAKMUNCANG",
+    "code": "LEBAKMUNCANG_CODE",
+    "district_id": "65a8dad5d394440a658eab33",
+    "total_voters": 11812
+  },
+  {
+    "village_name": "CIWIDEY",
+    "code": "CIWIDEY_CODE",
+    "district_id": "65a8dad5d394440a658eab33",
+    "total_voters": 12221
+  },
+  {
+    "village_name": "NENGKELAN",
+    "code": "NENGKELAN_CODE",
+    "district_id": "65a8dad5d394440a658eab33",
+    "total_voters": 5117
+  },
+  {
+    "village_name": "PANUNDAAN",
+    "code": "PANUNDAAN_CODE",
+    "district_id": "65a8dad5d394440a658eab33",
+    "total_voters": 10649
+  },
+  {
+    "village_name": "PANYOCOKAN",
+    "code": "PANYOCOKAN_CODE",
+    "district_id": "65a8dad5d394440a658eab33",
+    "total_voters": 9808
+  },
+  {
+    "village_name": "RAWABOGO",
+    "code": "RAWABOGO_CODE",
+    "district_id": "65a8dad5d394440a658eab33",
+    "total_voters": 6463
+  },
+  {
+    "village_name": "SUKAWENING",
+    "code": "SUKAWENING_CODE",
+    "district_id": "65a8dad5d394440a658eab33",
+    "total_voters": 8596
+  },
+  {
+    "village_name": "PASAWAHAN",
+    "code": "PASAWAHAN_CODE",
+    "district_id": "65a8dad5d394440a658eab4d",
+    "total_voters": 7931
+  },
+  {
+    "village_name": "DAYEUHKOLOT",
+    "code": "DAYEUHKOLOT_CODE",
+    "district_id": "65a8dad5d394440a658eab4d",
+    "total_voters": 9901
+  },
+  {
+    "village_name": "CANGKUANG WETAN",
+    "code": "CANGKUANG WETAN_CODE",
+    "district_id": "65a8dad5d394440a658eab4d",
+    "total_voters": 13909
+  },
+  {
+    "village_name": "CANGKUANG KULON",
+    "code": "CANGKUANG KULON_CODE",
+    "district_id": "65a8dad5d394440a658eab4d",
+    "total_voters": 26595
+  },
+  {
+    "village_name": "SUKAPURA",
+    "code": "SUKAPURA_CODE",
+    "district_id": "65a8dad5d394440a658eab4d",
+    "total_voters": 12662
+  },
+  {
+    "village_name": "CITEUREUP",
+    "code": "CITEUREUP_CODE",
+    "district_id": "65a8dad5d394440a658eab4d",
+    "total_voters": 13548
+  },
+  {
+    "village_name": "IBUN",
+    "code": "IBUN_CODE",
+    "district_id": "65a8dad5d394440a658eab3a",
+    "total_voters": 6249
+  },
+  {
+    "village_name": "LAKSANA",
+    "code": "LAKSANA_CODE",
+    "district_id": "65a8dad5d394440a658eab3a",
+    "total_voters": 6223
+  },
+  {
+    "village_name": "DUKUH",
+    "code": "DUKUH_CODE",
+    "district_id": "65a8dad5d394440a658eab3a",
+    "total_voters": 6002
+  },
+  {
+    "village_name": "TALUN",
+    "code": "TALUN_CODE",
+    "district_id": "65a8dad5d394440a658eab3a",
+    "total_voters": 5235
+  },
+  {
+    "village_name": "PANGGUH",
+    "code": "PANGGUH_CODE",
+    "district_id": "65a8dad5d394440a658eab3a",
+    "total_voters": 7380
+  },
+  {
+    "village_name": "LAMPEGAN",
+    "code": "LAMPEGAN_CODE",
+    "district_id": "65a8dad5d394440a658eab3a",
+    "total_voters": 5748
+  },
+  {
+    "village_name": "MEKARWANGI",
+    "code": "MEKARWANGI_CODE",
+    "district_id": "65a8dad5d394440a658eab3a",
+    "total_voters": 5725
+  },
+  {
+    "village_name": "SUDI",
+    "code": "SUDI_CODE",
+    "district_id": "65a8dad5d394440a658eab3a",
+    "total_voters": 5035
+  },
+  {
+    "village_name": "TANGGULUN",
+    "code": "TANGGULUN_CODE",
+    "district_id": "65a8dad5d394440a658eab3a",
+    "total_voters": 2862
+  },
+  {
+    "village_name": "CIBEET",
+    "code": "CIBEET_CODE",
+    "district_id": "65a8dad5d394440a658eab3a",
+    "total_voters": 5172
+  },
+  {
+    "village_name": "KARYALAKSANA",
+    "code": "KARYALAKSANA_CODE",
+    "district_id": "65a8dad5d394440a658eab3a",
+    "total_voters": 5850
+  },
+  {
+    "village_name": "SANGKANHURIP",
+    "code": "SANGKANHURIP_CODE",
+    "district_id": "65a8dad5d394440a658eab48",
+    "total_voters": 23802
+  },
+  {
+    "village_name": "KATAPANG",
+    "code": "KATAPANG_CODE",
+    "district_id": "65a8dad5d394440a658eab48",
+    "total_voters": 11382
+  },
+  {
+    "village_name": "GANDASARI",
+    "code": "GANDASARI_CODE",
+    "district_id": "65a8dad5d394440a658eab48",
+    "total_voters": 13033
+  },
+  {
+    "village_name": "SUKAMUKTI",
+    "code": "SUKAMUKTI_CODE",
+    "district_id": "65a8dad5d394440a658eab48",
+    "total_voters": 22748
+  },
+  {
+    "village_name": "CILAMPENI",
+    "code": "CILAMPENI_CODE",
+    "district_id": "65a8dad5d394440a658eab48",
+    "total_voters": 15102
+  },
+  {
+    "village_name": "PANGAUBAN",
+    "code": "PANGAUBAN_CODE",
+    "district_id": "65a8dad5d394440a658eab48",
+    "total_voters": 21372
+  },
+  {
+    "village_name": "BANYUSARI",
+    "code": "BANYUSARI_CODE",
+    "district_id": "65a8dad5d394440a658eab48",
+    "total_voters": 6514
+  },
+  {
+    "village_name": "CIBEUREUM",
+    "code": "CIBEUREUM_CODE",
+    "district_id": "65a8dad5d394440a658eab38",
+    "total_voters": 13096
+  },
+  {
+    "village_name": "SANTOSA",
+    "code": "SANTOSA_CODE",
+    "district_id": "65a8dad5d394440a658eab38",
+    "total_voters": 3643
+  },
+  {
+    "village_name": "TARUMAJAYA",
+    "code": "TARUMAJAYA_CODE",
+    "district_id": "65a8dad5d394440a658eab38",
+    "total_voters": 11343
+  },
+  {
+    "village_name": "NEGLAWANGI",
+    "code": "NEGLAWANGI_CODE",
+    "district_id": "65a8dad5d394440a658eab38",
+    "total_voters": 3601
+  },
+  {
+    "village_name": "CIHAWUK",
+    "code": "CIHAWUK_CODE",
+    "district_id": "65a8dad5d394440a658eab38",
+    "total_voters": 4754
+  },
+  {
+    "village_name": "CIKEMBANG",
+    "code": "CIKEMBANG_CODE",
+    "district_id": "65a8dad5d394440a658eab38",
+    "total_voters": 5269
+  },
+  {
+    "village_name": "RESMI TINGAL",
+    "code": "RESMI TINGAL_CODE",
+    "district_id": "65a8dad5d394440a658eab38",
+    "total_voters": 4391
+  },
+  {
+    "village_name": "JELEGONG",
+    "code": "JELEGONG_CODE",
+    "district_id": "65a8dad5d394440a658eab4a",
+    "total_voters": 28344
+  },
+  {
+    "village_name": "PAMEUNTASAN",
+    "code": "PAMEUNTASAN_CODE",
+    "district_id": "65a8dad5d394440a658eab4a",
+    "total_voters": 6537
+  },
+  {
+    "village_name": "KOPO",
+    "code": "KOPO_CODE",
+    "district_id": "65a8dad5d394440a658eab4a",
+    "total_voters": 6407
+  },
+  {
+    "village_name": "CIBODAS",
+    "code": "CIBODAS_CODE",
+    "district_id": "65a8dad5d394440a658eab4a",
+    "total_voters": 21480
+  },
+  {
+    "village_name": "KUTAWARINGIN",
+    "code": "KUTAWARINGIN_CODE",
+    "district_id": "65a8dad5d394440a658eab4a",
+    "total_voters": 5331
+  },
+  {
+    "village_name": "SUKAMULYA",
+    "code": "SUKAMULYA_CODE",
+    "district_id": "65a8dad5d394440a658eab4a",
+    "total_voters": 12514
+  },
+  {
+    "village_name": "BUNINAGARA",
+    "code": "BUNINAGARA_CODE",
+    "district_id": "65a8dad5d394440a658eab4a",
+    "total_voters": 5423
+  },
+  {
+    "village_name": "GAJAH MEKAR",
+    "code": "GAJAH MEKAR_CODE",
+    "district_id": "65a8dad5d394440a658eab4a",
+    "total_voters": 8693
+  },
+  {
+    "village_name": "CILAME",
+    "code": "CILAME_CODE",
+    "district_id": "65a8dad5d394440a658eab4a",
+    "total_voters": 4469
+  },
+  {
+    "village_name": "MAJALAYA",
+    "code": "MAJALAYA_CODE",
+    "district_id": "65a8dad5d394440a658eab4e",
+    "total_voters": 8329
+  },
+  {
+    "village_name": "WANGISAGARA",
+    "code": "WANGISAGARA_CODE",
+    "district_id": "65a8dad5d394440a658eab4e",
+    "total_voters": 10985
+  },
+  {
+    "village_name": "BIRU",
+    "code": "BIRU_CODE",
+    "district_id": "65a8dad5d394440a658eab4e",
+    "total_voters": 12830
+  },
+  {
+    "village_name": "PADAMULYA",
+    "code": "PADAMULYA_CODE",
+    "district_id": "65a8dad5d394440a658eab4e",
+    "total_voters": 11141
+  },
+  {
+    "village_name": "BOJONG",
+    "code": "BOJONG_CODE",
+    "district_id": "65a8dad5d394440a658eab4e",
+    "total_voters": 16173
+  },
+  {
+    "village_name": "MAJASETRA",
+    "code": "MAJASETRA_CODE",
+    "district_id": "65a8dad5d394440a658eab4e",
+    "total_voters": 7436
+  },
+  {
+    "village_name": "MAJAKERTA",
+    "code": "MAJAKERTA_CODE",
+    "district_id": "65a8dad5d394440a658eab4e",
+    "total_voters": 8958
+  },
+  {
+    "village_name": "PADAULUN",
+    "code": "PADAULUN_CODE",
+    "district_id": "65a8dad5d394440a658eab4e",
+    "total_voters": 15115
+  },
+  {
+    "village_name": "LAGADAR",
+    "code": "LAGADAR_CODE",
+    "district_id": "65a8dad5d394440a658eab4b",
+    "total_voters": 18943
+  },
+  {
+    "village_name": "NANJUNG",
+    "code": "NANJUNG_CODE",
+    "district_id": "65a8dad5d394440a658eab4b",
+    "total_voters": 13499
+  },
+  {
+    "village_name": "MEKARRAHAYU",
+    "code": "MEKARRAHAYU_CODE",
+    "district_id": "65a8dad5d394440a658eab4b",
+    "total_voters": 26458
+  },
+  {
+    "village_name": "RAHAYU",
+    "code": "RAHAYU_CODE",
+    "district_id": "65a8dad5d394440a658eab4b",
+    "total_voters": 20658
+  },
+  {
+    "village_name": "CIGONDEWAH HILIR",
+    "code": "CIGONDEWAH HILIR_CODE",
+    "district_id": "65a8dad5d394440a658eab4b",
+    "total_voters": 9717
+  },
+  {
+    "village_name": "SULAIMAN",
+    "code": "SULAIMAN_CODE",
+    "district_id": "65a8dad5d394440a658eab4c",
+    "total_voters": 2314
+  },
+  {
+    "village_name": "MARGAHAYU TENGAH",
+    "code": "MARGAHAYU TENGAH_CODE",
+    "district_id": "65a8dad5d394440a658eab4c",
+    "total_voters": 14278
+  },
+  {
+    "village_name": "MARGAHAYU SELATAN",
+    "code": "MARGAHAYU SELATAN_CODE",
+    "district_id": "65a8dad5d394440a658eab4c",
+    "total_voters": 25516
+  },
+  {
+    "village_name": "SUKAMENAK",
+    "code": "SUKAMENAK_CODE",
+    "district_id": "65a8dad5d394440a658eab4c",
+    "total_voters": 21983
+  },
+  {
+    "village_name": "SAYATI",
+    "code": "SAYATI_CODE",
+    "district_id": "65a8dad5d394440a658eab4c",
+    "total_voters": 24358
+  },
+  {
+    "village_name": "NAGREG",
+    "code": "NAGREG_CODE",
+    "district_id": "65a8dad5d394440a658eab3e",
+    "total_voters": 5089
+  },
+  {
+    "village_name": "CIARO",
+    "code": "CIARO_CODE",
+    "district_id": "65a8dad5d394440a658eab3e",
+    "total_voters": 6525
+  },
+  {
+    "village_name": "CIHERANG",
+    "code": "CIHERANG_CODE",
+    "district_id": "65a8dad5d394440a658eab3e",
+    "total_voters": 5819
+  },
+  {
+    "village_name": "CITAMAN",
+    "code": "CITAMAN_CODE",
+    "district_id": "65a8dad5d394440a658eab3e",
+    "total_voters": 6633
+  },
+  {
+    "village_name": "MANDALAWANGI",
+    "code": "MANDALAWANGI_CODE",
+    "district_id": "65a8dad5d394440a658eab3e",
+    "total_voters": 3017
+  },
+  {
+    "village_name": "NAGREG KENDAN",
+    "code": "NAGREG KENDAN_CODE",
+    "district_id": "65a8dad5d394440a658eab3e",
+    "total_voters": 4146
+  },
+  {
+    "village_name": "GANJAR SABAR",
+    "code": "GANJAR SABAR_CODE",
+    "district_id": "65a8dad5d394440a658eab3e",
+    "total_voters": 6554
+  },
+  {
+    "village_name": "CIPEUJEUH",
+    "code": "CIPEUJEUH_CODE",
+    "district_id": "65a8dad5d394440a658eab39",
+    "total_voters": 4818
+  },
+  {
+    "village_name": "CIKITU",
+    "code": "CIKITU_CODE",
+    "district_id": "65a8dad5d394440a658eab39",
+    "total_voters": 5496
+  },
+  {
+    "village_name": "CINANGGELA",
+    "code": "CINANGGELA_CODE",
+    "district_id": "65a8dad5d394440a658eab39",
+    "total_voters": 3524
+  },
+  {
+    "village_name": "MARUYUNG",
+    "code": "MARUYUNG_CODE",
+    "district_id": "65a8dad5d394440a658eab39",
+    "total_voters": 11453
+  },
+  {
+    "village_name": "SUKARAME",
+    "code": "SUKARAME_CODE",
+    "district_id": "65a8dad5d394440a658eab39",
+    "total_voters": 4531
+  },
+  {
+    "village_name": "CIKAWAO",
+    "code": "CIKAWAO_CODE",
+    "district_id": "65a8dad5d394440a658eab39",
+    "total_voters": 7702
+  },
+  {
+    "village_name": "MANDALAHAJI",
+    "code": "MANDALAHAJI_CODE",
+    "district_id": "65a8dad5d394440a658eab39",
+    "total_voters": 9391
+  },
+  {
+    "village_name": "GIRIMULYA",
+    "code": "GIRIMULYA_CODE",
+    "district_id": "65a8dad5d394440a658eab39",
+    "total_voters": 4934
+  },
+  {
+    "village_name": "SUKASARI",
+    "code": "SUKASARI_CODE",
+    "district_id": "65a8dad5d394440a658eab47",
+    "total_voters": 10002
+  },
+  {
+    "village_name": "BOJONGMANGGU",
+    "code": "BOJONGMANGGU_CODE",
+    "district_id": "65a8dad5d394440a658eab47",
+    "total_voters": 8355
+  },
+  {
+    "village_name": "RANCATUNGKU",
+    "code": "RANCATUNGKU_CODE",
+    "district_id": "65a8dad5d394440a658eab47",
+    "total_voters": 7740
+  },
+  {
+    "village_name": "BOJONGKUNCI",
+    "code": "BOJONGKUNCI_CODE",
+    "district_id": "65a8dad5d394440a658eab47",
+    "total_voters": 11634
+  },
+  {
+    "village_name": "RANCAMULYA",
+    "code": "RANCAMULYA_CODE",
+    "district_id": "65a8dad5d394440a658eab47",
+    "total_voters": 13963
+  },
+  {
+    "village_name": "LANGONSARI",
+    "code": "LANGONSARI_CODE",
+    "district_id": "65a8dad5d394440a658eab47",
+    "total_voters": 12413
+  },
+  {
+    "village_name": "PANGALENGAN",
+    "code": "PANGALENGAN_CODE",
+    "district_id": "65a8dad5d394440a658eab37",
+    "total_voters": 15480
+  },
+  {
+    "village_name": "MARGALUYU",
+    "code": "MARGALUYU_CODE",
+    "district_id": "65a8dad5d394440a658eab37",
+    "total_voters": 6649
+  },
+  {
+    "village_name": "WARNASARI",
+    "code": "WARNASARI_CODE",
+    "district_id": "65a8dad5d394440a658eab37",
+    "total_voters": 6843
+  },
+  {
+    "village_name": "SUKAMANAH",
+    "code": "SUKAMANAH_CODE",
+    "district_id": "65a8dad5d394440a658eab37",
+    "total_voters": 30136
+  },
+  {
+    "village_name": "LAMAJANG",
+    "code": "LAMAJANG_CODE",
+    "district_id": "65a8dad5d394440a658eab37",
+    "total_voters": 8599
+  },
+  {
+    "village_name": "MARGAMUKTI",
+    "code": "MARGAMUKTI_CODE",
+    "district_id": "65a8dad5d394440a658eab37",
+    "total_voters": 12871
+  },
+  {
+    "village_name": "MARGAMULYA",
+    "code": "MARGAMULYA_CODE",
+    "district_id": "65a8dad5d394440a658eab37",
+    "total_voters": 20345
+  },
+  {
+    "village_name": "BANJARSARI",
+    "code": "BANJARSARI_CODE",
+    "district_id": "65a8dad5d394440a658eab37",
+    "total_voters": 4061
+  },
+  {
+    "village_name": "SUKALUYU",
+    "code": "SUKALUYU_CODE",
+    "district_id": "65a8dad5d394440a658eab37",
+    "total_voters": 6762
+  },
+  {
+    "village_name": "TRIBAKTIMULYA",
+    "code": "TRIBAKTIMULYA_CODE",
+    "district_id": "65a8dad5d394440a658eab37",
+    "total_voters": 4346
+  },
+  {
+    "village_name": "PULOSARI",
+    "code": "PULOSARI_CODE",
+    "district_id": "65a8dad5d394440a658eab37",
+    "total_voters": 8221
+  },
+  {
+    "village_name": "WANASUKA",
+    "code": "WANASUKA_CODE",
+    "district_id": "65a8dad5d394440a658eab37",
+    "total_voters": 3049
+  },
+  {
+    "village_name": "MARGAMEKAR",
+    "code": "MARGAMEKAR_CODE",
+    "district_id": "65a8dad5d394440a658eab37",
+    "total_voters": 6657
+  },
+  {
+    "village_name": "CIGENTUR",
+    "code": "CIGENTUR_CODE",
+    "district_id": "65a8dad5d394440a658eab3b",
+    "total_voters": 4708
+  },
+  {
+    "village_name": "CIPEDES",
+    "code": "CIPEDES_CODE",
+    "district_id": "65a8dad5d394440a658eab3b",
+    "total_voters": 9093
+  },
+  {
+    "village_name": "LOA",
+    "code": "LOA_CODE",
+    "district_id": "65a8dad5d394440a658eab3b",
+    "total_voters": 8460
+  },
+  {
+    "village_name": "CIJAGRA",
+    "code": "CIJAGRA_CODE",
+    "district_id": "65a8dad5d394440a658eab3b",
+    "total_voters": 5869
+  },
+  {
+    "village_name": "CIPAKU",
+    "code": "CIPAKU_CODE",
+    "district_id": "65a8dad5d394440a658eab3b",
+    "total_voters": 12120
+  },
+  {
+    "village_name": "SINDANGSARI",
+    "code": "SINDANGSARI_CODE",
+    "district_id": "65a8dad5d394440a658eab3b",
+    "total_voters": 10277
+  },
+  {
+    "village_name": "DRAWATI",
+    "code": "DRAWATI_CODE",
+    "district_id": "65a8dad5d394440a658eab3b",
+    "total_voters": 8657
+  },
+  {
+    "village_name": "SUKAMANTRI",
+    "code": "SUKAMANTRI_CODE",
+    "district_id": "65a8dad5d394440a658eab3b",
+    "total_voters": 12928
+  },
+  {
+    "village_name": "KARANGTUNGGAL",
+    "code": "KARANGTUNGGAL_CODE",
+    "district_id": "65a8dad5d394440a658eab3b",
+    "total_voters": 4167
+  },
+  {
+    "village_name": "MEKARPAWITAN",
+    "code": "MEKARPAWITAN_CODE",
+    "district_id": "65a8dad5d394440a658eab3b",
+    "total_voters": 7389
+  },
+  {
+    "village_name": "TANGSIMEKAR",
+    "code": "TANGSIMEKAR_CODE",
+    "district_id": "65a8dad5d394440a658eab3b",
+    "total_voters": 6730
+  },
+  {
+    "village_name": "PASIRJAMBU",
+    "code": "PASIRJAMBU_CODE",
+    "district_id": "65a8dad5d394440a658eab35",
+    "total_voters": 6752
+  },
+  {
+    "village_name": "CUKANGGENTENG",
+    "code": "CUKANGGENTENG_CODE",
+    "district_id": "65a8dad5d394440a658eab35",
+    "total_voters": 5402
+  },
+  {
+    "village_name": "CISONDARI",
+    "code": "CISONDARI_CODE",
+    "district_id": "65a8dad5d394440a658eab35",
+    "total_voters": 7951
+  },
+  {
+    "village_name": "MEKARMAJU",
+    "code": "MEKARMAJU_CODE",
+    "district_id": "65a8dad5d394440a658eab35",
+    "total_voters": 4683
+  },
+  {
+    "village_name": "SUGIHMUKTI",
+    "code": "SUGIHMUKTI_CODE",
+    "district_id": "65a8dad5d394440a658eab35",
+    "total_voters": 8637
+  },
+  {
+    "village_name": "PATENGAN",
+    "code": "PATENGAN_CODE",
+    "district_id": "65a8dad5d394440a658eab34",
+    "total_voters": 3915
+  },
+  {
+    "village_name": "SUKARESMI",
+    "code": "SUKARESMI_CODE",
+    "district_id": "65a8dad5d394440a658eab34",
+    "total_voters": 7423
+  },
+  {
+    "village_name": "INDRAGIRI",
+    "code": "INDRAGIRI_CODE",
+    "district_id": "65a8dad5d394440a658eab34",
+    "total_voters": 2726
+  },
+  {
+    "village_name": "CIPELAH",
+    "code": "CIPELAH_CODE",
+    "district_id": "65a8dad5d394440a658eab34",
+    "total_voters": 6558
+  },
+  {
+    "village_name": "ALAMENDAH",
+    "code": "ALAMENDAH_CODE",
+    "district_id": "65a8dad5d394440a658eab34",
+    "total_voters": 17822
+  },
+  {
+    "village_name": "RANCAEKEK KENCANA",
+    "code": "RANCAEKEK KENCANA_CODE",
+    "district_id": "65a8dad5d394440a658eab3f",
+    "total_voters": 17585
+  },
+  {
+    "village_name": "RANCAEKEK WETAN",
+    "code": "RANCAEKEK WETAN_CODE",
+    "district_id": "65a8dad5d394440a658eab3f",
+    "total_voters": 17699
+  },
+  {
+    "village_name": "RANCAEKEK KULON",
+    "code": "RANCAEKEK KULON_CODE",
+    "district_id": "65a8dad5d394440a658eab3f",
+    "total_voters": 10344
+  },
+  {
+    "village_name": "BOJONGSALAM",
+    "code": "BOJONGSALAM_CODE",
+    "district_id": "65a8dad5d394440a658eab3f",
+    "total_voters": 5119
+  },
+  {
+    "village_name": "BOJONGLOA",
+    "code": "BOJONGLOA_CODE",
+    "district_id": "65a8dad5d394440a658eab3f",
+    "total_voters": 14909
+  },
+  {
+    "village_name": "LINGGAR",
+    "code": "LINGGAR_CODE",
+    "district_id": "65a8dad5d394440a658eab3f",
+    "total_voters": 8408
+  },
+  {
+    "village_name": "HAURPUGUR",
+    "code": "HAURPUGUR_CODE",
+    "district_id": "65a8dad5d394440a658eab3f",
+    "total_voters": 6107
+  },
+  {
+    "village_name": "TEGAL SUMEDANG",
+    "code": "TEGAL SUMEDANG_CODE",
+    "district_id": "65a8dad5d394440a658eab3f",
+    "total_voters": 3312
+  },
+  {
+    "village_name": "SANGIANG",
+    "code": "SANGIANG_CODE",
+    "district_id": "65a8dad5d394440a658eab3f",
+    "total_voters": 5283
+  },
+  {
+    "village_name": "NANJUNG MEKAR",
+    "code": "NANJUNG MEKAR_CODE",
+    "district_id": "65a8dad5d394440a658eab3f",
+    "total_voters": 8673
+  },
+  {
+    "village_name": "RANCAKASUMBA",
+    "code": "RANCAKASUMBA_CODE",
+    "district_id": "65a8dad5d394440a658eab41",
+    "total_voters": 8996
+  },
+  {
+    "village_name": "SOLOKANJERUK",
+    "code": "SOLOKANJERUK_CODE",
+    "district_id": "65a8dad5d394440a658eab41",
+    "total_voters": 12481
+  },
+  {
+    "village_name": "PANYADAP",
+    "code": "PANYADAP_CODE",
+    "district_id": "65a8dad5d394440a658eab41",
+    "total_voters": 9486
+  },
+  {
+    "village_name": "BOJONGEMAS",
+    "code": "BOJONGEMAS_CODE",
+    "district_id": "65a8dad5d394440a658eab41",
+    "total_voters": 9759
+  },
+  {
+    "village_name": "PADAMUKTI",
+    "code": "PADAMUKTI_CODE",
+    "district_id": "65a8dad5d394440a658eab41",
+    "total_voters": 6403
+  },
+  {
+    "village_name": "LANGENSARI",
+    "code": "LANGENSARI_CODE",
+    "district_id": "65a8dad5d394440a658eab41",
+    "total_voters": 8114
+  },
+  {
+    "village_name": "SOREANG",
+    "code": "SOREANG_CODE",
+    "district_id": "65a8dad5d394440a658eab49",
+    "total_voters": 15010
+  },
+  {
+    "village_name": "SADU",
+    "code": "SADU_CODE",
+    "district_id": "65a8dad5d394440a658eab49",
+    "total_voters": 7728
+  },
+  {
+    "village_name": "PANYIRAPAN",
+    "code": "PANYIRAPAN_CODE",
+    "district_id": "65a8dad5d394440a658eab49",
+    "total_voters": 5935
+  },
+  {
+    "village_name": "SUKAJADI",
+    "code": "SUKAJADI_CODE",
+    "district_id": "65a8dad5d394440a658eab49",
+    "total_voters": 6205
+  },
+  {
+    "village_name": "PAMEKARAN",
+    "code": "PAMEKARAN_CODE",
+    "district_id": "65a8dad5d394440a658eab49",
+    "total_voters": 9962
+  },
+  {
+    "village_name": "KARAMATMULYA",
+    "code": "KARAMATMULYA_CODE",
+    "district_id": "65a8dad5d394440a658eab49",
+    "total_voters": 6494
+  },
+  {
+    "village_name": "SUKANAGARA",
+    "code": "SUKANAGARA_CODE",
+    "district_id": "65a8dad5d394440a658eab49",
+    "total_voters": 4555
+  },
+  {
+    "village_name": "CINGCIN",
+    "code": "CINGCIN_CODE",
+    "district_id": "65a8dad5d394440a658eab49",
+    "total_voters": 17225
+  },
+  {
+    "village_name": "PARUNGSERAB",
+    "code": "PARUNGSERAB_CODE",
+    "district_id": "65a8dad5d394440a658eab49",
+    "total_voters": 6561
+  },
+  {
+    "village_name": "SEKARWANGI",
+    "code": "SEKARWANGI_CODE",
+    "district_id": "65a8dad5d394440a658eab49",
+    "total_voters": 6240
+  }
+]

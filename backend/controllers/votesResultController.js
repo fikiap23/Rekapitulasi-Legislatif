@@ -301,6 +301,7 @@ const votesResultController = {
         const resultsByDistrict = await VotesResult.find({
           village_id: { $in: villageIds },
         })
+        const village = await Village.findById(villageIds)
 
         // Aggregate the results for the district
         const aggregatedResult = {
@@ -317,13 +318,8 @@ const votesResultController = {
             0
           ),
         }
-
-        // Retrieve total_voters directly from the villages
-        for (const villageId of villageIds) {
-          const village = await Village.findById(villageId)
-          if (village) {
-            aggregatedResult.total_voters += village.total_voters
-          }
+        if (village) {
+          aggregatedResult.total_voters += village.total_voters
         }
 
         resultsByDistricts.push(aggregatedResult)
