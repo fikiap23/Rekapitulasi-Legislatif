@@ -1,5 +1,6 @@
 import express from 'express'
 import votesResultController from '../controllers/votesResultController.js'
+import calegController from '../controllers/calegController.js'
 import { protectAdminRoute } from '../middlewares/protectRoute.js'
 
 const router = express.Router()
@@ -31,5 +32,7 @@ router.get(
   protectAdminRoute,
   votesResultController.getVillageByVillageId
 )
+
+router.get('/calegs', protectAdminRoute, calegController.getAllCalegs)
 
 export default router

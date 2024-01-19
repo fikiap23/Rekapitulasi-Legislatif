@@ -10,7 +10,6 @@ import TableContainer from '@mui/material/TableContainer';
 import TablePagination from '@mui/material/TablePagination';
 import { Grid, MenuItem, TextField, LinearProgress } from '@mui/material';
 
-import { users } from 'src/_mock/user';
 import resultService from 'src/services/resultService';
 import districtService from 'src/services/districtService';
 
@@ -40,7 +39,7 @@ export default function SuaraCalegView() {
   const [kecamatan, setKecamatan] = useState('');
   const [kelurahan, setKelurahan] = useState('');
   const [selectedKelurahan, setSelectedKelurahan] = useState({});
-  const [dataParties, setParties] = useState([]);
+  const [calegs, setCalegs] = useState([]);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -51,7 +50,10 @@ export default function SuaraCalegView() {
       setLoading(true);
 
       const getKecamatans = await districtService.getAllDistricts();
+      const getCalegs = await resultService.getAllCalegs();
       setKecamatans(getKecamatans.data);
+      setCalegs(getCalegs.data);
+      console.log(getCalegs.data);
 
       setLoading(false);
     } catch (error) {
@@ -66,7 +68,7 @@ export default function SuaraCalegView() {
       const getKelurahan = await resultService.getVillageByVillageId(village_id);
 
       setSelectedKelurahan(getKelurahan.data);
-      setParties(getKelurahan.data.valid_ballots_detail);
+      // setParties(getKelurahan.data.valid_ballots_detail);
       console.log(getKelurahan.data.valid_ballots_detail);
       setLoading(false);
     } catch (error) {
@@ -98,7 +100,7 @@ export default function SuaraCalegView() {
   };
 
   const dataFiltered = applyFilter({
-    inputData: users,
+    inputData: calegs,
     comparator: getComparator(order, orderBy),
     filterName,
   });
@@ -175,9 +177,9 @@ export default function SuaraCalegView() {
                     onRequestSort={handleSort}
                     headLabel={[
                       { id: 'isVerified', label: 'No', align: 'center' },
-                      { id: 'name', label: 'Nama' },
-                      { id: 'company', label: 'Partai' },
-                      { id: 'role', label: 'Jumlah Suara' },
+                      { id: 'candidate_data.name', label: 'Nama' },
+                      { id: 'party_name', label: 'Partai' },
+                      { id: 'number_of_votes', label: 'Jumlah Suara' },
                     ]}
                   />
                   <TableBody>
@@ -185,11 +187,11 @@ export default function SuaraCalegView() {
                       .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                       .map((row, index) => (
                         <UserTableRow
-                          key={row.id}
+                          key={row.candidate_id}
                           no={page * rowsPerPage + index + 1}
-                          name={row.name}
-                          role={row.role}
-                          company={row.company}
+                          name={row.candidate_data.name}
+                          role={row.number_of_votes}
+                          company={row.party_name}
                         />
                       ))}
 

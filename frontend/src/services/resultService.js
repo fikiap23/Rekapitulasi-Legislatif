@@ -66,6 +66,17 @@ const resultService = {
       return error.response.data;
     }
   },
+
+  getAllCalegs: async () => {
+    try {
+      const response = await axios.get(`${BASE_URL}/calegs`, {
+        withCredentials: true,
+      });
+      return response.data;
+    } catch (error) {
+      return error.response.data;
+    }
+  },
 };
 
 export default resultService;
