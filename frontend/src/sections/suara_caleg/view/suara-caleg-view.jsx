@@ -64,12 +64,14 @@ export default function SuaraCalegView() {
   const handleCalegByKecamatan = async (districtId) => {
     try {
       setCalegs([]);
+      setKelurahan('');
       setLoading(true);
       const getCalegs = await resultService.getCalegByDistrictId(districtId);
       setCalegs(getCalegs.data);
       setLoading(false);
     } catch (error) {
       setCalegs([]);
+      setKelurahan('');
       setLoading(false);
     }
   };
