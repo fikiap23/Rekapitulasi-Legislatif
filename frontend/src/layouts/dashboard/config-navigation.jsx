@@ -13,7 +13,7 @@ const navConfig = [
     title: 'data keseluruhan',
     path: '/',
     icon: <Iconify icon="tdesign:chart-analytics" />,
-    accessibleRoles: ['admin', 'user_district', 'user_village'],
+    accessibleRoles: ['admin'],
   },
   {
     title: 'data kecamatan',

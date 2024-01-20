@@ -30,7 +30,11 @@ export default function Router() {
         <Navigate to="/login" replace />
       ),
       children: [
-        { element: <IndexPage />, index: true },
+        {
+          element:
+            user?.role === 'admin' ? <IndexPage /> : <Navigate to="pengisian-suara" replace />,
+          index: true,
+        },
         { path: 'pengisian-suara', element: <PengisianSuaraPage /> },
 
         {
