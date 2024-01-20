@@ -1,4 +1,5 @@
 import { useSnackbar } from 'notistack';
+import { useRecoilValue } from 'recoil';
 import { useState, useEffect } from 'react';
 
 import Container from '@mui/material/Container';
@@ -19,6 +20,7 @@ import {
   LinearProgress,
 } from '@mui/material';
 
+import userAtom from 'src/atoms/userAtom';
 import partyService from 'src/services/partyService';
 import resultService from 'src/services/resultService';
 import districtService from 'src/services/districtService';
@@ -30,6 +32,7 @@ import PartyCard from '../party-card';
 // ----------------------------------------------------------------------
 
 export default function PengisianSuaraView() {
+  const user = useRecoilValue(userAtom);
   const [kecamatan, setKecamatan] = useState('');
   const [kelurahan, setKelurahan] = useState('');
   const [parties, setParties] = useState([]);
@@ -45,24 +48,28 @@ export default function PengisianSuaraView() {
   ]);
 
   useEffect(() => {
+    const handleGetAllParties = async () => {
+      try {
+        setLoading(true);
+        const result = await partyService.getAllParties();
+        if (user.role === 'admin') {
+          const getKecamatans = await districtService.getAllDistricts();
+          setKecamatans(getKecamatans.data);
+        } else if (user.role === 'user_village') {
+          setKelurahan(user.villageData);
+        }
+
+        setParties(result);
+
+        setLoading(false);
+      } catch (error) {
+        setKecamatans([]);
+        setParties([]);
+        setLoading(false);
+      }
+    };
     handleGetAllParties();
-  }, []);
-
-  const handleGetAllParties = async () => {
-    try {
-      setLoading(true);
-      const result = await partyService.getAllParties();
-      const getKecamatans = await districtService.getAllDistricts();
-      setKecamatans(getKecamatans.data);
-      setParties(result);
-
-      setLoading(false);
-    } catch (error) {
-      setKecamatans([]);
-      setParties([]);
-      setLoading(false);
-    }
-  };
+  }, [user]);
 
   const handleSubmit = async () => {
     try {
@@ -89,7 +96,13 @@ export default function PengisianSuaraView() {
         return;
       }
 
-      const result = await resultService.fillBallots(kelurahan, votesResult);
+      let result;
+      if (user.role === 'admin') {
+        result = await resultService.fillBallots(kelurahan, votesResult);
+      } else if (user.role === 'user_village') {
+        result = await resultService.fillBallots(kelurahan._id, votesResult);
+        // console.log('kelurahan', kelurahan._id);
+      }
       if (result.code === 200) {
         enqueueSnackbar('Voting success', {
           variant: 'success',
@@ -144,59 +157,67 @@ export default function PengisianSuaraView() {
       {loading && <LinearProgress color="primary" variant="query" />}
       {!loading && (
         <>
-          <Grid container spacing={3} mb={5}>
-            <Grid item xs={12}>
-              <TextField
-                fullWidth
-                label="Name"
-                variant="outlined"
-                // onChange={(e) => setName(e.target.value)}
-              />
-            </Grid>
-            <Grid item xs={12} md={6}>
-              <TextField
-                fullWidth
-                select
-                label="Kecamatan"
-                value={kecamatan}
-                onChange={(e) => {
-                  setKecamatan(e.target.value);
-                  setKelurahans(e.target.value.villages);
-                  // console.log(e.target.value);
-                }}
-                variant="outlined"
-              >
-                <MenuItem value="" disabled>
-                  Pilih Kecamatan
-                </MenuItem>
-                {kecamatans.map((option) => (
-                  <MenuItem key={option._id} value={option}>
-                    {option.district_name}
+          {user.role === 'user_village' && (
+            <Typography variant="h6" sx={{ mb: 2, color: 'primary.main' }}>
+              Isi suara di Kelurahan {kelurahan.village_name}
+            </Typography>
+          )}
+
+          {user.role === 'admin' && (
+            <Grid container spacing={3} mb={5}>
+              <Grid item xs={12}>
+                <TextField
+                  fullWidth
+                  label="Name"
+                  variant="outlined"
+                  // onChange={(e) => setName(e.target.value)}
+                />
+              </Grid>
+              <Grid item xs={12} md={6}>
+                <TextField
+                  fullWidth
+                  select
+                  label="Kecamatan"
+                  value={kecamatan}
+                  onChange={(e) => {
+                    setKecamatan(e.target.value);
+                    setKelurahans(e.target.value.villages);
+                    // console.log(e.target.value);
+                  }}
+                  variant="outlined"
+                >
+                  <MenuItem value="" disabled>
+                    Pilih Kecamatan
                   </MenuItem>
-                ))}
-              </TextField>
-            </Grid>
-            <Grid item xs={12} md={6}>
-              <TextField
-                fullWidth
-                select
-                label="Kelurahan"
-                value={kelurahan}
-                onChange={(e) => setKelurahan(e.target.value)}
-                variant="outlined"
-                disabled={!kecamatan}
-              >
-                <MenuItem value="" disabled>
-                  Pilih Desa / Kelurahan
-                </MenuItem>
-                {kelurahans.map((option) => (
-                  <MenuItem key={option._id} value={option._id}>
-                    {option.village_name}
+                  {kecamatans.map((option) => (
+                    <MenuItem key={option._id} value={option}>
+                      {option.district_name}
+                    </MenuItem>
+                  ))}
+                </TextField>
+              </Grid>
+              <Grid item xs={12} md={6}>
+                <TextField
+                  fullWidth
+                  select
+                  label="Kelurahan"
+                  value={kelurahan}
+                  onChange={(e) => setKelurahan(e.target.value)}
+                  variant="outlined"
+                  disabled={!kecamatan}
+                >
+                  <MenuItem value="" disabled>
+                    Pilih Desa / Kelurahan
                   </MenuItem>
-                ))}
-              </TextField>
+                  {kelurahans.map((option) => (
+                    <MenuItem key={option._id} value={option._id}>
+                      {option.village_name}
+                    </MenuItem>
+                  ))}
+                </TextField>
+              </Grid>
             </Grid>
-          </Grid>
+          )}
 
           <Grid container spacing={2} mb={5}>
             {parties.map((party) => (

@@ -3,6 +3,7 @@ import bcrypt from 'bcryptjs'
 import generateTokenAndSetCookie from '../utils/helpers/generateTokenAndSetCookie.js'
 import apiHandler from '../utils/apiHandler.js'
 import User from '../models/userModel.js'
+import { Village, District } from '../models/regionModel.js'
 
 const authController = {
   signupAdmin: async (req, res) => {
@@ -146,6 +147,8 @@ const authController = {
           },
         })
       } else if (user.role == 'user_village') {
+        const villageData = await Village.findOne({ _id: user.village_id })
+        console.log(villageData)
         generateTokenAndSetCookie(user._id, 'user_village', res)
         return apiHandler({
           res,
@@ -158,6 +161,7 @@ const authController = {
             name: user.name,
             username: user.username,
             village_id: user.village_id,
+            villageData: villageData,
           },
         })
       } else {
