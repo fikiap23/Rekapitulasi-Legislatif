@@ -142,6 +142,7 @@ const authController = {
             name: user.name,
             role: user.role,
             username: user.username,
+            district_id: user.district_id,
           },
         })
       } else if (user.role == 'user_village') {
@@ -156,6 +157,7 @@ const authController = {
             role: user.role,
             name: user.name,
             username: user.username,
+            village_id: user.village_id,
           },
         })
       } else {
