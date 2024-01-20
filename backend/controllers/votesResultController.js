@@ -286,8 +286,8 @@ const votesResultController = {
 
   getAllDistricts: async (req, res) => {
     try {
-      // Find all districts
-      const districts = await District.find()
+      // Find all districts with populated villages
+      const districts = await District.find().populate('villages')
 
       // Array to store results for each district
       const resultsByDistricts = []
@@ -295,20 +295,30 @@ const votesResultController = {
       // Iterate through each district
       for (const district of districts) {
         // Extract village IDs for the district
-        const villageIds = district.villages
+        const villageIds = district.villages.map((village) => village._id)
+
+        // Fetch results for the villages in the district concurrently
+        const villagePromises = villageIds.map((villageId) =>
+          Village.findById(villageId)
+        )
+        const villages = await Promise.all(villagePromises)
+
+        // Calculate total voters for the district
+        const totalVotersForDistrict = villages.reduce(
+          (total, village) => total + (village ? village.total_voters : 0),
+          0
+        )
 
         // Fetch results for the villages in the district
         const resultsByDistrict = await VotesResult.find({
           village_id: { $in: villageIds },
         })
-        const village = await Village.findById(villageIds)
 
         // Aggregate the results for the district
         const aggregatedResult = {
           district_id: district._id,
           district_name: district.district_name,
-          total_voters: 0, // Initialize total_voters to 0
-
+          total_voters: totalVotersForDistrict,
           total_invalid_ballots: resultsByDistrict.reduce(
             (total, result) => total + result.total_invalid_ballots,
             0
@@ -317,9 +327,6 @@ const votesResultController = {
             (total, result) => total + result.total_valid_ballots,
             0
           ),
-        }
-        if (village) {
-          aggregatedResult.total_voters += village.total_voters
         }
 
         resultsByDistricts.push(aggregatedResult)
