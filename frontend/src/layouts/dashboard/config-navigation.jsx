@@ -37,7 +37,7 @@ const navConfig = [
     title: 'pengguna',
     path: '/user',
     icon: <Iconify icon="solar:user-outline" />,
-    accessibleRoles: ['admin'],
+    accessibleRoles: ['admin', 'user_district'],
   },
 ];
 

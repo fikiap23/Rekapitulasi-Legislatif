@@ -39,7 +39,12 @@ export default function Router() {
 
         {
           path: 'user',
-          element: user?.role === 'admin' ? <UserPage /> : <Navigate to="/404" replace />,
+          element:
+            user?.role === 'admin' || user?.role === 'user_district' ? (
+              <UserPage />
+            ) : (
+              <Navigate to="/404" replace />
+            ),
         },
 
         {
