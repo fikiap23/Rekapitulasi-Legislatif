@@ -30,7 +30,7 @@ const navConfig = [
   {
     title: 'data suara caleg',
     path: '/suara-caleg',
-    icon: <Iconify icon="healthicons:village-outline" />,
+    icon: <Iconify icon="material-symbols-light:ballot-outline" />,
     accessibleRoles: ['admin'],
   },
   {
