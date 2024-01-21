@@ -233,6 +233,55 @@ const villageController = {
       })
     }
   },
+
+  getAllVillageByDistrictId: async (req, res) => {
+    try {
+      const { district_id } = req.params
+
+      if (!district_id) {
+        return apiHandler({
+          res,
+          status: 'error',
+          code: 400,
+          message: 'Invalid district ID',
+          error: null,
+        })
+      }
+
+      // Check if the district exists
+      const district = await District.findById(district_id)
+      if (!district) {
+        return apiHandler({
+          res,
+          status: 'error',
+          code: 404,
+          message: 'District not found',
+          error: null,
+        })
+      }
+
+      // Fetch all villages for the given district
+      const villages = await Village.find({ district_id })
+
+      return apiHandler({
+        res,
+        status: 'success',
+        code: 200,
+        message: 'Villages retrieved successfully',
+        data: villages,
+        error: null,
+      })
+    } catch (error) {
+      return apiHandler({
+        res,
+        status: 'error',
+        code: 500,
+        message: 'Internal Server Error',
+        data: null,
+        error: { type: 'InternalServerError', details: error.message },
+      })
+    }
+  },
 }
 
 export default villageController

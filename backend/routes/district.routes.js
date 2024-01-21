@@ -6,7 +6,7 @@ const router = express.Router()
 
 //! route district
 router.post('/', protectAdminRoute, districtController.createNewDistrict)
-router.get('/', protectAdminRoute, districtController.getAllDistricts)
+router.get('/', districtController.getAllDistricts)
 
 router.post(
   '/bulk/:regency_id',

@@ -30,17 +30,31 @@ export default function Router() {
         <Navigate to="/login" replace />
       ),
       children: [
-        { element: <IndexPage />, index: true },
+        {
+          element:
+            user?.role === 'admin' ? <IndexPage /> : <Navigate to="pengisian-suara" replace />,
+          index: true,
+        },
         { path: 'pengisian-suara', element: <PengisianSuaraPage /> },
 
         {
           path: 'user',
-          element: user?.role === 'admin' ? <UserPage /> : <Navigate to="/404" replace />,
+          element:
+            user?.role === 'admin' || user?.role === 'user_district' ? (
+              <UserPage />
+            ) : (
+              <Navigate to="/404" replace />
+            ),
         },
 
         {
           path: 'kecamatan',
-          element: user?.role === 'admin' ? <KecamatanPage /> : <Navigate to="/404" replace />,
+          element:
+            user?.role === 'admin' || user?.role === 'user_district' ? (
+              <KecamatanPage />
+            ) : (
+              <Navigate to="/404" replace />
+            ),
         },
 
         {

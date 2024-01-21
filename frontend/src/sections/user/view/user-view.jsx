@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import Card from '@mui/material/Card';
 import Stack from '@mui/material/Stack';
 import Table from '@mui/material/Table';
+import { LinearProgress } from '@mui/material';
 import Container from '@mui/material/Container';
 import TableBody from '@mui/material/TableBody';
 import Typography from '@mui/material/Typography';
@@ -30,7 +31,7 @@ export default function UserPage() {
   const [orderBy, setOrderBy] = useState('username');
   const [filterUsername, setFilterUsername] = useState(''); // Change to filter by username
   const [rowsPerPage, setRowsPerPage] = useState(5);
-
+  const [loading, setLoading] = useState(false);
   const [users, setUsers] = useState([]);
 
   // Get all users and admins
@@ -40,12 +41,15 @@ export default function UserPage() {
 
   const handleGetAllUsers = async () => {
     try {
+      setLoading(true);
       const result = await userService.getAllUsers();
       setUsers(result);
       // console.log('All users and admins:', result);
       // Handle successful retrieval of users and admins
+      setLoading(false);
     } catch (error) {
       console.error('Get all users and admins error:', error);
+      setLoading(false);
       // Handle error in retrieving users and admins
     }
   };
@@ -113,75 +117,77 @@ export default function UserPage() {
         <Typography variant="h4">Users</Typography>
         <CreateUserDialog />
       </Stack>
+      {loading && <LinearProgress color="primary" variant="query" />}
+      {!loading && (
+        <Card>
+          <UserTableToolbar
+            numSelected={selected.length}
+            filterUsername={filterUsername}
+            selectedIds={selected}
+            onFilterUsername={handleFilterByUsername}
+          />
 
-      <Card>
-        <UserTableToolbar
-          numSelected={selected.length}
-          filterUsername={filterUsername}
-          selectedIds={selected}
-          onFilterUsername={handleFilterByUsername}
-        />
-
-        <Scrollbar>
-          <TableContainer sx={{ overflow: 'unset' }}>
-            <Table sx={{ minWidth: 800 }}>
-              <UserTableHead
-                order={order}
-                orderBy={orderBy}
-                rowCount={users.length}
-                numSelected={selected.length}
-                onRequestSort={handleSort}
-                onSelectAllClick={handleSelectAllClick}
-                headLabel={[
-                  { id: 'username', label: 'Username' }, // Change to filter by username
-                  { id: 'daerah', label: 'Daerah' },
-                  { id: 'role', label: 'Peran' },
-                  { id: 'status', label: 'Status' },
-                  { id: '' },
-                ]}
-              />
-              <TableBody>
-                {dataFiltered
-                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                  .map((row) => (
-                    <UserTableRow
-                      user={row}
-                      id={row._id}
-                      key={row._id}
-                      username={row.username} // Change to filter by username
-                      role={row.role}
-                      status="Aktif"
-                      daerah={
-                        row.village_id?.village_name ??
-                        row.district_id?.district_name ??
-                        'Super Admin'
-                      }
-                      selected={selected.indexOf(row._id) !== -1} // Change to filter by username
-                      handleClick={(event) => handleClick(event, row._id)} // Change to filter by username
-                    />
-                  ))}
-
-                <TableEmptyRows
-                  height={77}
-                  emptyRows={emptyRows(page, rowsPerPage, users.length)}
+          <Scrollbar>
+            <TableContainer sx={{ overflow: 'unset' }}>
+              <Table sx={{ minWidth: 800 }}>
+                <UserTableHead
+                  order={order}
+                  orderBy={orderBy}
+                  rowCount={users.length}
+                  numSelected={selected.length}
+                  onRequestSort={handleSort}
+                  onSelectAllClick={handleSelectAllClick}
+                  headLabel={[
+                    { id: 'username', label: 'Username' }, // Change to filter by username
+                    { id: 'daerah', label: 'Daerah' },
+                    { id: 'role', label: 'Peran' },
+                    { id: 'status', label: 'Status' },
+                    { id: '' },
+                  ]}
                 />
+                <TableBody>
+                  {dataFiltered
+                    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                    .map((row) => (
+                      <UserTableRow
+                        user={row}
+                        id={row._id}
+                        key={row._id}
+                        username={row.username} // Change to filter by username
+                        role={row.role}
+                        status="Aktif"
+                        daerah={
+                          row.village_id?.village_name ??
+                          row.district_id?.district_name ??
+                          'Super Admin'
+                        }
+                        selected={selected.indexOf(row._id) !== -1} // Change to filter by username
+                        handleClick={(event) => handleClick(event, row._id)} // Change to filter by username
+                      />
+                    ))}
 
-                {notFound && <TableNoData query={filterUsername} />}
-              </TableBody>
-            </Table>
-          </TableContainer>
-        </Scrollbar>
+                  <TableEmptyRows
+                    height={77}
+                    emptyRows={emptyRows(page, rowsPerPage, users.length)}
+                  />
 
-        <TablePagination
-          page={page}
-          component="div"
-          count={users.length}
-          rowsPerPage={rowsPerPage}
-          onPageChange={handleChangePage}
-          rowsPerPageOptions={[5, 10, 25]}
-          onRowsPerPageChange={handleChangeRowsPerPage}
-        />
-      </Card>
+                  {notFound && <TableNoData query={filterUsername} />}
+                </TableBody>
+              </Table>
+            </TableContainer>
+          </Scrollbar>
+
+          <TablePagination
+            page={page}
+            component="div"
+            count={users.length}
+            rowsPerPage={rowsPerPage}
+            onPageChange={handleChangePage}
+            rowsPerPageOptions={[5, 10, 25]}
+            onRowsPerPageChange={handleChangeRowsPerPage}
+          />
+        </Card>
+      )}
     </Container>
   );
 }

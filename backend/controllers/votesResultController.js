@@ -9,16 +9,19 @@ const votesResultController = {
     try {
       const { villageId } = req.params
       const validBallotsDetail = req.body
-// Check if validBallotsDetail is an array and not empty
-if (!Array.isArray(validBallotsDetail) || validBallotsDetail.length === 0) {
-  return apiHandler({
-    res,
-    status: 'error',
-    code: 400,
-    message: 'Invalid or empty validBallotsDetail format',
-    error: null,
-  });
-}
+      // Check if validBallotsDetail is an array and not empty
+      if (
+        !Array.isArray(validBallotsDetail) ||
+        validBallotsDetail.length === 0
+      ) {
+        return apiHandler({
+          res,
+          status: 'error',
+          code: 400,
+          message: 'Invalid or empty validBallotsDetail format',
+          error: null,
+        })
+      }
 
       // Check villageId
       if (!villageId) {
@@ -48,8 +51,8 @@ if (!Array.isArray(validBallotsDetail) || validBallotsDetail.length === 0) {
 
       for (const item of validBallotsDetail) {
         if (item.party_id) {
-          // Check if party exists
           const partyExists = await Party.findById(item.party_id)
+
           if (!partyExists) {
             return apiHandler({
               res,
@@ -60,42 +63,30 @@ if (!Array.isArray(validBallotsDetail) || validBallotsDetail.length === 0) {
             })
           }
 
-          // Check if candidates exist for the party
           if (partyExists.candidates && partyExists.candidates.length > 0) {
             let totalVotesParty = 0
 
             for (const candidate of item.candidates) {
               const candidateId = new mongoose.Types.ObjectId(
-                candidate.candidate_id
+                candidate?.candidate_id
               )
               const candidateExists = partyExists.candidates.find((c) =>
                 c._id.equals(candidateId)
               )
 
               if (!candidateExists) {
-                return apiHandler({
-                  res,
-                  status: 'error',
-                  code: 400,
-                  message: `Candidate with ID ${candidate.candidate_id} not found for party ${item.party_id}`,
-                  error: null,
-                })
+                console.warn(
+                  `Candidate with ID ${candidate?.candidate_id} not found for party ${item.party_id}. Skipping...`
+                )
+
+                // Skip to the next iteration if candidate is not found
+                continue
               }
 
               totalVotesParty += candidate.number_of_votes || 0
             }
 
-            // Check if total votes for the party exceed maxVotes
-            if (totalVotesParty > village.total_voters) {
-              return apiHandler({
-                res,
-                status: 'error',
-                code: 400,
-                message: `Total votes for party ${item.party_id} exceed the maximum allowed votes`,
-                error: null,
-              })
-            }
-
+            // Rest of the code for processing totalVotesParty
             // Add total votes for the party to the overall total
             totalVotesAllParties += totalVotesParty
 
@@ -136,6 +127,7 @@ if (!Array.isArray(validBallotsDetail) || validBallotsDetail.length === 0) {
       const updatedVotesResult = await VotesResult.findOneAndUpdate(
         { village_id: villageId },
         {
+          total_voters: village.total_voters,
           valid_ballots_detail: validBallotsDetail,
           total_valid_ballots: totalVotesAllParties,
           total_invalid_ballots: village.total_voters - totalVotesAllParties,
@@ -238,7 +230,7 @@ if (!Array.isArray(validBallotsDetail) || validBallotsDetail.length === 0) {
 
   getAllResult: async (req, res) => {
     try {
-      // Find villages all
+      // Find all villages
       const villages = await Village.find()
 
       // Extract village IDs
@@ -251,6 +243,12 @@ if (!Array.isArray(validBallotsDetail) || validBallotsDetail.length === 0) {
 
       let valid_ballots_detail = await getValidBallotsHelper(result)
 
+      // Sum up the total_voters from all villages
+      const total_voters = villages.reduce(
+        (total, village) => total + village.total_voters,
+        0
+      )
+
       // Combine and aggregate the results
       const aggregatedResult = {
         total_invalid_ballots: result.reduce(
@@ -261,6 +259,7 @@ if (!Array.isArray(validBallotsDetail) || validBallotsDetail.length === 0) {
           (total, result) => total + result.total_valid_ballots,
           0
         ),
+        total_voters: total_voters,
       }
 
       // Return the aggregated result
@@ -268,12 +267,228 @@ if (!Array.isArray(validBallotsDetail) || validBallotsDetail.length === 0) {
         res,
         status: 'success',
         code: 200,
-        message: 'Voting results for the district retrieved successfully',
+        message: 'Voting results for all villages retrieved successfully',
         data: { ...aggregatedResult, valid_ballots_detail },
         error: null,
       })
     } catch (error) {
       console.error('Error getting total results by district:', error)
+      return apiHandler({
+        res,
+        status: 'error',
+        code: 500,
+        message: 'Internal Server Error',
+        data: null,
+        error: { type: 'InternalServerError', details: error.message },
+      })
+    }
+  },
+
+  getAllDistricts: async (req, res) => {
+    try {
+      // Find all districts with populated villages
+      const districts = await District.find().populate('villages')
+
+      // Array to store results for each district
+      const resultsByDistricts = []
+
+      // Iterate through each district
+      for (const district of districts) {
+        // Extract village IDs for the district
+        const villageIds = district.villages.map((village) => village._id)
+
+        // Fetch results for the villages in the district concurrently
+        const villagePromises = villageIds.map((villageId) =>
+          Village.findById(villageId)
+        )
+        const villages = await Promise.all(villagePromises)
+
+        // Calculate total voters for the district
+        const totalVotersForDistrict = villages.reduce(
+          (total, village) => total + (village ? village.total_voters : 0),
+          0
+        )
+
+        // Fetch results for the villages in the district
+        const resultsByDistrict = await VotesResult.find({
+          village_id: { $in: villageIds },
+        })
+
+        // Aggregate the results for the district
+        const aggregatedResult = {
+          district_id: district._id,
+          district_name: district.district_name,
+          total_voters: totalVotersForDistrict,
+          total_invalid_ballots: resultsByDistrict.reduce(
+            (total, result) => total + result.total_invalid_ballots,
+            0
+          ),
+          total_valid_ballots: resultsByDistrict.reduce(
+            (total, result) => total + result.total_valid_ballots,
+            0
+          ),
+        }
+
+        resultsByDistricts.push(aggregatedResult)
+      }
+
+      // Return the results for all districts
+      return apiHandler({
+        res,
+        status: 'success',
+        code: 200,
+        message: 'Voting results for all districts retrieved successfully',
+        data: resultsByDistricts,
+        error: null,
+      })
+    } catch (error) {
+      console.error('Error getting total results by district:', error)
+      return apiHandler({
+        res,
+        status: 'error',
+        code: 500,
+        message: 'Internal Server Error',
+        data: null,
+        error: { type: 'InternalServerError', details: error.message },
+      })
+    }
+  },
+
+  getAllVillageByDistrictId: async (req, res) => {
+    try {
+      const { districtId } = req.params
+
+      // Check if districtId is provided
+      if (!districtId) {
+        return apiHandler({
+          res,
+          status: 'error',
+          code: 400,
+          message: 'Missing districtId parameter',
+          error: null,
+        })
+      }
+
+      // Check if districtId exists
+      const district = await District.findById(districtId)
+      if (!district) {
+        return apiHandler({
+          res,
+          status: 'error',
+          code: 404,
+          message: 'District not found',
+          error: null,
+        })
+      }
+
+      // Extract village IDs
+      const villageIds = district.villages
+
+      // Fetch all villages for the given district
+      const villages = await Village.find({ _id: { $in: villageIds } })
+
+      // Fetch results for the villages in the district
+      const resultsByDistrict = await VotesResult.find({
+        village_id: { $in: villageIds },
+      })
+
+      // Map results to village IDs for easier lookup
+      const resultsMap = resultsByDistrict.reduce((acc, result) => {
+        acc[result.village_id] = result
+        return acc
+      }, {})
+
+      // Combine village data with voting results
+      const villagesWithResults = villages.map((village) => {
+        const result = resultsMap[village._id.toString()] || {
+          total_invalid_ballots: 0,
+          total_valid_ballots: 0,
+        }
+
+        return {
+          village_id: village._id,
+          village_name: village.village_name,
+          total_voters: village.total_voters,
+          total_invalid_ballots: result.total_invalid_ballots,
+          total_valid_ballots: result.total_valid_ballots,
+        }
+      })
+
+      // Return the villages with voting results
+      return apiHandler({
+        res,
+        status: 'success',
+        code: 200,
+        message: 'Villages for the district retrieved successfully',
+        data: villagesWithResults,
+        error: null,
+      })
+    } catch (error) {
+      console.error('Error getting villages by district:', error)
+      return apiHandler({
+        res,
+        status: 'error',
+        code: 500,
+        message: 'Internal Server Error',
+        data: null,
+        error: { type: 'InternalServerError', details: error.message },
+      })
+    }
+  },
+  getVillageByVillageId: async (req, res) => {
+    try {
+      const { villageId } = req.params
+
+      // Check if villageId is provided
+      if (!villageId) {
+        return apiHandler({
+          res,
+          status: 'error',
+          code: 400,
+          message: 'Missing villageId parameter',
+          error: null,
+        })
+      }
+
+      // Check if villageId exists
+      const village = await Village.findById(villageId)
+
+      if (!village) {
+        return apiHandler({
+          res,
+          status: 'error',
+          code: 404,
+          message: 'Village not found',
+          error: null,
+        })
+      }
+
+      // Fetch voting results for the village with populated party details (_id, code, name)
+      const results = await VotesResult.findOne({
+        village_id: villageId,
+      }).populate({
+        path: 'valid_ballots_detail.party_id',
+        select: '_id code name',
+      })
+
+      // Return the village with populated voting results
+      return apiHandler({
+        res,
+        status: 'success',
+        code: 200,
+        message: 'Village retrieved successfully',
+        data: {
+          village_id: village._id,
+          village_name: village.village_name,
+          total_voters: village.total_voters,
+          total_invalid_ballots: results ? results.total_invalid_ballots : 0,
+          total_valid_ballots: results ? results.total_valid_ballots : 0,
+          valid_ballots_detail: results ? results.valid_ballots_detail : [],
+        },
+        error: null,
+      })
+    } catch (error) {
+      console.error('Error getting village by villageId:', error)
       return apiHandler({
         res,
         status: 'error',
@@ -296,7 +511,6 @@ const getValidBallotsHelper = async (resultsByDistrict) => {
       result.valid_ballots_detail.forEach((party) => {
         const partyId = party.party_id
 
-        // Initialize total votes for the party if not exists
         if (!totalVotes[partyId]) {
           totalVotes[partyId] = {
             party_id: partyId,
@@ -305,27 +519,34 @@ const getValidBallotsHelper = async (resultsByDistrict) => {
           }
         }
 
-        // Add total votes for the party
-        totalVotes[partyId].total_votes_party += party.total_votes_party
+        console.log(
+          `Party ID: ${partyId}, Total Votes Party: ${totalVotes[partyId].total_votes_party}`
+        )
 
-        // Iterate through each candidate in the party
         party.candidates.forEach((candidate) => {
-          const candidateId = candidate.candidate_id
+          if (candidate) {
+            const candidateId = candidate.candidate_id
 
-          // Initialize total votes for the candidate if not exists
-          if (!totalVotes[partyId].candidates[candidateId]) {
-            totalVotes[partyId].candidates[candidateId] = {
-              candidate_id: candidateId,
-              number_of_votes: 0,
+            if (!totalVotes[partyId].candidates[candidateId]) {
+              totalVotes[partyId].candidates[candidateId] = {
+                candidate_id: candidateId,
+                number_of_votes: 0,
+              }
             }
-          }
 
-          // Add total votes for the candidate
-          totalVotes[partyId].candidates[candidateId].number_of_votes +=
-            candidate.number_of_votes
+            totalVotes[partyId].candidates[candidateId].number_of_votes +=
+              candidate.number_of_votes
+
+            console.log(
+              `Candidate ID: ${candidateId}, Number of Votes: ${totalVotes[partyId].candidates[candidateId].number_of_votes}`
+            )
+            // add total votes party
+            totalVotes[partyId].total_votes_party += candidate.number_of_votes
+          }
         })
       })
     })
+    console.log('Total Votes:', totalVotes)
 
     // Collect all party IDs and candidate IDs
     const allPartyIds = Object.keys(totalVotes)
@@ -347,12 +568,9 @@ const getValidBallotsHelper = async (resultsByDistrict) => {
       return {
         party_id: party.party_id,
         total_votes_party: party.total_votes_party,
-        party_data: {
-          _id: partyData._id,
-          name: partyData.name,
-          code: partyData.code,
-          logoUrl: partyData.logoUrl,
-        },
+        name: partyData.name,
+        code: partyData.code,
+        logoUrl: partyData.logoUrl,
         candidates: Object.values(party.candidates).map((candidate) => {
           // Access candidate data from the party map
           const candidateData = partyData.candidates.find(

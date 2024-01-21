@@ -7,12 +7,20 @@ import Autocomplete, { autocompleteClasses } from '@mui/material/Autocomplete';
 import Iconify from 'src/components/iconify';
 
 // ----------------------------------------------------------------------
-
 KecamatanSearch.propTypes = {
   kecamatans: PropTypes.array.isRequired,
+  onSelectKecamatan: PropTypes.func,
 };
 
-export default function KecamatanSearch({ kecamatans }) {
+export default function KecamatanSearch({ kecamatans, onSelectKecamatan }) {
+  const handleSelectKecamatan = (event, value) => {
+    if (value) {
+      if (onSelectKecamatan) {
+        onSelectKecamatan(value);
+      }
+    }
+  };
+
   return (
     <Autocomplete
       sx={{ width: 280 }}
@@ -29,8 +37,9 @@ export default function KecamatanSearch({ kecamatans }) {
         },
       }}
       options={kecamatans}
-      getOptionLabel={(kecamatan) => kecamatan.name}
-      isOptionEqualToValue={(option, value) => option.id === value.id}
+      getOptionLabel={(kecamatan) => kecamatan.district_name}
+      isOptionEqualToValue={(option, value) => option.district_id === value.district_id}
+      onChange={handleSelectKecamatan} // Set the onChange handler
       renderInput={(params) => (
         <TextField
           {...params}

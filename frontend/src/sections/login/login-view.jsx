@@ -36,6 +36,9 @@ export default function LoginView() {
     password: '',
   });
 
+  // Fungsi untuk mengenkripsi data sebelum disimpan
+  const encryptData = (data) => btoa(data);
+
   const handleLogin = async () => {
     try {
       setLoading(true);
@@ -64,8 +67,12 @@ export default function LoginView() {
 
       const result = await authService.loginUser(userData);
       if (result.code === 200) {
-        localStorage.setItem('user-pileg', JSON.stringify(result.data));
+        // Mengenkripsi data sebelum disimpan di local storage
+        const encryptedUserData = encryptData(JSON.stringify(result.data));
+        localStorage.setItem('user-pileg', encryptedUserData);
+
         setUser(result.data);
+
         enqueueSnackbar('Login successful', {
           variant: 'success',
           anchorOrigin: {
