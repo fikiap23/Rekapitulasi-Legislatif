@@ -1,4 +1,5 @@
 import { useSnackbar } from 'notistack';
+import { useRecoilValue } from 'recoil';
 import React, { useState, useEffect } from 'react';
 
 import Button from '@mui/material/Button';
@@ -11,7 +12,9 @@ import { IconButton, InputLabel } from '@mui/material';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 
+import userAtom from 'src/atoms/userAtom';
 import userService from 'src/services/userService';
+import villageService from 'src/services/villageService';
 import districtService from 'src/services/districtService';
 
 import Iconify from 'src/components/iconify';
@@ -26,24 +29,30 @@ export default function CreateUserDialog() {
     district_id: '',
     village_id: '',
   });
-
+  const user = useRecoilValue(userAtom);
   const [loading, setLoading] = useState(false);
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
   const [kecamatans, setKecamatans] = useState([]);
   const [kelurahans, setKelurahans] = useState([]);
 
   useEffect(() => {
+    const handleGetKecamatans = async () => {
+      if (user.role === 'admin') {
+        const getKecamatans = await districtService.getAllDistricts();
+        if (getKecamatans.code === 200) {
+          setKecamatans(getKecamatans.data);
+        } else {
+          setKecamatans([]);
+        }
+      } else if (user.role === 'user_district') {
+        const getKelurahans = await villageService.getAllVillageByDistrictId(user.district_id);
+        // console.log(getKelurahans.data);
+        // setKecamatan(user.districtData);
+        setKelurahans(getKelurahans.data);
+      }
+    };
     handleGetKecamatans();
-  }, []);
-
-  const handleGetKecamatans = async () => {
-    const getKecamatans = await districtService.getAllDistricts();
-    if (getKecamatans.code === 200) {
-      setKecamatans(getKecamatans.data);
-    } else {
-      setKecamatans([]);
-    }
-  };
+  }, [user]);
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -71,6 +80,7 @@ export default function CreateUserDialog() {
         formData.kecamatan = '';
         // console.log(formData);
       }
+      console.log(formData);
       const result = await userService.createNewUser(formData);
       if (result.code === 201) {
         enqueueSnackbar('User created', {
@@ -131,100 +141,151 @@ export default function CreateUserDialog() {
       </Button>
       <Dialog maxWidth="xs" fullWidth open={open} onClose={handleClose}>
         <DialogTitle>Buat akun baru</DialogTitle>
-        <DialogContent>
-          <TextField
-            onChange={(e) => setFormData({ ...formData, username: e.target.value })}
-            autoFocus
-            margin="dense"
-            id="username"
-            name="username"
-            label="Username"
-            type="text"
-            fullWidth
-            variant="standard"
-          />
 
-          <TextField
-            onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-            margin="dense"
-            id="password"
-            name="password"
-            label="Password"
-            type="password"
-            fullWidth
-            variant="standard"
-          />
-
-          <div style={{ marginTop: '16px' }}>
-            <InputLabel id="role-label">Peran</InputLabel>
-            <Select
-              labelId="role-label"
-              id="role"
-              name="role"
-              value={formData.role}
-              onChange={(e) => {
-                setFormData({ ...formData, role: e.target.value, kecamatan: '', village_id: '' });
-                // Reset kecamatan dan village_id ketika peran berubah
-              }}
+        {user.role === 'user_district' && (
+          <DialogContent>
+            <TextField
+              onChange={(e) => setFormData({ ...formData, username: e.target.value })}
+              autoFocus
+              margin="dense"
+              id="username"
+              name="username"
+              label="Username"
+              type="text"
               fullWidth
-            >
-              <MenuItem value="admin">Admin</MenuItem>
-              <MenuItem value="user_district">User Kecamatan</MenuItem>
-              <MenuItem value="user_village">User Kelurahan</MenuItem>
-            </Select>
-          </div>
+              variant="standard"
+            />
 
-          {formData.role !== 'admin' && (
-            <>
-              <div style={{ marginTop: '16px' }}>
-                <InputLabel id="kecamatan-label">Kecamatan</InputLabel>
-                <Select
-                  labelId="kecamatan-label"
-                  id="kecamatan"
-                  name="kecamatan"
-                  value={formData.kecamatan}
-                  onChange={(e) => {
-                    setFormData({
-                      ...formData,
-                      kecamatan: e.target.value,
-                      village_id: '',
-                      district_id: e.target.value._id,
-                    });
-                    setKelurahans(e.target.value.villages);
-                  }}
-                  fullWidth
-                >
-                  {kecamatans.map((kecamatan) => (
-                    <MenuItem key={kecamatan._id} value={kecamatan}>
-                      {kecamatan.district_name}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </div>
+            <TextField
+              onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+              margin="dense"
+              id="password"
+              name="password"
+              label="Password"
+              type="password"
+              fullWidth
+              variant="standard"
+            />
+            <div style={{ marginTop: '16px' }}>
+              <InputLabel id="kelurahan-label">Kelurahan</InputLabel>
+              <Select
+                labelId="kelurahan-label"
+                id="kelurahan"
+                name="kelurahan"
+                value={formData.village_id}
+                onChange={(e) => {
+                  const newValue = e.target.value;
+                  // console.log('New value for village_id:', newValue);
+                  setFormData({ ...formData, village_id: newValue, role: 'user_village' });
+                }}
+                fullWidth
+              >
+                {kelurahans.map((kelurahan) => (
+                  <MenuItem key={kelurahan._id} value={kelurahan._id}>
+                    {kelurahan.village_name}
+                  </MenuItem>
+                ))}
+              </Select>
+            </div>
+          </DialogContent>
+        )}
 
-              {formData.role === 'user_village' && (
+        {user.role === 'admin' && (
+          <DialogContent>
+            <TextField
+              onChange={(e) => setFormData({ ...formData, username: e.target.value })}
+              autoFocus
+              margin="dense"
+              id="username"
+              name="username"
+              label="Username"
+              type="text"
+              fullWidth
+              variant="standard"
+            />
+
+            <TextField
+              onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+              margin="dense"
+              id="password"
+              name="password"
+              label="Password"
+              type="password"
+              fullWidth
+              variant="standard"
+            />
+
+            <div style={{ marginTop: '16px' }}>
+              <InputLabel id="role-label">Peran</InputLabel>
+              <Select
+                labelId="role-label"
+                id="role"
+                name="role"
+                value={formData.role}
+                onChange={(e) => {
+                  setFormData({ ...formData, role: e.target.value, kecamatan: '', village_id: '' });
+                  // Reset kecamatan dan village_id ketika peran berubah
+                }}
+                fullWidth
+              >
+                <MenuItem value="admin">Admin</MenuItem>
+                <MenuItem value="user_district">User Kecamatan</MenuItem>
+                <MenuItem value="user_village">User Kelurahan</MenuItem>
+              </Select>
+            </div>
+
+            {formData.role !== 'admin' && (
+              <>
                 <div style={{ marginTop: '16px' }}>
-                  <InputLabel id="kelurahan-label">Kelurahan</InputLabel>
+                  <InputLabel id="kecamatan-label">Kecamatan</InputLabel>
                   <Select
-                    disabled={!formData.kecamatan}
-                    labelId="kelurahan-label"
-                    id="kelurahan"
-                    name="kelurahan"
-                    value={formData.village_id}
-                    onChange={(e) => setFormData({ ...formData, village_id: e.target.value })}
+                    labelId="kecamatan-label"
+                    id="kecamatan"
+                    name="kecamatan"
+                    value={formData.kecamatan}
+                    onChange={(e) => {
+                      setFormData({
+                        ...formData,
+                        kecamatan: e.target.value,
+                        village_id: '',
+                        district_id: e.target.value._id,
+                      });
+                      setKelurahans(e.target.value.villages);
+                    }}
                     fullWidth
                   >
-                    {kelurahans.map((kelurahan) => (
-                      <MenuItem key={kelurahan._id} value={kelurahan._id}>
-                        {kelurahan.village_name}
+                    {kecamatans.map((kecamatan) => (
+                      <MenuItem key={kecamatan._id} value={kecamatan}>
+                        {kecamatan.district_name}
                       </MenuItem>
                     ))}
                   </Select>
                 </div>
-              )}
-            </>
-          )}
-        </DialogContent>
+
+                {formData.role === 'user_village' && (
+                  <div style={{ marginTop: '16px' }}>
+                    <InputLabel id="kelurahan-label">Kelurahan</InputLabel>
+                    <Select
+                      disabled={!formData.kecamatan}
+                      labelId="kelurahan-label"
+                      id="kelurahan"
+                      name="kelurahan"
+                      value={formData.village_id}
+                      onChange={(e) => setFormData({ ...formData, village_id: e.target.value })}
+                      fullWidth
+                    >
+                      {kelurahans.map((kelurahan) => (
+                        <MenuItem key={kelurahan._id} value={kelurahan._id}>
+                          {kelurahan.village_name}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </div>
+                )}
+              </>
+            )}
+          </DialogContent>
+        )}
 
         <DialogActions>
           <Button onClick={handleClose}>Batal</Button>
