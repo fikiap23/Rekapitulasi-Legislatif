@@ -13,4 +13,10 @@ router.post(
   villageController.createBulkVillagesByDistrict
 )
 
+// Retrieving all villages by district ID
+router.get(
+  '/district/:district_id',
+  villageController.getAllVillageByDistrictId
+)
+
 export default router

@@ -132,6 +132,8 @@ const authController = {
           },
         })
       } else if (user.role == 'user_district') {
+        const districtData = await District.findOne({ _id: user.district_id })
+        console.log(districtData)
         generateTokenAndSetCookie(user._id, 'user_district', res)
         return apiHandler({
           res,
@@ -144,11 +146,12 @@ const authController = {
             role: user.role,
             username: user.username,
             district_id: user.district_id,
+            districtData: districtData,
           },
         })
       } else if (user.role == 'user_village') {
         const villageData = await Village.findOne({ _id: user.village_id })
-        console.log(villageData)
+        // console.log(villageData)
         generateTokenAndSetCookie(user._id, 'user_village', res)
         return apiHandler({
           res,
