@@ -1,3 +1,4 @@
+import { useRecoilValue } from 'recoil';
 import { useState, useEffect } from 'react';
 
 import Container from '@mui/material/Container';
@@ -16,6 +17,7 @@ import {
   TablePagination,
 } from '@mui/material';
 
+import userAtom from 'src/atoms/userAtom';
 import resultService from 'src/services/resultService';
 
 import KecamatanSearch from '../kecamatan-search';
@@ -25,6 +27,7 @@ import BarChart from '../../../layouts/dashboard/common/bar-chart';
 // ----------------------------------------------------------------------
 const rowsPerPageOptions = [10, 15, 30];
 export default function KecamatanView() {
+  const user = useRecoilValue(userAtom);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(rowsPerPageOptions[0]);
   const [kecamatans, setKecamatans] = useState([]);
@@ -34,17 +37,26 @@ export default function KecamatanView() {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
+    const handleGetAllKecamatans = async () => {
+      setLoading(true);
+      if (user.role === 'admin') {
+        const getKecamatans = await resultService.getAllDistricts();
+        setKecamatans(getKecamatans.data);
+        setLoading(false);
+      } else if (user.role === 'user_district') {
+        setSelectedKecamatanName(user.districtData.district_name);
+        setLoading(true);
+        const getKelurahans = await resultService.getAllVillagesByDistrict(user.district_id);
+        const getParties = await resultService.getAllBallotsByDistrictId(user.district_id);
+        setParties(getParties.valid_ballots_detail);
+        setKelurahans(getKelurahans.data);
+        setLoading(false);
+      }
+
+      setLoading(false);
+    };
     handleGetAllKecamatans();
-  }, []);
-
-  const handleGetAllKecamatans = async () => {
-    setLoading(true);
-    const getKecamatans = await resultService.getAllDistricts();
-
-    setKecamatans(getKecamatans.data);
-
-    setLoading(false);
-  };
+  }, [user]);
 
   const handleSelectKecamatan = async (selectedKecamatan) => {
     // console.log(selectedKecamatan.district_id);
@@ -77,9 +89,11 @@ export default function KecamatanView() {
       {loading && <LinearProgress color="primary" variant="query" />}
       {!loading && (
         <>
-          <Stack mb={5} direction="row" alignItems="center" justifyContent="space-between">
-            <KecamatanSearch kecamatans={kecamatans} onSelectKecamatan={handleSelectKecamatan} />
-          </Stack>
+          {user.role === 'admin' && (
+            <Stack mb={5} direction="row" alignItems="center" justifyContent="space-between">
+              <KecamatanSearch kecamatans={kecamatans} onSelectKecamatan={handleSelectKecamatan} />
+            </Stack>
+          )}
 
           <Grid container spacing={3}>
             <Grid xs={12} md={6} lg={8}>

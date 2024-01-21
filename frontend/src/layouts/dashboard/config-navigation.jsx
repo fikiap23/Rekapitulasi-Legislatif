@@ -19,7 +19,7 @@ const navConfig = [
     title: 'data kecamatan',
     path: '/kecamatan',
     icon: <Iconify icon="teenyicons:building-outline" />,
-    accessibleRoles: ['admin'],
+    accessibleRoles: ['admin', 'user_district'],
   },
   {
     title: 'data kelurahan',

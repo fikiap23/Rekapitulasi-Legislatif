@@ -44,7 +44,12 @@ export default function Router() {
 
         {
           path: 'kecamatan',
-          element: user?.role === 'admin' ? <KecamatanPage /> : <Navigate to="/404" replace />,
+          element:
+            user?.role === 'admin' || user?.role === 'user_district' ? (
+              <KecamatanPage />
+            ) : (
+              <Navigate to="/404" replace />
+            ),
         },
 
         {
