@@ -23,6 +23,7 @@ import {
 import userAtom from 'src/atoms/userAtom';
 import partyService from 'src/services/partyService';
 import resultService from 'src/services/resultService';
+import villageService from 'src/services/villageService';
 import districtService from 'src/services/districtService';
 
 import Iconify from 'src/components/iconify';
@@ -55,6 +56,11 @@ export default function PengisianSuaraView() {
         if (user.role === 'admin') {
           const getKecamatans = await districtService.getAllDistricts();
           setKecamatans(getKecamatans.data);
+        } else if (user.role === 'user_district') {
+          const getKelurahans = await villageService.getAllVillageByDistrictId(user.district_id);
+          // console.log(getKelurahans.data);
+          setKecamatan(user.districtData);
+          setKelurahans(getKelurahans.data);
         } else if (user.role === 'user_village') {
           setKelurahan(user.villageData);
         }
@@ -102,6 +108,9 @@ export default function PengisianSuaraView() {
       } else if (user.role === 'user_village') {
         result = await resultService.fillBallots(kelurahan._id, votesResult);
         // console.log('kelurahan', kelurahan._id);
+      } else if (user.role === 'user_district') {
+        result = await resultService.fillBallots(kelurahan, votesResult);
+        // console.log('kelurahan', kelurahan);
       }
       if (result.code === 200) {
         enqueueSnackbar('Voting success', {
@@ -161,6 +170,36 @@ export default function PengisianSuaraView() {
             <Typography variant="h6" sx={{ mb: 2, color: 'primary.main' }}>
               Isi suara di Kelurahan {kelurahan.village_name}
             </Typography>
+          )}
+
+          {user.role === 'user_district' && (
+            <>
+              <Typography variant="h6" sx={{ mb: 2, color: 'primary.main' }}>
+                Isi suara di Kecamatan {kecamatan.district_name}
+              </Typography>
+              <Grid container spacing={3} mb={5}>
+                <Grid item xs={12} md={6}>
+                  <TextField
+                    fullWidth
+                    select
+                    label="Kelurahan"
+                    value={kelurahan}
+                    onChange={(e) => setKelurahan(e.target.value)}
+                    variant="outlined"
+                    disabled={!kecamatan}
+                  >
+                    <MenuItem value="" disabled>
+                      Pilih Desa / Kelurahan
+                    </MenuItem>
+                    {kelurahans.map((option) => (
+                      <MenuItem key={option._id} value={option._id}>
+                        {option.village_name}
+                      </MenuItem>
+                    ))}
+                  </TextField>
+                </Grid>
+              </Grid>
+            </>
           )}
 
           {user.role === 'admin' && (
