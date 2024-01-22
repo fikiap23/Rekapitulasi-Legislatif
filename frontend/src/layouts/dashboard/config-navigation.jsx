@@ -19,7 +19,7 @@ const navConfig = [
     title: 'data kecamatan',
     path: '/kecamatan',
     icon: <Iconify icon="teenyicons:building-outline" />,
-    accessibleRoles: ['admin'],
+    accessibleRoles: ['admin', 'user_district'],
   },
   {
     title: 'data kelurahan',
@@ -30,14 +30,14 @@ const navConfig = [
   {
     title: 'data suara caleg',
     path: '/suara-caleg',
-    icon: <Iconify icon="healthicons:village-outline" />,
+    icon: <Iconify icon="material-symbols-light:ballot-outline" />,
     accessibleRoles: ['admin'],
   },
   {
     title: 'pengguna',
     path: '/user',
     icon: <Iconify icon="solar:user-outline" />,
-    accessibleRoles: ['admin'],
+    accessibleRoles: ['admin', 'user_district'],
   },
 ];
 

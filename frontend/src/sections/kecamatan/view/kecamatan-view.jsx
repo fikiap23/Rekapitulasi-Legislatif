@@ -1,6 +1,11 @@
+<<<<<<< HEAD
 import JSPdf from 'jspdf';
 import html2canvas from 'html2canvas';
 import { useRef, useState, useEffect } from 'react';
+=======
+import { useRecoilValue } from 'recoil';
+import { useState, useEffect } from 'react';
+>>>>>>> f67ef5ebcd90688cbf21a6e95bafb44ae9f463b3
 
 import Container from '@mui/material/Container';
 import Grid from '@mui/material/Unstable_Grid2';
@@ -19,6 +24,7 @@ import {
   TablePagination,
 } from '@mui/material';
 
+import userAtom from 'src/atoms/userAtom';
 import resultService from 'src/services/resultService';
 
 import Iconify from 'src/components/iconify/iconify';
@@ -29,6 +35,7 @@ import BarChart from '../../../layouts/dashboard/common/bar-chart';
 // ----------------------------------------------------------------------
 const rowsPerPageOptions = [10, 15, 30];
 export default function KecamatanView() {
+  const user = useRecoilValue(userAtom);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(rowsPerPageOptions[0]);
   const [kecamatans, setKecamatans] = useState([]);
@@ -38,17 +45,26 @@ export default function KecamatanView() {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
+    const handleGetAllKecamatans = async () => {
+      setLoading(true);
+      if (user.role === 'admin') {
+        const getKecamatans = await resultService.getAllDistricts();
+        setKecamatans(getKecamatans.data);
+        setLoading(false);
+      } else if (user.role === 'user_district') {
+        setSelectedKecamatanName(user.districtData.district_name);
+        setLoading(true);
+        const getKelurahans = await resultService.getAllVillagesByDistrict(user.district_id);
+        const getParties = await resultService.getAllBallotsByDistrictId(user.district_id);
+        setParties(getParties.valid_ballots_detail);
+        setKelurahans(getKelurahans.data);
+        setLoading(false);
+      }
+
+      setLoading(false);
+    };
     handleGetAllKecamatans();
-  }, []);
-
-  const handleGetAllKecamatans = async () => {
-    setLoading(true);
-    const getKecamatans = await resultService.getAllDistricts();
-
-    setKecamatans(getKecamatans.data);
-
-    setLoading(false);
-  };
+  }, [user]);
 
   const handleSelectKecamatan = async (selectedKecamatan) => {
     // console.log(selectedKecamatan.district_id);
@@ -123,6 +139,7 @@ export default function KecamatanView() {
       {loading && <LinearProgress color="primary" variant="query" />}
       {!loading && (
         <>
+<<<<<<< HEAD
           <Stack mb={5} direction="row" alignItems="center" justifyContent="space-between">
             <KecamatanSearch kecamatans={kecamatans} onSelectKecamatan={handleSelectKecamatan} />
           </Stack>
@@ -133,6 +150,13 @@ export default function KecamatanView() {
           >
             Export Data
           </Button>
+=======
+          {user.role === 'admin' && (
+            <Stack mb={5} direction="row" alignItems="center" justifyContent="space-between">
+              <KecamatanSearch kecamatans={kecamatans} onSelectKecamatan={handleSelectKecamatan} />
+            </Stack>
+          )}
+>>>>>>> f67ef5ebcd90688cbf21a6e95bafb44ae9f463b3
 
           <Grid container spacing={3} ref={pdfRef}>
             <Grid container lg={12} className="printArea">
