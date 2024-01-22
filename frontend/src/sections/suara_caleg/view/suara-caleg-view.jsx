@@ -1,4 +1,6 @@
-import { useState, useEffect } from 'react';
+import JSPdf from 'jspdf';
+import html2canvas from 'html2canvas';
+import { useRef, useState, useEffect } from 'react';
 
 import Card from '@mui/material/Card';
 import Stack from '@mui/material/Stack';
@@ -8,12 +10,13 @@ import TableBody from '@mui/material/TableBody';
 import Typography from '@mui/material/Typography';
 import TableContainer from '@mui/material/TableContainer';
 import TablePagination from '@mui/material/TablePagination';
-import { Grid, MenuItem, TextField, LinearProgress } from '@mui/material';
+import { Grid, Button, MenuItem, TextField, LinearProgress } from '@mui/material';
 
 import resultService from 'src/services/resultService';
 import districtService from 'src/services/districtService';
 
 import Scrollbar from 'src/components/scrollbar';
+import Iconify from 'src/components/iconify/iconify';
 
 import TableNoData from '../table-no-data';
 import UserTableRow from '../user-table-row';
@@ -121,6 +124,28 @@ export default function SuaraCalegView() {
 
   const notFound = !dataFiltered.length && !!filterName;
 
+  // print area function
+  const handlePrint = () => {
+    const input = pdfRef.current;
+    html2canvas(input).then((canvas) => {
+      const imgData = canvas.toDataURL('image/png');
+      const pdf = new JSPdf('p', 'mm', 'a4', true);
+      const pdfWidth = pdf.internal.pageSize.getWidth();
+      const pdfHeight = pdf.internal.pageSize.getHeight();
+      const imgWidth = canvas.width;
+      const imgHeight = canvas.height;
+      const ratio = Math.min(pdfWidth / imgWidth, pdfHeight / imgHeight);
+      const imgX = (pdfWidth - imgWidth * ratio) / 2;
+      const imgY = 10;
+
+      // Page 1
+      pdf.addImage(imgData, 'PNG', imgX, imgY, imgWidth * ratio, imgHeight * ratio);
+
+      pdf.save(`Data_Calon Legislatif.pdf`);
+    });
+  };
+  const pdfRef = useRef();
+
   return (
     <Container>
       <Stack direction="row" alignItems="center" justifyContent="space-between" mb={3}>
@@ -195,57 +220,66 @@ export default function SuaraCalegView() {
             </Grid>
           </Grid>
 
-          <Card>
-            <UserTableToolbar filterName={filterName} onFilterName={handleFilterByName} />
+          <Button
+            onClick={() => handlePrint()}
+            variant="contained"
+            startIcon={<Iconify icon="fa6-solid:file-pdf" />}
+          >
+            Export Data
+          </Button>
+          <Grid item ref={pdfRef}>
+            <Card>
+              <UserTableToolbar filterName={filterName} onFilterName={handleFilterByName} />
 
-            <Scrollbar>
-              <TableContainer sx={{ overflow: 'unset' }}>
-                <Table sx={{ minWidth: 800 }}>
-                  <UserTableHead
-                    order={order}
-                    orderBy={orderBy}
-                    onRequestSort={handleSort}
-                    headLabel={[
-                      { id: 'isVerified', label: 'No', align: 'center' },
-                      { id: 'candidate_data.name', label: 'Nama' },
-                      { id: 'party_name', label: 'Partai' },
-                      { id: 'number_of_votes', label: 'Jumlah Suara' },
-                    ]}
-                  />
-                  <TableBody>
-                    {dataFiltered
-                      .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                      .map((row, index) => (
-                        <UserTableRow
-                          key={row.candidate_id}
-                          no={page * rowsPerPage + index + 1}
-                          name={row.candidate_data.name}
-                          role={row.number_of_votes}
-                          company={row.party_name}
-                        />
-                      ))}
-
-                    <TableEmptyRows
-                      height={77}
-                      emptyRows={emptyRows(page, rowsPerPage, dataFiltered.length)}
+              <Scrollbar>
+                <TableContainer sx={{ overflow: 'unset' }}>
+                  <Table>
+                    <UserTableHead
+                      order={order}
+                      orderBy={orderBy}
+                      onRequestSort={handleSort}
+                      headLabel={[
+                        { id: 'isVerified', label: 'No', align: 'center' },
+                        { id: 'candidate_data.name', label: 'Nama' },
+                        { id: 'party_name', label: 'Partai' },
+                        { id: 'number_of_votes', label: 'Jumlah Suara' },
+                      ]}
                     />
+                    <TableBody>
+                      {dataFiltered
+                        .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                        .map((row, index) => (
+                          <UserTableRow
+                            key={row.candidate_id}
+                            no={page * rowsPerPage + index + 1}
+                            name={row.candidate_data.name}
+                            role={row.number_of_votes}
+                            company={row.party_name}
+                          />
+                        ))}
 
-                    {notFound && <TableNoData query={filterName} />}
-                  </TableBody>
-                </Table>
-              </TableContainer>
-            </Scrollbar>
+                      <TableEmptyRows
+                        height={77}
+                        emptyRows={emptyRows(page, rowsPerPage, dataFiltered.length)}
+                      />
 
-            <TablePagination
-              page={page}
-              component="div"
-              count={dataFiltered.length}
-              rowsPerPage={rowsPerPage}
-              onPageChange={handleChangePage}
-              rowsPerPageOptions={[10, 20, 30, 50, 100, 150, 200]}
-              onRowsPerPageChange={handleChangeRowsPerPage}
-            />
-          </Card>
+                      {notFound && <TableNoData query={filterName} />}
+                    </TableBody>
+                  </Table>
+                </TableContainer>
+              </Scrollbar>
+
+              <TablePagination
+                page={page}
+                component="div"
+                count={dataFiltered.length}
+                rowsPerPage={rowsPerPage}
+                onPageChange={handleChangePage}
+                rowsPerPageOptions={[10, 20, 30, 50, 100, 150, 200]}
+                onRowsPerPageChange={handleChangeRowsPerPage}
+              />
+            </Card>
+          </Grid>
         </>
       )}
     </Container>
