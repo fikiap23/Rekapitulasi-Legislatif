@@ -242,7 +242,7 @@ export default function SuaraCalegView() {
               count={dataFiltered.length}
               rowsPerPage={rowsPerPage}
               onPageChange={handleChangePage}
-              rowsPerPageOptions={[10, 20, 30]}
+              rowsPerPageOptions={[10, 20, 30, 50, 100, 150, 200]}
               onRowsPerPageChange={handleChangeRowsPerPage}
             />
           </Card>
