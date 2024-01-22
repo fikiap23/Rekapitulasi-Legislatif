@@ -1,11 +1,7 @@
-<<<<<<< HEAD
 import JSPdf from 'jspdf';
 import html2canvas from 'html2canvas';
-import { useRef, useState, useEffect } from 'react';
-=======
 import { useRecoilValue } from 'recoil';
-import { useState, useEffect } from 'react';
->>>>>>> f67ef5ebcd90688cbf21a6e95bafb44ae9f463b3
+import { useRef, useState, useEffect } from 'react';
 
 import Container from '@mui/material/Container';
 import Grid from '@mui/material/Unstable_Grid2';
@@ -139,10 +135,11 @@ export default function KecamatanView() {
       {loading && <LinearProgress color="primary" variant="query" />}
       {!loading && (
         <>
-<<<<<<< HEAD
-          <Stack mb={5} direction="row" alignItems="center" justifyContent="space-between">
-            <KecamatanSearch kecamatans={kecamatans} onSelectKecamatan={handleSelectKecamatan} />
-          </Stack>
+          {user.role === 'admin' && (
+            <Stack mb={5} direction="row" alignItems="center" justifyContent="space-between">
+              <KecamatanSearch kecamatans={kecamatans} onSelectKecamatan={handleSelectKecamatan} />
+            </Stack>
+          )}
           <Button
             onClick={() => handlePrint()}
             variant="contained"
@@ -150,13 +147,6 @@ export default function KecamatanView() {
           >
             Export Data
           </Button>
-=======
-          {user.role === 'admin' && (
-            <Stack mb={5} direction="row" alignItems="center" justifyContent="space-between">
-              <KecamatanSearch kecamatans={kecamatans} onSelectKecamatan={handleSelectKecamatan} />
-            </Stack>
-          )}
->>>>>>> f67ef5ebcd90688cbf21a6e95bafb44ae9f463b3
 
           <Grid container spacing={3} ref={pdfRef}>
             <Grid container lg={12} className="printArea">
