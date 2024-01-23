@@ -33,6 +33,12 @@ const resultVoteSchema = mongoose.Schema(
         code: {
           type: String,
         },
+        name: {
+          type: String,
+        },
+        logoUrl: {
+          type: String,
+        },
         total_votes_party: {
           type: Number,
           default: 0,
@@ -43,6 +49,12 @@ const resultVoteSchema = mongoose.Schema(
             candidate_id: {
               type: mongoose.Schema.Types.ObjectId,
               ref: 'Candidate',
+            },
+            name: {
+              type: String,
+            },
+            gender: {
+              type: String,
             },
             number_of_votes: {
               type: Number,

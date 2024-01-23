@@ -1,10 +1,7 @@
 import express from 'express'
 import votesResultController from '../controllers/votesResultController.js'
 import calegController from '../controllers/calegController.js'
-import {
-  protectAdminRoute,
-  protectUserVillageRoute,
-} from '../middlewares/protectRoute.js'
+import { protectUserVillageRoute } from '../middlewares/protectRoute.js'
 
 const router = express.Router()
 
@@ -15,6 +12,7 @@ router.post(
 )
 
 router.get('/', protectUserVillageRoute, votesResultController.getAllResult)
+
 router.get(
   '/districts',
   protectUserVillageRoute,
