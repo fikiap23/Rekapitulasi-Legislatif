@@ -9,7 +9,7 @@ router.post('/', protectAdminRoute, districtController.createNewDistrict)
 router.get('/', districtController.getAllDistricts)
 
 router.post(
-  '/bulk/:regency_id',
+  '/bulk',
   protectAdminRoute,
   districtController.createMultipleDistrictsByRegency
 )

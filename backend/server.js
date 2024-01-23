@@ -4,7 +4,6 @@ import connectDB from './db/connectDB.js'
 import cookieParser from 'cookie-parser'
 import authRoutes from './routes/auth.routes.js'
 import partyRoutes from './routes/party.routes.js'
-import regencyRoutes from './routes/regency.routes.js'
 import districtRoutes from './routes/district.routes.js'
 import villageRoutes from './routes/village.routes.js'
 import userRoutes from './routes/user.routes.js'
@@ -36,7 +35,6 @@ app.use(cookieParser())
 // Routes
 app.use('/api/v2/auth', authRoutes)
 app.use('/api/v2/parties', partyRoutes)
-app.use('/api/v2/regencies', regencyRoutes)
 app.use('/api/v2/districts', districtRoutes)
 app.use('/api/v2/villages', villageRoutes)
 app.use('/api/v2/users', userRoutes)

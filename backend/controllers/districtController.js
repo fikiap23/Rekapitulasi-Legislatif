@@ -1,28 +1,17 @@
-import { District, Regency } from '../models/regionModel.js'
+import { District } from '../models/regionModel.js'
 
 import apiHandler from '../utils/apiHandler.js'
 const districtController = {
   createNewDistrict: async (req, res) => {
     try {
-      const { district_name, regency_id, code } = req.body
+      const { district_name, code } = req.body
 
-      if (!district_name || !regency_id || !code) {
+      if (!district_name || !code) {
         return apiHandler({
           res,
           status: 'error',
           code: 400,
           message: 'Missing required fields',
-          error: null,
-        })
-      }
-
-      const regency = await Regency.findById(regency_id)
-      if (!regency) {
-        return apiHandler({
-          res,
-          status: 'error',
-          code: 400,
-          message: 'Regency not found',
           error: null,
         })
       }
@@ -41,14 +30,11 @@ const districtController = {
 
       const newDistrict = new District({
         district_name,
-        regency_id,
+
         code,
       })
 
       await newDistrict.save()
-
-      regency.districts.push(newDistrict._id)
-      await regency.save()
 
       return apiHandler({
         res,
@@ -77,30 +63,7 @@ const districtController = {
 
   createMultipleDistrictsByRegency: async (req, res) => {
     try {
-      const { regency_id } = req.params
       const districtsData = req.body
-
-      if (!regency_id) {
-        return apiHandler({
-          res,
-          status: 'error',
-          code: 400,
-          message: 'Missing regency_id parameter',
-          error: null,
-        })
-      }
-
-      // Check if the regency exists
-      const regency = await Regency.findById(regency_id)
-      if (!regency) {
-        return apiHandler({
-          res,
-          status: 'error',
-          code: 400,
-          message: 'Regency not found',
-          error: null,
-        })
-      }
 
       if (
         !districtsData ||

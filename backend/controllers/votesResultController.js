@@ -1,6 +1,6 @@
 import apiHandler from '../utils/apiHandler.js'
 import VotesResult from '../models/votesResultModel.js'
-import { Village, District, Regency } from '../models/regionModel.js'
+import { Village, District } from '../models/regionModel.js'
 import Party from '../models/partyModel.js'
 import VotesResultHistory from '../models/resultVoteHistoryModel.js'
 import mongoose from 'mongoose'
