@@ -45,6 +45,7 @@ const resultVoteHistorySchema = mongoose.Schema(
                     type: mongoose.Schema.Types.ObjectId,
                     ref: 'Candidate',
                   },
+                  candidateData: Object,
                   number_of_votes: Number,
                 },
               ],

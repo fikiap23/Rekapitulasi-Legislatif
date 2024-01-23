@@ -548,26 +548,39 @@ const votesResultController = {
         })
       }
 
+      // Find VotesResultHistory without populating party_id
       const results = await VotesResultHistory.findOne({
         village_id: villageId,
       })
-        .populate({
-          path: 'village_id',
-          model: 'Village', // replace with the actual model name for the village
-        })
-        .populate({
-          path: 'history.created_by',
-          model: 'User', // replace with the actual model name for the user
-          select: '_id username',
-        })
 
-      // Return the village with populated voting results
+      // Manually populate party_id and candidate_id inside the valid_ballots_detail array
+      const populatedResults = await Promise.all(
+        results.history.map(async (historyEntry) => {
+          if (historyEntry.changes.valid_ballots_detail) {
+            // Call the helper function to process valid_ballots_detail
+            const transformedResult = await getSingleValidBallotsHelper(
+              historyEntry.changes.valid_ballots_detail
+            )
+
+            return {
+              ...historyEntry.toObject(),
+              changes: {
+                ...historyEntry.changes.toObject(),
+                valid_ballots_detail: transformedResult,
+              },
+            }
+          }
+          return historyEntry
+        })
+      )
+
+      // Return the village with manually populated voting results
       return apiHandler({
         res,
         status: 'success',
         code: 200,
         message: 'Village retrieved successfully',
-        data: results,
+        data: { ...results.toObject(), history: populatedResults },
         error: null,
       })
     } catch (error) {
@@ -582,6 +595,96 @@ const votesResultController = {
       })
     }
   },
+}
+
+const getSingleValidBallotsHelper = async (validBallots) => {
+  try {
+    // Object to store total votes for each party and candidate
+    const totalVotes = {}
+
+    validBallots.forEach((party) => {
+      const partyId = party.party_id
+
+      if (!totalVotes[partyId]) {
+        totalVotes[partyId] = {
+          party_id: partyId,
+          total_votes_party: 0,
+          candidates: {},
+        }
+      }
+
+      console.log(
+        `Party ID: ${partyId}, Total Votes Party: ${totalVotes[partyId].total_votes_party}`
+      )
+
+      party.candidates.forEach((candidate) => {
+        if (candidate) {
+          const candidateId = candidate.candidate_id
+
+          if (!totalVotes[partyId].candidates[candidateId]) {
+            totalVotes[partyId].candidates[candidateId] = {
+              candidate_id: candidateId,
+              number_of_votes: 0,
+            }
+          }
+
+          totalVotes[partyId].candidates[candidateId].number_of_votes +=
+            candidate.number_of_votes
+
+          console.log(
+            `Candidate ID: ${candidateId}, Number of Votes: ${totalVotes[partyId].candidates[candidateId].number_of_votes}`
+          )
+          // add total votes party
+          totalVotes[partyId].total_votes_party += candidate.number_of_votes
+        }
+      })
+    })
+
+    console.log('Total Votes:', totalVotes)
+
+    // Collect all party IDs and candidate IDs
+    const allPartyIds = Object.keys(totalVotes)
+
+    // Populate party data
+    const populatedParties = await Party.find({
+      _id: { $in: allPartyIds },
+    }).select('_id name code candidates logoUrl')
+
+    // Transform party data into a mapping for easy access
+    const partyMap = populatedParties.reduce((acc, party) => {
+      acc[party._id] = party
+      return acc
+    }, {})
+
+    // Transform the result with populated party data and candidates
+    const transformedResult = Object.values(totalVotes).map((party) => {
+      const partyData = partyMap[party.party_id]
+      return {
+        party_id: party.party_id,
+        total_votes_party: party.total_votes_party,
+        name: partyData.name,
+        code: partyData.code,
+        logoUrl: partyData.logoUrl,
+        candidates: Object.values(party.candidates).map((candidate) => {
+          // Access candidate data from the party map
+          const candidateData = partyData.candidates.find(
+            (c) => c._id.toString() === candidate.candidate_id.toString()
+          )
+          return {
+            candidate_id: candidate.candidate_id,
+            number_of_votes: candidate.number_of_votes,
+            candidate_data: candidateData,
+          }
+        }),
+      }
+    })
+
+    // Return the aggregated result
+    return transformedResult
+  } catch (error) {
+    console.error('Error getting total results by district:', error)
+    return null
+  }
 }
 
 const getValidBallotsHelper = async (resultsByDistrict) => {
