@@ -48,4 +48,6 @@ router.get(
   calegController.getAllCalegByVillage
 )
 
+router.get('/history/:villageId', votesResultController.getHistoryByVillageId)
+
 export default router
