@@ -2,6 +2,7 @@ import apiHandler from '../utils/apiHandler.js'
 import VotesResult from '../models/votesResultModel.js'
 import { Village, District, Regency } from '../models/regionModel.js'
 import Party from '../models/partyModel.js'
+import VotesResultHistory from '../models/resultVoteHistoryModel.js'
 import mongoose from 'mongoose'
 
 const votesResultController = {
@@ -135,13 +136,32 @@ const votesResultController = {
         { new: true, upsert: true }
       )
 
-      // Return the updated document
+      // Create a history entry
+      const historyEntry = {
+        updated_at: new Date(),
+        created_by: req.user._id,
+        changes: {
+          total_voters: village.total_voters,
+          valid_ballots_detail: validBallotsDetail,
+          total_valid_ballots: totalVotesAllParties,
+          total_invalid_ballots: village.total_voters - totalVotesAllParties,
+        },
+      }
+
+      // Save the history entry to VotesResultHistory
+      const history = await VotesResultHistory.findOneAndUpdate(
+        { votesResultId: updatedVotesResult._id, village_id: villageId },
+        { $push: { history: historyEntry } },
+        { new: true, upsert: true }
+      )
+
+      // Return the updated document and history entry
       return apiHandler({
         res,
         status: 'success',
         code: 200,
         message: 'Valid ballots detail updated successfully',
-        data: updatedVotesResult,
+        data: { updatedVotesResult, history },
         error: null,
       })
     } catch (error) {
