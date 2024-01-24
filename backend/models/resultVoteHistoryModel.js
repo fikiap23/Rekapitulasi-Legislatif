@@ -36,6 +36,7 @@ const resultVoteHistorySchema = mongoose.Schema(
             },
             code: String,
             name: String,
+            logoUrl: String,
             total_votes_party: Number,
             candidates: [
               {
