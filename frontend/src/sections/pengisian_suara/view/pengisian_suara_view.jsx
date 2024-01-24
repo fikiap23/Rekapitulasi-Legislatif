@@ -14,10 +14,13 @@ import {
   TableBody,
   TableCell,
   TableHead,
+  Accordion,
   Typography,
   IconButton,
   TableContainer,
   LinearProgress,
+  AccordionSummary,
+  AccordionDetails,
 } from '@mui/material';
 
 import userAtom from 'src/atoms/userAtom';
@@ -179,9 +182,23 @@ export default function PengisianSuaraView() {
       {!loading && (
         <>
           {user.role === 'user_village' && (
-            <Typography variant="h6" sx={{ mb: 2, color: 'primary.main' }}>
-              Isi suara di Kelurahan {kelurahan.village_name}
-            </Typography>
+            <>
+              <Typography variant="h6" sx={{ mb: 2, color: 'primary.main' }}>
+                Isi suara di Kelurahan {kelurahan.village_name}
+              </Typography>
+              <Grid container spacing={2} mb={5}>
+                {parties.map((party) => (
+                  <Grid item xs={12} sm={6} md={4} key={party._id}>
+                    <PartyCard party={party} setVotesResult={setVotesResult} />
+                  </Grid>
+                ))}
+              </Grid>
+              <Grid item xs={12} mb={5}>
+                <Button type="button" variant="contained" color="primary" onClick={handleSubmit}>
+                  Submit
+                </Button>
+              </Grid>
+            </>
           )}
 
           {history.length > 0 && (
@@ -230,7 +247,15 @@ export default function PengisianSuaraView() {
                     select
                     label="Kelurahan"
                     value={kelurahan}
-                    onChange={(e) => setKelurahan(e.target.value)}
+                    onChange={async (e) => {
+                      setHistory([]);
+                      setKelurahan(e.target.value);
+                      const getHistory = await resultService.getHistoryVillageId(e.target.value);
+                      // console.log(getHistory.data.history);
+                      if (getHistory.data.history) {
+                        setHistory(getHistory.data.history);
+                      }
+                    }}
                     variant="outlined"
                     disabled={!kecamatan}
                   >
@@ -245,83 +270,101 @@ export default function PengisianSuaraView() {
                   </TextField>
                 </Grid>
               </Grid>
+              <Grid container spacing={2} mb={5}>
+                {parties.map((party) => (
+                  <Grid item xs={12} sm={6} md={4} key={party._id}>
+                    <PartyCard party={party} setVotesResult={setVotesResult} />
+                  </Grid>
+                ))}
+              </Grid>
+              <Grid item xs={12} mb={5}>
+                <Button type="button" variant="contained" color="primary" onClick={handleSubmit}>
+                  Submit
+                </Button>
+              </Grid>
             </>
           )}
 
           {user.role === 'admin' && (
-            <Grid container spacing={3} mb={5}>
-              <Grid item xs={12}>
+            <Accordion>
+              <AccordionSummary
+                expandIcon={<Iconify icon="eva:arrow-ios-forward-fill" />}
+                aria-controls="panel1a-content"
+                id="panel1a-header"
+              >
                 <Typography variant="h5" color="primary.main">
                   Input Suara Sah
                 </Typography>
-              </Grid>
-              <Grid item xs={12} md={6}>
-                <TextField
-                  fullWidth
-                  select
-                  label="Kecamatan"
-                  value={kecamatan}
-                  onChange={(e) => {
-                    setKecamatan(e.target.value);
-                    setKelurahans(e.target.value.villages);
-                    // console.log(e.target.value);
-                  }}
-                  variant="outlined"
-                >
-                  <MenuItem value="" disabled>
-                    Pilih Kecamatan
-                  </MenuItem>
-                  {kecamatans.map((option) => (
-                    <MenuItem key={option._id} value={option}>
-                      {option.district_name}
-                    </MenuItem>
+              </AccordionSummary>
+              <AccordionDetails>
+                <Grid container spacing={3} mb={5}>
+                  <Grid item xs={12} md={6}>
+                    <TextField
+                      fullWidth
+                      select
+                      label="Kecamatan"
+                      value={kecamatan}
+                      onChange={(e) => {
+                        setKecamatan(e.target.value);
+                        setKelurahans(e.target.value.villages);
+                        // console.log(e.target.value);
+                      }}
+                      variant="outlined"
+                    >
+                      <MenuItem value="" disabled>
+                        Pilih Kecamatan
+                      </MenuItem>
+                      {kecamatans.map((option) => (
+                        <MenuItem key={option._id} value={option}>
+                          {option.district_name}
+                        </MenuItem>
+                      ))}
+                    </TextField>
+                  </Grid>
+                  <Grid item xs={12} md={6}>
+                    <TextField
+                      fullWidth
+                      select
+                      label="Kelurahan"
+                      value={kelurahan}
+                      onChange={async (e) => {
+                        setHistory([]);
+                        setKelurahan(e.target.value);
+                        const getHistory = await resultService.getHistoryVillageId(e.target.value);
+                        // console.log(getHistory.data.history);
+                        if (getHistory.data.history) {
+                          setHistory(getHistory.data.history);
+                        }
+                      }}
+                      variant="outlined"
+                      disabled={!kecamatan}
+                    >
+                      <MenuItem value="" disabled>
+                        Pilih Desa / Kelurahan
+                      </MenuItem>
+                      {kelurahans.map((option) => (
+                        <MenuItem key={option._id} value={option._id}>
+                          {option.village_name}
+                        </MenuItem>
+                      ))}
+                    </TextField>
+                  </Grid>
+                </Grid>
+                <Grid container spacing={2} mb={5}>
+                  {parties.map((party) => (
+                    <Grid item xs={12} sm={6} md={4} key={party._id}>
+                      <PartyCard party={party} setVotesResult={setVotesResult} />
+                    </Grid>
                   ))}
-                </TextField>
-              </Grid>
-              <Grid item xs={12} md={6}>
-                <TextField
-                  fullWidth
-                  select
-                  label="Kelurahan"
-                  value={kelurahan}
-                  onChange={async (e) => {
-                    setHistory([]);
-                    setKelurahan(e.target.value);
-                    const getHistory = await resultService.getHistoryVillageId(e.target.value);
-                    // console.log(getHistory.data.history);
-                    if (getHistory.data.history) {
-                      setHistory(getHistory.data.history);
-                    }
-                  }}
-                  variant="outlined"
-                  disabled={!kecamatan}
-                >
-                  <MenuItem value="" disabled>
-                    Pilih Desa / Kelurahan
-                  </MenuItem>
-                  {kelurahans.map((option) => (
-                    <MenuItem key={option._id} value={option._id}>
-                      {option.village_name}
-                    </MenuItem>
-                  ))}
-                </TextField>
-              </Grid>
-            </Grid>
+                </Grid>
+                <Grid item xs={12} mb={5}>
+                  <Button type="button" variant="contained" color="primary" onClick={handleSubmit}>
+                    Submit
+                  </Button>
+                </Grid>
+              </AccordionDetails>
+            </Accordion>
           )}
-
-          <Grid container spacing={2} mb={5}>
-            {parties.map((party) => (
-              <Grid item xs={12} sm={6} md={4} key={party._id}>
-                <PartyCard party={party} setVotesResult={setVotesResult} />
-              </Grid>
-            ))}
-          </Grid>
-
-          <Grid item xs={12} mb={5}>
-            <Button type="button" variant="contained" color="primary" onClick={handleSubmit}>
-              Submit
-            </Button>
-          </Grid>
         </>
       )}
     </Container>
