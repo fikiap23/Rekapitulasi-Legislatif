@@ -12,6 +12,7 @@ const resultVoteHistorySchema = mongoose.Schema(
       ref: 'Village',
       required: true,
     },
+    village_name: String,
     history: [
       {
         updated_at: {
@@ -23,35 +24,31 @@ const resultVoteHistorySchema = mongoose.Schema(
           ref: 'User',
           required: true,
         },
-        changes: {
-          village_id: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: 'Village',
-          },
-          total_voters: Number,
-          total_invalid_ballots: Number,
-          total_valid_ballots: Number,
-          valid_ballots_detail: [
-            {
-              party_id: {
-                type: mongoose.Schema.Types.ObjectId,
-                ref: 'Party',
-              },
-              code: String,
-              total_votes_party: Number,
-              candidates: [
-                {
-                  candidate_id: {
-                    type: mongoose.Schema.Types.ObjectId,
-                    ref: 'Candidate',
-                  },
-                  candidateData: Object,
-                  number_of_votes: Number,
-                },
-              ],
+
+        total_voters: Number,
+        total_invalid_ballots: Number,
+        total_valid_ballots: Number,
+        valid_ballots_detail: [
+          {
+            party_id: {
+              type: mongoose.Schema.Types.ObjectId,
+              ref: 'Party',
             },
-          ],
-        },
+            code: String,
+            name: String,
+            total_votes_party: Number,
+            candidates: [
+              {
+                candidate_id: {
+                  type: mongoose.Schema.Types.ObjectId,
+                  ref: 'Candidate',
+                },
+                name: String,
+                number_of_votes: Number,
+              },
+            ],
+          },
+        ],
       },
     ],
   },

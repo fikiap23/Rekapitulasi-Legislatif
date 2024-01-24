@@ -2,6 +2,7 @@ import apiHandler from '../utils/apiHandler.js'
 import VotesResult from '../models/votesResultModel.js'
 import { Village, District } from '../models/regionModel.js'
 import Party from '../models/partyModel.js'
+import User from '../models/userModel.js'
 import VotesResultHistory from '../models/resultVoteHistoryModel.js'
 import mongoose from 'mongoose'
 
@@ -142,18 +143,19 @@ const votesResultController = {
       const historyEntry = {
         updated_at: new Date(),
         created_by: req.user._id,
-        changes: {
-          total_voters: village.total_voters,
-          valid_ballots_detail: validBallotsDetail,
-          total_valid_ballots: totalVotesAllParties,
-          total_invalid_ballots: village.total_voters - totalVotesAllParties,
-        },
+
+        total_voters: village.total_voters,
+        valid_ballots_detail: validBallotsDetail,
+        total_valid_ballots: totalVotesAllParties,
+        total_invalid_ballots: village.total_voters - totalVotesAllParties,
       }
 
       // Save the history entry to VotesResultHistory
       const history = await VotesResultHistory.findOneAndUpdate(
         { votesResultId: updatedVotesResult._id, village_id: villageId },
-        { $push: { history: historyEntry } },
+        {
+          $push: { history: historyEntry },
+        },
         { new: true, upsert: true }
       )
 
@@ -554,13 +556,30 @@ const votesResultController = {
         village_id: villageId,
       })
 
-      // Return the village with manually populated voting results
+      // Populate the created_by field in the history array with specific fields
+      const populatedHistory = await Promise.all(
+        results.history.map(async (entry) => {
+          const createdByUser = await User.findById(entry.created_by)
+          return {
+            ...entry.toObject(),
+            created_by: {
+              _id: createdByUser._id,
+              username: createdByUser.username,
+              role: createdByUser.role,
+            },
+          }
+        })
+      )
+
+      // Return the village with populated voting results
       return apiHandler({
         res,
         status: 'success',
         code: 200,
         message: 'Village retrieved successfully',
-        data: results ? results : null,
+        data: results
+          ? { ...results.toObject(), history: populatedHistory }
+          : null,
         error: null,
       })
     } catch (error) {
