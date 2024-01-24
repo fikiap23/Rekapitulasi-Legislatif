@@ -603,7 +603,7 @@ const getValidBallotsHelper = async (validBallots) => {
       ? validBallots
       : [validBallots]
 
-    const totalVotes = validBallots.reduce((acc, result) => {
+    const totalVotes = ballotsArray.reduce((acc, result) => {
       for (const party of Object.values(result.valid_ballots_detail)) {
         const partyId = party.party_id
 
