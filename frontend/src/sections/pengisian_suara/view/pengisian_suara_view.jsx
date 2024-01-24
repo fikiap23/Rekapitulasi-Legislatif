@@ -32,6 +32,7 @@ import districtService from 'src/services/districtService';
 import Iconify from 'src/components/iconify';
 
 import PartyCard from '../party-card';
+import DetailHistory from '../detail-history-dialog';
 
 // ----------------------------------------------------------------------
 
@@ -183,7 +184,6 @@ export default function PengisianSuaraView() {
       <Typography variant="h4" sx={{ mb: 5 }}>
         Formulir Pengisian Suara
       </Typography>
-
       {loading && <LinearProgress color="primary" variant="query" />}
       {!loading && (
         <>
@@ -210,7 +210,7 @@ export default function PengisianSuaraView() {
                           <TableCell>{convertDateFormat(item.updated_at)}</TableCell>
                           <TableCell>{item.created_by.username}</TableCell>
                           <TableCell>
-                            <Button>Lihat</Button>
+                            <DetailHistory parties={item.valid_ballots_detail} />
                           </TableCell>
                         </TableRow>
                       ))}
