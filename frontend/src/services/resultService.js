@@ -97,6 +97,17 @@ const resultService = {
       return error.response.data;
     }
   },
+
+  getHistoryVillageId: async (villageId) => {
+    try {
+      const response = await axios.get(`${BASE_URL}/history/${villageId}`, {
+        withCredentials: true,
+      });
+      return response.data;
+    } catch (error) {
+      return error.response.data;
+    }
+  },
 };
 
 export default resultService;

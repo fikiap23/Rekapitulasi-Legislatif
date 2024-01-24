@@ -556,6 +556,17 @@ const votesResultController = {
         village_id: villageId,
       })
 
+      if (!results) {
+        return apiHandler({
+          res,
+          status: 'success',
+          code: 200,
+          message: 'Village retrieved successfully',
+          data: [],
+          error: null,
+        })
+      }
+
       // Populate the created_by field in the history array with specific fields
       const populatedHistory = await Promise.all(
         results.history.map(async (entry) => {

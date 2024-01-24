@@ -42,12 +42,22 @@ export default function PengisianSuaraView() {
   const [loading, setLoading] = useState(false);
   const [votesResult, setVotesResult] = useState([]);
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
-  const [history] = useState([
-    { id: 1, date: '2022-01-01', user: 'John Doe', action: 'Submitted' },
-    { id: 2, date: '2022-01-02', user: 'Jane Smith', action: 'Updated' },
-    // Add more history items as needed
-  ]);
+  const [history, setHistory] = useState([]);
+  function convertDateFormat(originalDateString) {
+    const originalDate = new Date(originalDateString);
 
+    const year = originalDate.getFullYear();
+    const month = String(originalDate.getMonth() + 1).padStart(2, '0'); // Months are zero-based
+    const day = String(originalDate.getDate()).padStart(2, '0');
+
+    const hours = String(originalDate.getHours()).padStart(2, '0');
+    const minutes = String(originalDate.getMinutes()).padStart(2, '0');
+    const seconds = String(originalDate.getSeconds()).padStart(2, '0');
+
+    const formattedDate = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+
+    return formattedDate;
+  }
   useEffect(() => {
     const handleGetAllParties = async () => {
       try {
@@ -113,6 +123,8 @@ export default function PengisianSuaraView() {
         // console.log('kelurahan', kelurahan);
       }
       if (result.code === 200) {
+        console.log(result.data);
+        setHistory(result.data.history.history);
         enqueueSnackbar('Voting success', {
           variant: 'success',
           anchorOrigin: {
@@ -160,7 +172,7 @@ export default function PengisianSuaraView() {
   return (
     <Container>
       <Typography variant="h4" sx={{ mb: 5 }}>
-        Pengisian Suara
+        Formulir Pengisian Suara
       </Typography>
 
       {loading && <LinearProgress color="primary" variant="query" />}
@@ -170,6 +182,40 @@ export default function PengisianSuaraView() {
             <Typography variant="h6" sx={{ mb: 2, color: 'primary.main' }}>
               Isi suara di Kelurahan {kelurahan.village_name}
             </Typography>
+          )}
+
+          {history.length > 0 && (
+            <Grid container spacing={3} mb={5}>
+              <Grid item xs={12}>
+                <Typography variant="h5" sx={{ mb: 3 }} color="primary.main">
+                  Riwayat Pengisian Suara
+                </Typography>
+                <TableContainer component={Paper}>
+                  <Table>
+                    <TableHead>
+                      <TableRow>
+                        <TableCell>ID</TableCell>
+                        <TableCell>Tanggal</TableCell>
+                        <TableCell>User</TableCell>
+                        <TableCell>Aksi</TableCell>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      {history.map((item, index) => (
+                        <TableRow key={item._id}>
+                          <TableCell>{index + 1}</TableCell>
+                          <TableCell>{convertDateFormat(item.updated_at)}</TableCell>
+                          <TableCell>{item.created_by.username}</TableCell>
+                          <TableCell>
+                            <Button>Lihat</Button>
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </TableContainer>
+              </Grid>
+            </Grid>
           )}
 
           {user.role === 'user_district' && (
@@ -205,12 +251,9 @@ export default function PengisianSuaraView() {
           {user.role === 'admin' && (
             <Grid container spacing={3} mb={5}>
               <Grid item xs={12}>
-                <TextField
-                  fullWidth
-                  label="Name"
-                  variant="outlined"
-                  // onChange={(e) => setName(e.target.value)}
-                />
+                <Typography variant="h5" color="primary.main">
+                  Input Suara Sah
+                </Typography>
               </Grid>
               <Grid item xs={12} md={6}>
                 <TextField
@@ -241,7 +284,15 @@ export default function PengisianSuaraView() {
                   select
                   label="Kelurahan"
                   value={kelurahan}
-                  onChange={(e) => setKelurahan(e.target.value)}
+                  onChange={async (e) => {
+                    setHistory([]);
+                    setKelurahan(e.target.value);
+                    const getHistory = await resultService.getHistoryVillageId(e.target.value);
+                    // console.log(getHistory.data.history);
+                    if (getHistory.data.history) {
+                      setHistory(getHistory.data.history);
+                    }
+                  }}
                   variant="outlined"
                   disabled={!kecamatan}
                 >
@@ -270,37 +321,6 @@ export default function PengisianSuaraView() {
             <Button type="button" variant="contained" color="primary" onClick={handleSubmit}>
               Submit
             </Button>
-          </Grid>
-          <Grid container spacing={3} mb={5}>
-            <Grid item xs={12}>
-              <Typography variant="h5" sx={{ mb: 3 }}>
-                Riwayat Perubahan
-              </Typography>
-              <TableContainer component={Paper}>
-                <Table>
-                  <TableHead>
-                    <TableRow>
-                      <TableCell>ID</TableCell>
-                      <TableCell>Tanggal</TableCell>
-                      <TableCell>User</TableCell>
-                      <TableCell>Aksi</TableCell>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {history.map((item) => (
-                      <TableRow key={item.id}>
-                        <TableCell>{item.id}</TableCell>
-                        <TableCell>{item.date}</TableCell>
-                        <TableCell>{item.user}</TableCell>
-                        <TableCell>
-                          <Button>Lihat</Button>
-                        </TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </TableContainer>
-            </Grid>
           </Grid>
         </>
       )}
