@@ -75,6 +75,12 @@ export default function PengisianSuaraView() {
           setKecamatan(user.districtData);
           setKelurahans(getKelurahans.data);
         } else if (user.role === 'user_village') {
+          setHistory([]);
+          const getHistory = await resultService.getHistoryVillageId(user.village_id);
+          // console.log(getHistory.data.history);
+          if (getHistory.data.history) {
+            setHistory(getHistory.data.history);
+          }
           setKelurahan(user.villageData);
         }
 
@@ -181,26 +187,6 @@ export default function PengisianSuaraView() {
       {loading && <LinearProgress color="primary" variant="query" />}
       {!loading && (
         <>
-          {user.role === 'user_village' && (
-            <>
-              <Typography variant="h6" sx={{ mb: 2, color: 'primary.main' }}>
-                Isi suara di Kelurahan {kelurahan.village_name}
-              </Typography>
-              <Grid container spacing={2} mb={5}>
-                {parties.map((party) => (
-                  <Grid item xs={12} sm={6} md={4} key={party._id}>
-                    <PartyCard party={party} setVotesResult={setVotesResult} />
-                  </Grid>
-                ))}
-              </Grid>
-              <Grid item xs={12} mb={5}>
-                <Button type="button" variant="contained" color="primary" onClick={handleSubmit}>
-                  Submit
-                </Button>
-              </Grid>
-            </>
-          )}
-
           {history.length > 0 && (
             <Grid container spacing={3} mb={5}>
               <Grid item xs={12}>
@@ -234,11 +220,30 @@ export default function PengisianSuaraView() {
               </Grid>
             </Grid>
           )}
+          {user.role === 'user_village' && (
+            <>
+              <Typography variant="h6" sx={{ mb: 2, color: 'primary.main' }}>
+                Input suara sah di Kelurahan {kelurahan.village_name}
+              </Typography>
+              <Grid container spacing={2} mb={5}>
+                {parties.map((party) => (
+                  <Grid item xs={12} sm={6} md={4} key={party._id}>
+                    <PartyCard party={party} setVotesResult={setVotesResult} />
+                  </Grid>
+                ))}
+              </Grid>
+              <Grid item xs={12} mb={5}>
+                <Button type="button" variant="contained" color="primary" onClick={handleSubmit}>
+                  Submit
+                </Button>
+              </Grid>
+            </>
+          )}
 
           {user.role === 'user_district' && (
             <>
               <Typography variant="h6" sx={{ mb: 2, color: 'primary.main' }}>
-                Isi suara di Kecamatan {kecamatan.district_name}
+                Input suara sah di Kecamatan {kecamatan.district_name}
               </Typography>
               <Grid container spacing={3} mb={5}>
                 <Grid item xs={12} md={6}>
