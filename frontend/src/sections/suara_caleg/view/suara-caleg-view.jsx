@@ -14,6 +14,7 @@ import { Grid, Button, MenuItem, TextField, LinearProgress } from '@mui/material
 
 import resultService from 'src/services/resultService';
 import districtService from 'src/services/districtService';
+import PieChart from 'src/layouts/dashboard/common/pie-chart';
 
 import Scrollbar from 'src/components/scrollbar';
 import Iconify from 'src/components/iconify/iconify';
@@ -24,6 +25,7 @@ import UserTableHead from '../user-table-head';
 import TableEmptyRows from '../table-empty-rows';
 import UserTableToolbar from '../user-table-toolbar';
 import { emptyRows, applyFilter, getComparator } from '../utils';
+
 // ----------------------------------------------------------------------
 
 export default function SuaraCalegView() {
@@ -41,6 +43,7 @@ export default function SuaraCalegView() {
   const [kelurahans, setKelurahans] = useState([]);
   const [kecamatan, setKecamatan] = useState('');
   const [kelurahan, setKelurahan] = useState('');
+  const [top10Calegs, setTop10Calegs] = useState([]);
 
   const [calegs, setCalegs] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -56,7 +59,12 @@ export default function SuaraCalegView() {
       const getCalegs = await resultService.getAllCalegs();
       setKecamatans(getKecamatans.data);
       setCalegs(getCalegs.data);
-      console.log(getCalegs.data);
+      // console.log(getCalegs.data);
+      // Sort candidates based on number_of_votes in descending order
+      const sortedCalegs = getCalegs.data.sort((a, b) => b.number_of_votes - a.number_of_votes);
+
+      // Get the top 10 candidates
+      setTop10Calegs(sortedCalegs.slice(0, 10));
 
       setLoading(false);
     } catch (error) {
@@ -228,6 +236,7 @@ export default function SuaraCalegView() {
           >
             Export Data
           </Button>
+
           <Grid item ref={pdfRef}>
             <Card>
               <UserTableToolbar filterName={filterName} onFilterName={handleFilterByName} />
@@ -280,6 +289,17 @@ export default function SuaraCalegView() {
                 onRowsPerPageChange={handleChangeRowsPerPage}
               />
             </Card>
+          </Grid>
+          <Grid xs={12} md={6} lg={4}>
+            <PieChart
+              title="10 Besar Perolehan Suara Caleg"
+              chart={{
+                series: top10Calegs.map((item) => ({
+                  label: item.candidate_data.name,
+                  value: item.number_of_votes,
+                })),
+              }}
+            />
           </Grid>
         </>
       )}
