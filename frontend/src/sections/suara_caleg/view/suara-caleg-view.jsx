@@ -56,6 +56,7 @@ export default function SuaraCalegView() {
       const getCalegs = await resultService.getAllCalegs();
       setKecamatans(getKecamatans.data);
       setCalegs(getCalegs.data);
+      console.log(getCalegs.data);
 
       setLoading(false);
     } catch (error) {

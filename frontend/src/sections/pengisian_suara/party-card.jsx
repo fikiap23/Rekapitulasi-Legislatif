@@ -51,7 +51,7 @@ export default function PartyCard({ party, setVotesResult }) {
             <img src={party.logoUrl} alt={party.name} />
           </Avatar>
         }
-        subheader={party.name}
+        subheader={`${party.number_party} - ${party.name}`}
       />
 
       <CardContent>

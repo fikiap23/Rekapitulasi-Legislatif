@@ -51,7 +51,10 @@ const partyController = {
   getAllParties: async (req, res) => {
     try {
       // Fetch all parties from the database
-      const allParties = await Party.find();
+      const allParties = await Party.find()
+
+      // Sort parties based on the "number_party" field
+      allParties.sort((a, b) => a.number_party - b.number_party)
 
       return apiHandler({
         res,
@@ -60,7 +63,7 @@ const partyController = {
         message: 'All parties retrieved successfully',
         data: allParties,
         error: null,
-      });
+      })
     } catch (error) {
       return apiHandler({
         res,
@@ -68,7 +71,7 @@ const partyController = {
         code: 500,
         message: 'Internal Server Error',
         error: { type: 'InternalServerError', details: error.message },
-      });
+      })
     }
   },
 }
