@@ -170,6 +170,7 @@ export default function StatusPengisianView() {
                         { id: 'village_name', label: 'Kelurahan' },
                         { id: 'district_name', label: 'kecamatan' },
                         { id: 'is_fillBallot', label: 'Status Pengisian' },
+                        { id: 'aksi', label: 'Aksi', align: 'center' },
                       ]}
                     />
                     <TableBody>
@@ -180,6 +181,7 @@ export default function StatusPengisianView() {
                             key={row._id}
                             no={page * rowsPerPage + index + 1}
                             village_name={row.village_name}
+                            village_id={row._id}
                             status={row.is_fillBallot}
                             district_name={row.district_name}
                           />
