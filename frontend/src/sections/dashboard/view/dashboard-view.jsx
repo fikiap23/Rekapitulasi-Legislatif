@@ -72,6 +72,10 @@ export default function DashboardView() {
   // print area function
   const handlePrint = async () => {
     const prevGridSize = { ...getGridSize };
+    const getButton = document.querySelectorAll('.printArea');
+    getButton.forEach((element) => {
+      element.style.display = 'none';
+    });
     // change grid to print
     await setGridSize({
       Table: {
@@ -83,9 +87,13 @@ export default function DashboardView() {
         md: 5,
       },
     });
+
     reactToPrint();
     // back to default
     setGridSize(prevGridSize);
+    getButton.forEach((element) => {
+      element.style.display = 'inline';
+    });
   };
   const reactToPrint = useReactToPrint({
     pageStyle: `@media print {
@@ -124,6 +132,7 @@ export default function DashboardView() {
               onClick={() => handlePrint()}
               variant="contained"
               startIcon={<Iconify icon="fa6-solid:file-pdf" />}
+              className="printArea"
             >
               Export Data
             </Button>
@@ -157,7 +166,7 @@ export default function DashboardView() {
               icon={<Iconify icon="teenyicons:building-outline" sx={{ width: 64, height: 64 }} />}
             />
           </Grid>
-          <Grid container lg={12} className="printArea">
+          <Grid container lg={12}>
             <Grid xs={getGridSize.Table.xs} md={getGridSize.Table.md} lg={8}>
               <TableContainer component={Paper}>
                 <Table aria-label="simple table">
@@ -212,7 +221,7 @@ export default function DashboardView() {
             </Grid>
           </Grid>
 
-          <Grid xs={12} md={12} lg={12} className="printArea">
+          <Grid xs={12} md={12} lg={12}>
             <BarChart
               title="Perolehan Suara Per Partai"
               chart={{

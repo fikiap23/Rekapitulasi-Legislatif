@@ -148,6 +148,10 @@ export default function SuaraCalegView() {
   // print area function
   const handlePrint = async () => {
     const prevGridSize = { ...getGridSize };
+    const getButton = document.querySelectorAll('.printArea');
+    getButton.forEach((element) => {
+      element.style.display = 'none';
+    });
     // change grid to print
     await setGridSize({
       Table: {
@@ -162,6 +166,9 @@ export default function SuaraCalegView() {
     reactToPrint();
     // back to default
     setGridSize(prevGridSize);
+    getButton.forEach((element) => {
+      element.style.display = 'inline';
+    });
   };
   const reactToPrint = useReactToPrint({
     pageStyle: `@media print {
@@ -175,7 +182,7 @@ export default function SuaraCalegView() {
   const pdfRef = useRef();
 
   return (
-    <Container>
+    <Container ref={pdfRef}>
       <Stack direction="row" alignItems="center" justifyContent="space-between" mb={3}>
         <Typography variant="h4">Calon Legislatif</Typography>
       </Stack>
@@ -198,7 +205,7 @@ export default function SuaraCalegView() {
       {!loading && (
         <>
           <Grid container spacing={3} mb={5}>
-            <Grid item xs={12} md={6}>
+            <Grid item xs={12} md={6} className="printArea">
               <TextField
                 fullWidth
                 select
@@ -222,7 +229,7 @@ export default function SuaraCalegView() {
                 ))}
               </TextField>
             </Grid>
-            <Grid item xs={12} md={6}>
+            <Grid item xs={12} md={6} className="printArea">
               <TextField
                 fullWidth
                 select
@@ -252,11 +259,12 @@ export default function SuaraCalegView() {
             onClick={() => handlePrint()}
             variant="contained"
             startIcon={<Iconify icon="fa6-solid:file-pdf" />}
+            className="printArea"
           >
             Export Data
           </Button>
 
-          <Grid item ref={pdfRef}>
+          <Grid item>
             <Card>
               <UserTableToolbar filterName={filterName} onFilterName={handleFilterByName} />
 
