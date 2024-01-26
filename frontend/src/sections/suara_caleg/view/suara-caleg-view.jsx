@@ -1,5 +1,6 @@
-import JSPdf from 'jspdf';
-import html2canvas from 'html2canvas';
+import { useReactToPrint } from 'react-to-print';
+// import JSPdf from 'jspdf';
+// import html2canvas from 'html2canvas';
 import { useRef, useState, useEffect } from 'react';
 
 import Card from '@mui/material/Card';
@@ -47,6 +48,17 @@ export default function SuaraCalegView() {
 
   const [calegs, setCalegs] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [getGridSize, setGridSize] = useState({
+    // default grid size
+    Table: {
+      xs: 12,
+      md: 6,
+    },
+    Chart: {
+      xs: 12,
+      md: 6,
+    },
+  });
 
   useEffect(() => {
     handleGetAllKecamatan();
@@ -134,25 +146,32 @@ export default function SuaraCalegView() {
   const notFound = !dataFiltered.length && !!filterName;
 
   // print area function
-  const handlePrint = () => {
-    const input = pdfRef.current;
-    html2canvas(input).then((canvas) => {
-      const imgData = canvas.toDataURL('image/png');
-      const pdf = new JSPdf('p', 'mm', 'a4', true);
-      const pdfWidth = pdf.internal.pageSize.getWidth();
-      const pdfHeight = pdf.internal.pageSize.getHeight();
-      const imgWidth = canvas.width;
-      const imgHeight = canvas.height;
-      const ratio = Math.min(pdfWidth / imgWidth, pdfHeight / imgHeight);
-      const imgX = (pdfWidth - imgWidth * ratio) / 2;
-      const imgY = 10;
-
-      // Page 1
-      pdf.addImage(imgData, 'PNG', imgX, imgY, imgWidth * ratio, imgHeight * ratio);
-
-      pdf.save(`Data_Calon Legislatif.pdf`);
+  const handlePrint = async () => {
+    const prevGridSize = { ...getGridSize };
+    // change grid to print
+    await setGridSize({
+      Table: {
+        xs: 7,
+        md: 7,
+      },
+      Chart: {
+        xs: 5,
+        md: 5,
+      },
     });
+    reactToPrint();
+    // back to default
+    setGridSize(prevGridSize);
   };
+  const reactToPrint = useReactToPrint({
+    pageStyle: `@media print {
+      @page {
+        size: 100vh;
+        margin: 10px;
+      }
+    }`,
+    content: () => pdfRef.current,
+  });
   const pdfRef = useRef();
 
   return (
