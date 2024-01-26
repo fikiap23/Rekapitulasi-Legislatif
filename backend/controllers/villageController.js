@@ -288,12 +288,22 @@ const villageController = {
         .select('_id code village_name district_id is_fillBallot')
         .populate('district_id', 'district_name')
 
+      // Modify the structure of each village object
+      const modifiedVillages = villages.map((village) => ({
+        _id: village._id,
+        village_name: village.village_name,
+        code: village.code,
+        district_id: village.district_id._id,
+        district_name: village.district_id.district_name,
+        is_fillBallot: village.is_fillBallot,
+      }))
+
       return apiHandler({
         res,
         status: 'success',
         code: 200,
         message: 'All villages retrieved successfully',
-        data: villages,
+        data: modifiedVillages,
         error: null,
       })
     } catch (error) {
