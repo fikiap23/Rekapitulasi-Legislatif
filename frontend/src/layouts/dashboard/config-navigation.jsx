@@ -10,6 +10,12 @@ const navConfig = [
     accessibleRoles: ['admin', 'user_district', 'user_village'],
   },
   {
+    title: 'status pengisian',
+    path: '/status-pengisian',
+    icon: <Iconify icon="mdi:list-status" />,
+    accessibleRoles: ['admin'],
+  },
+  {
     title: 'data keseluruhan',
     path: '/',
     icon: <Iconify icon="tdesign:chart-analytics" />,

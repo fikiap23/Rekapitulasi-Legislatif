@@ -4,6 +4,7 @@ import { Outlet, Navigate, useRoutes } from 'react-router-dom';
 
 import userAtom from 'src/atoms/userAtom';
 import DashboardLayout from 'src/layouts/dashboard';
+import StatusPengisianPage from 'src/pages/status-pengisian';
 
 export const IndexPage = lazy(() => import('src/pages/app'));
 export const KecamatanPage = lazy(() => import('src/pages/kecamatan'));
@@ -36,6 +37,12 @@ export default function Router() {
           index: true,
         },
         { path: 'pengisian-suara', element: <PengisianSuaraPage /> },
+
+        {
+          path: 'status-pengisian',
+          element:
+            user?.role === 'admin' ? <StatusPengisianPage /> : <Navigate to="/404" replace />,
+        },
 
         {
           path: 'user',
