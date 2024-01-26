@@ -7,24 +7,26 @@ import Label from 'src/components/label';
 
 // ----------------------------------------------------------------------
 
-export default function UserTableRow({ name, company, role, no }) {
+export default function UserTableRow({ village_name, district_name, status, no }) {
   return (
-    <TableRow hover tabIndex={-1} role="checkbox">
+    <TableRow hover tabIndex={-1} status="checkbox">
       <TableCell align="center">{no}</TableCell>
-      <TableCell>{name}</TableCell>
+      <TableCell>{village_name}</TableCell>
 
-      <TableCell>{company}</TableCell>
+      <TableCell>{district_name}</TableCell>
 
       <TableCell>
-        <Label color={role ? 'success' : 'error'}>{role ? 'Sudah Mengisi' : 'Belum Mengisi'}</Label>
+        <Label color={status ? 'success' : 'error'}>
+          {status ? 'Sudah Mengisi' : 'Belum Mengisi'}
+        </Label>
       </TableCell>
     </TableRow>
   );
 }
 
 UserTableRow.propTypes = {
-  company: PropTypes.any,
+  district_name: PropTypes.any,
   no: PropTypes.any,
-  name: PropTypes.any,
-  role: PropTypes.any,
+  village_name: PropTypes.any,
+  status: PropTypes.any,
 };

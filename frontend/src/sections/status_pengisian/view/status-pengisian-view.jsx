@@ -179,9 +179,9 @@ export default function StatusPengisianView() {
                           <UserTableRow
                             key={row._id}
                             no={page * rowsPerPage + index + 1}
-                            name={row.village_name}
-                            role={row.is_fillBallot}
-                            company={row.district_name}
+                            village_name={row.village_name}
+                            status={row.is_fillBallot}
+                            district_name={row.district_name}
                           />
                         ))}
 
