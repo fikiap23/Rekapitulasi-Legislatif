@@ -1,5 +1,4 @@
-import JSPdf from 'jspdf';
-import html2canvas from 'html2canvas';
+import { useReactToPrint } from 'react-to-print';
 import { useRef, useState, useEffect } from 'react';
 
 import Container from '@mui/material/Container';
@@ -35,6 +34,17 @@ export default function DashboardView() {
   const [dataParties, setParties] = useState([]);
   const [dataAllVotes, setAllVotes] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [getGridSize, setGridSize] = useState({
+    // default grid size
+    Table: {
+      xs: 12,
+      md: 6,
+    },
+    Chart: {
+      xs: 12,
+      md: 6,
+    },
+  });
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
@@ -60,43 +70,32 @@ export default function DashboardView() {
   };
 
   // print area function
-  const handlePrint = () => {
-    const input = pdfRef.current.querySelectorAll('.printArea');
-    html2canvas(input[0]).then((canvas) => {
-      const imgData = canvas.toDataURL('image/png');
-      const pdf = new JSPdf('p', 'mm', 'a4', true);
-      const pdfWidth = pdf.internal.pageSize.getWidth();
-      const pdfHeight = pdf.internal.pageSize.getHeight();
-      const imgWidth = canvas.width;
-      const imgHeight = canvas.height;
-      const ratio = Math.min(pdfWidth / imgWidth, pdfHeight / imgHeight);
-      const imgX = (pdfWidth - imgWidth * ratio) / 2;
-      const imgY = 10;
-
-      // Page 1
-      pdf.addImage(imgData, 'PNG', imgX, imgY, imgWidth * ratio, imgHeight * ratio);
-
-      pdf.addPage();
-
-      // Page 2
-      const secondPageX = 10;
-      const secondPageY = 10;
-
-      // Capture and add the second grid to the second page
-      html2canvas(input[1]).then((secondGridCanvas) => {
-        pdf.addImage(
-          secondGridCanvas.toDataURL('image/png'),
-          'PNG',
-          secondPageX,
-          secondPageY,
-          imgWidth * ratio,
-          imgHeight * ratio
-        );
-        // Save the PDF
-        pdf.save(`Data_Kabupaten Bandung.pdf`);
-      });
+  const handlePrint = async () => {
+    const prevGridSize = { ...getGridSize };
+    // change grid to print
+    await setGridSize({
+      Table: {
+        xs: 7,
+        md: 7,
+      },
+      Chart: {
+        xs: 5,
+        md: 5,
+      },
     });
+    reactToPrint();
+    // back to default
+    setGridSize(prevGridSize);
   };
+  const reactToPrint = useReactToPrint({
+    pageStyle: `@media print {
+      @page {
+        size: 100vh;
+        margin: 10px;
+      }
+    }`,
+    content: () => pdfRef.current,
+  });
   const pdfRef = useRef();
 
   return (
@@ -158,9 +157,8 @@ export default function DashboardView() {
               icon={<Iconify icon="teenyicons:building-outline" sx={{ width: 64, height: 64 }} />}
             />
           </Grid>
-
           <Grid container lg={12} className="printArea">
-            <Grid xs={12} md={6} lg={8}>
+            <Grid xs={getGridSize.Table.xs} md={getGridSize.Table.md} lg={8}>
               <TableContainer component={Paper}>
                 <Table aria-label="simple table">
                   <TableHead>
@@ -201,7 +199,7 @@ export default function DashboardView() {
               </TableContainer>
             </Grid>
 
-            <Grid xs={12} md={6} lg={4}>
+            <Grid xs={getGridSize.Chart.xs} md={getGridSize.Chart.md} lg={4}>
               <PieChart
                 title="Perolehan Suara"
                 chart={{
@@ -222,6 +220,9 @@ export default function DashboardView() {
                   label: item.name,
                   value: item.total_votes_party,
                 })),
+              }}
+              style={{
+                breakBefore: 'page', // Perhatikan penggunaan camelCase di sini
               }}
             />
           </Grid>
