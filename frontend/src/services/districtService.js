@@ -14,6 +14,16 @@ const districtService = {
       return error.response.data;
     }
   },
+  getAllDistrictNames: async () => {
+    try {
+      const response = await axios.get(`${BASE_URL}/names`, {
+        withCredentials: true,
+      });
+      return response.data;
+    } catch (error) {
+      return error.response.data;
+    }
+  },
 };
 
 export default districtService;

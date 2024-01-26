@@ -260,15 +260,26 @@ const villageController = {
         })
       }
 
-      // Fetch all villages for the given district
-      const villages = await Village.find({ district_id })
+      const villages = await Village.find({ district_id: district_id })
+        .select('_id code village_name district_id is_fillBallot')
+        .populate('district_id', 'district_name')
+
+      // Modify the structure of each village object
+      const modifiedVillages = villages.map((village) => ({
+        _id: village._id,
+        village_name: village.village_name,
+        code: village.code,
+        district_id: village.district_id._id,
+        district_name: village.district_id.district_name,
+        is_fillBallot: village.is_fillBallot,
+      }))
 
       return apiHandler({
         res,
         status: 'success',
         code: 200,
-        message: 'Villages retrieved successfully',
-        data: villages,
+        message: 'Villages for the specified district retrieved successfully',
+        data: modifiedVillages,
         error: null,
       })
     } catch (error) {

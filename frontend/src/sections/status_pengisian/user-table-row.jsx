@@ -2,6 +2,7 @@ import PropTypes from 'prop-types';
 
 import TableRow from '@mui/material/TableRow';
 import TableCell from '@mui/material/TableCell';
+import Label from 'src/components/label';
 
 // ----------------------------------------------------------------------
 
@@ -13,7 +14,9 @@ export default function UserTableRow({ name, company, role, no }) {
 
       <TableCell>{company}</TableCell>
 
-      <TableCell>{role}</TableCell>
+      <TableCell>
+        <Label color={role ? 'success' : 'error'}>{role ? 'Sudah Mengisi' : 'Belum Mengisi'}</Label>
+      </TableCell>
     </TableRow>
   );
 }

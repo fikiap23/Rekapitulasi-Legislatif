@@ -10,7 +10,6 @@ import TableContainer from '@mui/material/TableContainer';
 import TablePagination from '@mui/material/TablePagination';
 import { Grid, MenuItem, TextField, LinearProgress } from '@mui/material';
 
-import resultService from 'src/services/resultService';
 import districtService from 'src/services/districtService';
 
 import Scrollbar from 'src/components/scrollbar';
@@ -21,6 +20,7 @@ import UserTableHead from '../user-table-head';
 import TableEmptyRows from '../table-empty-rows';
 import UserTableToolbar from '../user-table-toolbar';
 import { emptyRows, applyFilter, getComparator } from '../utils';
+import villageService from 'src/services/villageService';
 
 // ----------------------------------------------------------------------
 
@@ -38,56 +38,36 @@ export default function StatusPengisianView() {
   const [kecamatans, setKecamatans] = useState([]);
   const [kelurahans, setKelurahans] = useState([]);
   const [kecamatan, setKecamatan] = useState('');
-  const [kelurahan, setKelurahan] = useState('');
 
-  const [calegs, setCalegs] = useState([]);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
+    const handleGetAllKecamatan = async () => {
+      try {
+        setLoading(true);
+
+        const getKecamatans = await districtService.getAllDistrictNames();
+
+        const getVillages = await villageService.getAllVillages();
+        console.log(getVillages.data);
+        setKelurahans(getVillages.data);
+        setKecamatans(getKecamatans.data);
+
+        setLoading(false);
+      } catch (error) {
+        setKecamatans([]);
+        setLoading(false);
+      }
+    };
     handleGetAllKecamatan();
   }, []);
-  const handleGetAllKecamatan = async () => {
+
+  const handleSelectKecamatan = async (districtId) => {
     try {
       setLoading(true);
 
-      const getKecamatans = await districtService.getAllDistricts();
-      const getCalegs = await resultService.getAllCalegs();
-      setKecamatans(getKecamatans.data);
-      setCalegs(getCalegs.data);
-
       setLoading(false);
     } catch (error) {
-      setKecamatans([]);
-      setLoading(false);
-    }
-  };
-
-  const handleCalegByKecamatan = async (districtId) => {
-    try {
-      setCalegs([]);
-      setKelurahan('');
-      setLoading(true);
-      const getCalegs = await resultService.getCalegByDistrictId(districtId);
-      setCalegs(getCalegs.data);
-      setLoading(false);
-    } catch (error) {
-      setCalegs([]);
-      setKelurahan('');
-      setLoading(false);
-    }
-  };
-
-  const handleSelectedKelurahan = async (village_id) => {
-    try {
-      setLoading(true);
-      setCalegs([]);
-      setLoading(true);
-      const getCalegs = await resultService.getCalegByVillageId(village_id);
-      setCalegs(getCalegs.data);
-      setLoading(false);
-      setLoading(false);
-    } catch (error) {
-      setCalegs([]);
       setLoading(false);
     }
   };
@@ -115,7 +95,7 @@ export default function StatusPengisianView() {
   };
 
   const dataFiltered = applyFilter({
-    inputData: calegs,
+    inputData: kelurahans,
     comparator: getComparator(order, orderBy),
     filterName,
   });
@@ -129,16 +109,10 @@ export default function StatusPengisianView() {
       </Stack>
 
       <Stack direction="row" alignItems="center" justifyContent="space-between" mb={3}>
-        {kelurahan ? (
+        {kecamatan && (
           <Typography variant="h6" sx={{ mb: 2, color: 'primary.main' }}>
-            Data di Kelurahan {kelurahan.village_name}
+            Data di Kecamatan {kecamatan.district_name}
           </Typography>
-        ) : (
-          kecamatan && (
-            <Typography variant="h6" sx={{ mb: 2, color: 'primary.main' }}>
-              Data di Kecamatan {kecamatan.district_name}
-            </Typography>
-          )
         )}
       </Stack>
 
@@ -154,9 +128,8 @@ export default function StatusPengisianView() {
                 value={kecamatan}
                 onChange={(e) => {
                   setKecamatan(e.target.value);
-                  setKelurahans(e.target.value.villages);
-                  handleCalegByKecamatan(e.target.value._id);
-                  // console.log(e.target.value);
+
+                  console.log(e.target.value);
                 }}
                 variant="outlined"
               >
@@ -166,30 +139,6 @@ export default function StatusPengisianView() {
                 {kecamatans.map((option) => (
                   <MenuItem key={option._id} value={option}>
                     {option.district_name}
-                  </MenuItem>
-                ))}
-              </TextField>
-            </Grid>
-            <Grid item xs={12} md={6}>
-              <TextField
-                fullWidth
-                select
-                label="Kelurahan"
-                value={kelurahan}
-                onChange={(e) => {
-                  setKelurahan(e.target.value);
-                  console.log(e.target.value);
-                  handleSelectedKelurahan(e.target.value._id);
-                }}
-                variant="outlined"
-                disabled={!kecamatan}
-              >
-                <MenuItem value="" disabled>
-                  Pilih Desa / Kelurahan
-                </MenuItem>
-                {kelurahans.map((option) => (
-                  <MenuItem key={option._id} value={option}>
-                    {option.village_name}
                   </MenuItem>
                 ))}
               </TextField>
@@ -208,10 +157,10 @@ export default function StatusPengisianView() {
                       orderBy={orderBy}
                       onRequestSort={handleSort}
                       headLabel={[
-                        { id: 'isVerified', label: 'No', align: 'center' },
-                        { id: 'candidate_data.name', label: 'Nama' },
-                        { id: 'party_name', label: 'Partai' },
-                        { id: 'number_of_votes', label: 'Jumlah Suara' },
+                        { id: 'no', label: 'No', align: 'center' },
+                        { id: 'village_name', label: 'Kelurahan' },
+                        { id: 'district_name', label: 'kecamatan' },
+                        { id: 'is_fillBallot', label: 'Status Pengisian' },
                       ]}
                     />
                     <TableBody>
@@ -219,11 +168,11 @@ export default function StatusPengisianView() {
                         .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                         .map((row, index) => (
                           <UserTableRow
-                            key={row.candidate_id}
+                            key={row._id}
                             no={page * rowsPerPage + index + 1}
-                            name={row.candidate_data.name}
-                            role={row.number_of_votes}
-                            company={row.party_name}
+                            name={row.village_name}
+                            role={row.is_fillBallot}
+                            company={row.district_name}
                           />
                         ))}
 
