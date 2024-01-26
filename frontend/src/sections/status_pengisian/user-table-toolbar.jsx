@@ -22,7 +22,7 @@ export default function UserTableToolbar({ filterName, onFilterName }) {
       <OutlinedInput
         value={filterName}
         onChange={onFilterName}
-        placeholder="Cari caleg..."
+        placeholder="Cari kelurahan..."
         startAdornment={
           <InputAdornment position="start">
             <Iconify

@@ -10,6 +10,7 @@ import TableContainer from '@mui/material/TableContainer';
 import TablePagination from '@mui/material/TablePagination';
 import { Grid, MenuItem, TextField, LinearProgress } from '@mui/material';
 
+import villageService from 'src/services/villageService';
 import districtService from 'src/services/districtService';
 
 import Scrollbar from 'src/components/scrollbar';
@@ -20,7 +21,6 @@ import UserTableHead from '../user-table-head';
 import TableEmptyRows from '../table-empty-rows';
 import UserTableToolbar from '../user-table-toolbar';
 import { emptyRows, applyFilter, getComparator } from '../utils';
-import villageService from 'src/services/villageService';
 
 // ----------------------------------------------------------------------
 
@@ -49,7 +49,7 @@ export default function StatusPengisianView() {
         const getKecamatans = await districtService.getAllDistrictNames();
 
         const getVillages = await villageService.getAllVillages();
-        console.log(getVillages.data);
+        // console.log(getVillages.data);
         setKelurahans(getVillages.data);
         setKecamatans(getKecamatans.data);
 
@@ -65,6 +65,14 @@ export default function StatusPengisianView() {
   const handleSelectKecamatan = async (districtId) => {
     try {
       setLoading(true);
+      setKelurahans([]);
+
+      const getVillages = await villageService.getAllVillageByDistrictId(districtId);
+      // console.log(getVillages.data);
+
+      if (getVillages.code === 200) {
+        setKelurahans(getVillages.data);
+      }
 
       setLoading(false);
     } catch (error) {
@@ -129,7 +137,8 @@ export default function StatusPengisianView() {
                 onChange={(e) => {
                   setKecamatan(e.target.value);
 
-                  console.log(e.target.value);
+                  // console.log(e.target.value);
+                  handleSelectKecamatan(e.target.value._id);
                 }}
                 variant="outlined"
               >
