@@ -19,6 +19,10 @@ const VillageSchema = mongoose.Schema(
       type: Number,
       required: true,
     },
+    is_fillBallot: {
+      type: Boolean,
+      default: false,
+    },
   },
   { timestamps: true }
 )

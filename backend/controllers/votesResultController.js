@@ -159,6 +159,14 @@ const votesResultController = {
         { new: true, upsert: true }
       )
 
+      // update  is_fillBallot in village
+      await Village.findOneAndUpdate(
+        { _id: villageId },
+        {
+          is_fillBallot: true,
+        }
+      )
+
       // Return the updated document and history entry
       return apiHandler({
         res,
