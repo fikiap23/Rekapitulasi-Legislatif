@@ -98,6 +98,10 @@ export default function KecamatanView() {
   // print area function
   const handlePrint = async () => {
     const prevGridSize = { ...getGridSize };
+    const getButton = document.querySelectorAll('.printArea');
+    getButton.forEach((element) => {
+      element.style.display = 'none';
+    });
     // change grid to print
     await setGridSize({
       Table: {
@@ -112,6 +116,9 @@ export default function KecamatanView() {
     reactToPrint();
     // back to default
     setGridSize(prevGridSize);
+    getButton.forEach((element) => {
+      element.style.display = 'inline';
+    });
   };
   const reactToPrint = useReactToPrint({
     pageStyle: `@media print {
@@ -125,7 +132,7 @@ export default function KecamatanView() {
   const pdfRef = useRef();
 
   return (
-    <Container maxWidth="xl">
+    <Container maxWidth="xl" ref={pdfRef}>
       <Typography variant="h4" mb={5}>
         Data Kecamatan {selectedKecamatanName}
       </Typography>
@@ -133,7 +140,13 @@ export default function KecamatanView() {
       {!loading && (
         <>
           {user.role === 'admin' && (
-            <Stack mb={5} direction="row" alignItems="center" justifyContent="space-between">
+            <Stack
+              mb={5}
+              direction="row"
+              alignItems="center"
+              justifyContent="space-between"
+              className="printArea"
+            >
               <KecamatanSearch kecamatans={kecamatans} onSelectKecamatan={handleSelectKecamatan} />
             </Stack>
           )}
@@ -141,11 +154,12 @@ export default function KecamatanView() {
             onClick={() => handlePrint()}
             variant="contained"
             startIcon={<Iconify icon="fa6-solid:file-pdf" />}
+            className="printArea"
           >
             Export Data
           </Button>
 
-          <Grid container spacing={3} ref={pdfRef}>
+          <Grid container spacing={3}>
             <Grid container lg={12}>
               <Grid xs={getGridSize.Table.xs} md={getGridSize.Table.md} lg={8}>
                 <TableContainer component={Paper}>

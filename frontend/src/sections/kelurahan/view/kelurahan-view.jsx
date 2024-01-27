@@ -83,6 +83,10 @@ export default function KelurahanView() {
   // print area function
   const handlePrint = async () => {
     const prevGridSize = { ...getGridSize };
+    const getButton = document.querySelectorAll('.printArea');
+    getButton.forEach((element) => {
+      element.style.display = 'none';
+    });
     // change grid to print
     await setGridSize({
       Table: {
@@ -97,6 +101,9 @@ export default function KelurahanView() {
     reactToPrint();
     // back to default
     setGridSize(prevGridSize);
+    getButton.forEach((element) => {
+      element.style.display = 'inline';
+    });
   };
   const reactToPrint = useReactToPrint({
     pageStyle: `@media print {
@@ -110,7 +117,7 @@ export default function KelurahanView() {
   const pdfRef = useRef();
 
   return (
-    <Container maxWidth="xl">
+    <Container maxWidth="xl" ref={pdfRef}>
       <Typography variant="h4" mb={5}>
         Data Kelurahan {kelurahan?.village_name}
       </Typography>
@@ -119,7 +126,7 @@ export default function KelurahanView() {
       {!loading && (
         <>
           <Grid container spacing={3} mb={5}>
-            <Grid item xs={12} md={6}>
+            <Grid item xs={12} md={6} className="printArea">
               <TextField
                 fullWidth
                 select
@@ -142,7 +149,7 @@ export default function KelurahanView() {
                 ))}
               </TextField>
             </Grid>
-            <Grid item xs={12} md={6}>
+            <Grid item xs={12} md={6} className="printArea">
               <TextField
                 fullWidth
                 select
@@ -171,10 +178,11 @@ export default function KelurahanView() {
             onClick={() => handlePrint()}
             variant="contained"
             startIcon={<Iconify icon="fa6-solid:file-pdf" />}
+            className="printArea"
           >
             Export Data
           </Button>
-          <Grid container spacing={3} ref={pdfRef}>
+          <Grid container spacing={3}>
             <Grid container lg={12}>
               <Grid xs={getGridSize.Table.xs} md={getGridSize.Table.xs} lg={8}>
                 <TableContainer component={Paper}>
