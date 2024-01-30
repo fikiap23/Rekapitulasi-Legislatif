@@ -93,12 +93,12 @@ const villageController = {
 
       // Ambil semua district_ids dari villagesData
       const districtIdsSet = new Set(
-        villagesData.map((village) => village.district_id)
+        villagesData.map((village) => village.district_code)
       )
       const districtIds = Array.from(districtIdsSet)
 
       // Periksa apakah semua district_ids ada di database
-      const districtsExist = await District.find({ _id: { $in: districtIds } })
+      const districtsExist = await District.find({ code: { $in: districtIds } })
 
       // Jika ada district_ids yang tidak ditemukan, kembalikan respons error
       if (districtIds.length !== districtsExist.length) {
@@ -131,7 +131,7 @@ const villageController = {
       // Loop melalui setiap desa dan tambahkan _id desa ke array villages di masing-masing distrik
       for (const village of createdVillages) {
         const district = districtsExist.find(
-          (d) => d._id.toString() === village.district_id.toString()
+          (d) => d.code.toString() === village.district_code.toString()
         )
         district.villages.push(village._id)
         await district.save()
