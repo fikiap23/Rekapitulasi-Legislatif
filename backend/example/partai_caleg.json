@@ -4,7 +4,7 @@
     "number_party": 1,
     "name": "Partai Kebangkitan Bangsa (PKB)",
     "path": "/partai-kebangkitan-bangsa",
-    "logoUrl": "https://goodkind-bucket04939-dev.s3.ap-southeast-1.amazonaws.com/public/assets/constant/partai/1/PKB.svg",
+    "logo_url": "https://goodkind-bucket04939-dev.s3.ap-southeast-1.amazonaws.com/public/assets/constant/partai/1/PKB.svg",
     "candidates": [
       { "name": "Humaira Zahrotun Noor", "gender": "Female" },
       { "name": "Asep Syamsudin, S.Ag.", "gender": "Male" },
@@ -23,7 +23,7 @@
     "number_party": 2,
     "name": "Partai Gerakan Indonesia Raya (GERINDRA)",
     "path": "/partai-gerakan-indonesia-raya",
-    "logoUrl": "https://goodkind-bucket04939-dev.s3.ap-southeast-1.amazonaws.com/public/assets/constant/partai/2/Gerindra.svg",
+    "logo_url": "https://goodkind-bucket04939-dev.s3.ap-southeast-1.amazonaws.com/public/assets/constant/partai/2/Gerindra.svg",
     "candidates": [
       { "name": "H. Taufik Hidayat, S.H., M.H.", "gender": "Male" },
       { "name": "Endah Suwarni, S.H., M.Kn.", "gender": "Female" },
@@ -42,7 +42,7 @@
     "number_party": 3,
     "name": "Partai Demokrasi Indonesia Perjuangan (PDI)",
     "path": "/partai-demokrasi-indonesia-perjuangan",
-    "logoUrl": "https://goodkind-bucket04939-dev.s3.ap-southeast-1.amazonaws.com/public/assets/constant/partai/3/PDIP.svg",
+    "logo_url": "https://goodkind-bucket04939-dev.s3.ap-southeast-1.amazonaws.com/public/assets/constant/partai/3/PDIP.svg",
     "candidates": [
       { "name": "S. Apriyanto Wijaya", "gender": "Male" },
       { "name": "Hj. Nia Purnakania, S.H., M.Kn.", "gender": "Female" },
@@ -61,7 +61,7 @@
     "number_party": 4,
     "name": "Partai Golongan Karya (GOLKAR)",
     "path": "/partai-golongan-karya",
-    "logoUrl": "https://goodkind-bucket04939-dev.s3.ap-southeast-1.amazonaws.com/public/assets/constant/partai/4/Golkar.svg",
+    "logo_url": "https://goodkind-bucket04939-dev.s3.ap-southeast-1.amazonaws.com/public/assets/constant/partai/4/Golkar.svg",
     "candidates": [
       { "name": "H. Sugianto, S.Ag., M.Si.", "gender": "Male" },
       { "name": "Dr. Hj. Cucu Sugyati, S.E., M.M.", "gender": "Female" },
@@ -83,7 +83,7 @@
     "number_party": 5,
     "name": "Partai Nasional Demokrat (NASDEM)",
     "path": "/partai-nasional-demokrat",
-    "logoUrl": "https://goodkind-bucket04939-dev.s3.ap-southeast-1.amazonaws.com/public/assets/constant/partai/5/Nasdem.svg",
+    "logo_url": "https://goodkind-bucket04939-dev.s3.ap-southeast-1.amazonaws.com/public/assets/constant/partai/5/Nasdem.svg",
     "candidates": [
       { "name": "Dra. Hj. Tia Fitriani", "gender": "Female" },
       { "name": "H. Agus Yasmin", "gender": "Male" },
@@ -102,7 +102,7 @@
     "number_party": 6,
     "name": "Partai Buruh",
     "path": "/partai-buruh",
-    "logoUrl": "https://goodkind-bucket04939-dev.s3.ap-southeast-1.amazonaws.com/public/assets/constant/partai/6/Buruh.svg",
+    "logo_url": "https://goodkind-bucket04939-dev.s3.ap-southeast-1.amazonaws.com/public/assets/constant/partai/6/Buruh.svg",
     "candidates": [
       { "name": "Asep Iwan Sobandi", "gender": "Male" },
       { "name": "Haernist H. H. Siahaan", "gender": "Male" },
@@ -120,7 +120,7 @@
     "number_party": 7,
     "name": "Gelombang Rakyat Indonesia (GELORA)",
     "path": "/gelombang-rakyat-indonesia",
-    "logoUrl": "https://goodkind-bucket04939-dev.s3.ap-southeast-1.amazonaws.com/public/assets/constant/partai/7/Gelora.svg",
+    "logo_url": "https://goodkind-bucket04939-dev.s3.ap-southeast-1.amazonaws.com/public/assets/constant/partai/7/Gelora.svg",
     "candidates": [
       { "name": "Ir. H. Abdurrachim Santosa", "gender": "Male" },
       { "name": "Dadang Kurniawan, S.I.P., M.H.", "gender": "Male" },
@@ -139,7 +139,7 @@
     "number_party": 8,
     "name": "Partai Keadilan Sejahtera (PKS)",
     "path": "/partai-keadilan-sejahtera",
-    "logoUrl": "https://goodkind-bucket04939-dev.s3.ap-southeast-1.amazonaws.com/public/assets/constant/partai/8/PKS.svg",
+    "logo_url": "https://goodkind-bucket04939-dev.s3.ap-southeast-1.amazonaws.com/public/assets/constant/partai/8/PKS.svg",
     "candidates": [
       { "name": "H. Jajang Rohana, S.Pd.I.", "gender": "Male" },
       { "name": "Hj. Sari Sundari, S.Sos., M.M.", "gender": "Female" },
@@ -161,7 +161,7 @@
     "number_party": 9,
     "name": "Partai Kebangkitan Nusantara",
     "path": "/partai-kebangkitan-nusantara",
-    "logoUrl": "https://goodkind-bucket04939-dev.s3.ap-southeast-1.amazonaws.com/public/assets/constant/partai/9/PKN.svg",
+    "logo_url": "https://goodkind-bucket04939-dev.s3.ap-southeast-1.amazonaws.com/public/assets/constant/partai/9/PKN.svg",
     "candidates": [
       { "name": "Mohamad Romli", "gender": "Male" },
       { "name": "Rika Nuraini, S.E.", "gender": "Female" },
@@ -175,7 +175,7 @@
     "number_party": 10,
     "name": "Partai Hati Nurani Rakyat (HANURA)",
     "path": "/partai-hati-nurani-rakyat",
-    "logoUrl": "https://goodkind-bucket04939-dev.s3.ap-southeast-1.amazonaws.com/public/assets/constant/partai/10/Hanura.svg",
+    "logo_url": "https://goodkind-bucket04939-dev.s3.ap-southeast-1.amazonaws.com/public/assets/constant/partai/10/Hanura.svg",
     "candidates": [
       { "name": "Budi Hermansyah, S.S.", "gender": "Male" },
       { "name": "H. Muhammad Sya'dudin, S.Si., S.Pd.I.", "gender": "Male" },
@@ -194,7 +194,7 @@
     "number_party": 11,
     "name": "Partai Garda Republik Indonesia (GARUDA)",
     "path": "/partai-garda-republik-indonesia",
-    "logoUrl": "https://goodkind-bucket04939-dev.s3.ap-southeast-1.amazonaws.com/public/assets/constant/partai/11/Garuda.svg",
+    "logo_url": "https://goodkind-bucket04939-dev.s3.ap-southeast-1.amazonaws.com/public/assets/constant/partai/11/Garuda.svg",
     "candidates": [
       { "name": "Pian Irawan", "gender": "Male" },
       { "name": "Al Azhar", "gender": "Male" },
@@ -207,7 +207,7 @@
     "number_party": 12,
     "name": "Partai Amanat Nasional (PAN)",
     "path": "/partai-amanat-nasional",
-    "logoUrl": "https://goodkind-bucket04939-dev.s3.ap-southeast-1.amazonaws.com/public/assets/constant/partai/12/PAN.svg",
+    "logo_url": "https://goodkind-bucket04939-dev.s3.ap-southeast-1.amazonaws.com/public/assets/constant/partai/12/PAN.svg",
     "candidates": [
       {
         "name": "Hj. Thoriqoh Nashrullah Fitriyah, S.T., M.E.Sy.",
@@ -232,7 +232,7 @@
     "number_party": 13,
     "name": "Partai Bulan Bintang (PBB)",
     "path": "/partai-bulan-bintang",
-    "logoUrl": "https://goodkind-bucket04939-dev.s3.ap-southeast-1.amazonaws.com/public/assets/constant/partai/13/PBB.svg",
+    "logo_url": "https://goodkind-bucket04939-dev.s3.ap-southeast-1.amazonaws.com/public/assets/constant/partai/13/PBB.svg",
     "candidates": [
       { "name": "Ajat Sudrajat", "gender": "Male" },
       { "name": "Drs. Abdul Bari", "gender": "Male" },
@@ -251,7 +251,7 @@
     "number_party": 14,
     "name": "Partai Demokrat (DEMOKRAT)",
     "path": "/partai-demokrat",
-    "logoUrl": "https://goodkind-bucket04939-dev.s3.ap-southeast-1.amazonaws.com/public/assets/constant/partai/14/Demokrat.svg",
+    "logo_url": "https://goodkind-bucket04939-dev.s3.ap-southeast-1.amazonaws.com/public/assets/constant/partai/14/Demokrat.svg",
     "candidates": [
       { "name": "Toni Setiawan", "gender": "Male" },
       { "name": "Saeful Bachri, S.H., M.A.P.", "gender": "Male" },
@@ -270,7 +270,7 @@
     "number_party": 15,
     "name": "Partai Solidaritas Indonesia (PSI)",
     "path": "/partai-solidaritas-indonesia",
-    "logoUrl": "https://goodkind-bucket04939-dev.s3.ap-southeast-1.amazonaws.com/public/assets/constant/partai/15/PSI.svg",
+    "logo_url": "https://goodkind-bucket04939-dev.s3.ap-southeast-1.amazonaws.com/public/assets/constant/partai/15/PSI.svg",
     "candidates": [
       { "name": "Erwin Rada Damanik", "gender": "Male" },
       { "name": "Dr. Ir. John Sihotang", "gender": "Male" },
@@ -288,7 +288,7 @@
     "number_party": 16,
     "name": "Partai Persatuan Indonesia (PERINDO)",
     "path": "/partai-persatuan-indonesia",
-    "logoUrl": "https://goodkind-bucket04939-dev.s3.ap-southeast-1.amazonaws.com/public/assets/constant/partai/16/Perindo.svg",
+    "logo_url": "https://goodkind-bucket04939-dev.s3.ap-southeast-1.amazonaws.com/public/assets/constant/partai/16/Perindo.svg",
     "candidates": [
       { "name": "Triawibawa, S.E., M.M.", "gender": "Male" },
       { "name": "Heri Rusli, S.H., M.Kn.", "gender": "Male" },
@@ -307,7 +307,7 @@
     "number_party": 17,
     "name": "Partai Persatuan Pembangunan (PPP)",
     "path": "/partai-persatuan-pembangunan",
-    "logoUrl": "https://goodkind-bucket04939-dev.s3.ap-southeast-1.amazonaws.com/public/assets/constant/partai/17/PPP.svg",
+    "logo_url": "https://goodkind-bucket04939-dev.s3.ap-southeast-1.amazonaws.com/public/assets/constant/partai/17/PPP.svg",
     "candidates": [
       { "name": "H. Didin Saepudin", "gender": "Male" },
       { "name": "Imam Alamsyah, S.Pd.I., M.Pd.", "gender": "Male" },
@@ -326,7 +326,7 @@
     "number_party": 18,
     "name": "Partai Ummat",
     "path": "/partai-ummat",
-    "logoUrl": "https://goodkind-bucket04939-dev.s3.ap-southeast-1.amazonaws.com/public/assets/constant/partai/24/Ummat.svg",
+    "logo_url": "https://goodkind-bucket04939-dev.s3.ap-southeast-1.amazonaws.com/public/assets/constant/partai/24/Ummat.svg",
     "candidates": [
       { "name": "Jajang Ading Sutarma", "gender": "Male" },
       { "name": "Agus Sugiarto", "gender": "Male" },

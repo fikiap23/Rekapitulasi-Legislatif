@@ -1,4 +1,4 @@
-import { District } from '../models/regionModel.js'
+import District from '../models/districtModel.js'
 
 import apiHandler from '../utils/apiHandler.js'
 const districtController = {

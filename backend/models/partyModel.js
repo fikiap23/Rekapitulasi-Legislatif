@@ -20,7 +20,7 @@ const partySchema = mongoose.Schema(
     name: { type: String, required: true },
     number_party: { type: Number, required: true, unique: true },
     path: { type: String, required: true },
-    logoUrl: { type: String, required: true },
+    logo_url: { type: String, required: true },
 
     candidates: [candidateSchema],
   },

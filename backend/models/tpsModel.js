@@ -1,11 +1,6 @@
 import mongoose from 'mongoose'
 
 const tpsSchema = new mongoose.Schema({
-  tps_id: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Tps',
-    required: true,
-  },
   village_id: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Village',
@@ -15,6 +10,14 @@ const tpsSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'District',
     required: true,
+  },
+  code: {
+    type: String,
+    required: true,
+  },
+  is_fillBallot: {
+    type: Boolean,
+    default: false,
   },
   total_voters: {
     type: Number,
@@ -43,9 +46,33 @@ const tpsSchema = new mongoose.Schema({
       name: {
         type: String,
       },
-      logoUrl: {
+      logo_url: {
         type: String,
       },
+      total_votes_party: {
+        type: Number,
+        default: 0,
+        min: [0, 'Total suara partai harus non-negatif.'],
+      },
+      candidates: [
+        {
+          candidate_id: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Candidate',
+          },
+          name: {
+            type: String,
+          },
+          gender: {
+            type: String,
+          },
+          number_of_votes: {
+            type: Number,
+            default: 0,
+            min: [0, 'Jumlah suara kandidat harus non-negatif.'],
+          },
+        },
+      ],
     },
   ],
 })

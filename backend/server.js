@@ -7,7 +7,6 @@ import partyRoutes from './routes/party.routes.js'
 import districtRoutes from './routes/district.routes.js'
 import villageRoutes from './routes/village.routes.js'
 import userRoutes from './routes/user.routes.js'
-import votesResultRoutes from './routes/votesResult.routes.js'
 
 import cors from 'cors'
 
@@ -25,7 +24,7 @@ app.use(
   })
 )
 
-const PORT = process.env.PORT || 5000
+const PORT = process.env.PORT || 3000
 
 // Tambahkan konfigurasi limit untuk express.json()
 app.use(express.json({ limit: '10mb' }))
@@ -33,12 +32,11 @@ app.use(express.urlencoded({ extended: true })) // for parsing application/x-www
 app.use(cookieParser())
 
 // Routes
-app.use('/api/v2/auth', authRoutes)
-app.use('/api/v2/parties', partyRoutes)
-app.use('/api/v2/districts', districtRoutes)
-app.use('/api/v2/villages', villageRoutes)
-app.use('/api/v2/users', userRoutes)
-app.use('/api/v2/result', votesResultRoutes)
+app.use('/api/v1/auth', authRoutes)
+app.use('/api/v1/parties', partyRoutes)
+app.use('/api/v1/districts', districtRoutes)
+app.use('/api/v1/villages', villageRoutes)
+app.use('/api/v1/users', userRoutes)
 
 app.listen(PORT, () => {
   console.log(`Server started at  http://localhost:${PORT}`)

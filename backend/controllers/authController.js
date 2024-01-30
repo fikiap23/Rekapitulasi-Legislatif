@@ -3,10 +3,11 @@ import bcrypt from 'bcryptjs'
 import generateTokenAndSetCookie from '../utils/helpers/generateTokenAndSetCookie.js'
 import apiHandler from '../utils/apiHandler.js'
 import User from '../models/userModel.js'
-import { Village, District } from '../models/regionModel.js'
+import District from '../models/districtModel.js'
+import Village from '../models/villageModel.js'
 
 const authController = {
-  signupAdmin: async (req, res) => {
+  registerAdmin: async (req, res) => {
     try {
       const { username, role = 'admin', password, repassword } = req.body
 

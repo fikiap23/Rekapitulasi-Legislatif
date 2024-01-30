@@ -10,4 +10,7 @@ router.post('/bulk', protectAdminRoute, partyController.createBulkParties)
 // Route for getting all parties
 router.get('/', partyController.getAllParties)
 
+// Route for getting all parties and their candidates
+router.get('/candidates', partyController.getAllPartiesAndCandidates)
+
 export default router

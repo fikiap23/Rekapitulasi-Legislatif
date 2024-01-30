@@ -9,14 +9,21 @@ const userSchema = mongoose.Schema(
     },
     password: {
       type: String,
-      minLength: 6,
       required: true,
     },
     role: {
       type: String,
-      enum: ['user_village', 'user_district', 'admin'],
+      enum: ['user_tps', 'user_village', 'user_district', 'admin'],
       required: true,
       default: '',
+    },
+
+    tps_id: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Tps',
+      required: function () {
+        return this.role === 'user_tps'
+      },
     },
     village_id: {
       type: mongoose.Schema.Types.ObjectId,

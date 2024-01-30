@@ -1,4 +1,5 @@
-import { Village, District } from '../models/regionModel.js'
+import District from '../models/districtModel.js'
+import Village from '../models/villageModel.js'
 import User from '../models/userModel.js'
 import bcrypt from 'bcryptjs'
 import apiHandler from '../utils/apiHandler.js'
