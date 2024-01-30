@@ -5,6 +5,7 @@ import apiHandler from '../utils/apiHandler.js'
 import User from '../models/userModel.js'
 import District from '../models/districtModel.js'
 import Village from '../models/villageModel.js'
+import e from 'express'
 
 const authController = {
   registerAdmin: async (req, res) => {
@@ -166,6 +167,20 @@ const authController = {
             username: user.username,
             village_id: user.village_id,
             villageData: villageData,
+          },
+        })
+      } else if (user.role == 'user_tps') {
+        generateTokenAndSetCookie(user._id, 'user_tps', res)
+        return apiHandler({
+          res,
+          status: 'success',
+          code: 200,
+          message: 'User logged in successfully',
+          data: {
+            _id: user._id,
+            role: user.role,
+            name: user.name,
+            username: user.username,
           },
         })
       } else {
