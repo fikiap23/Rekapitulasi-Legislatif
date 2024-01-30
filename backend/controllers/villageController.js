@@ -5,9 +5,9 @@ import apiHandler from '../utils/apiHandler.js'
 const villageController = {
   createOneVillage: async (req, res) => {
     try {
-      const { village_name, code, total_voters, district_id } = req.body
+      const { name, code, total_voters, district_id } = req.body
 
-      if (!village_name || !total_voters || !district_id || !code) {
+      if (!name || !total_voters || !district_id || !code) {
         return apiHandler({
           res,
           status: 'error',
@@ -41,7 +41,7 @@ const villageController = {
       }
 
       const newVillage = new Village({
-        village_name,
+        name,
         code,
         district_id,
         total_voters,
@@ -61,7 +61,7 @@ const villageController = {
           _id: newVillage._id,
           code: newVillage.code,
           district_id: newVillage.district_id,
-          village_name: newVillage.village_name,
+          name: newVillage.name,
         },
         error: null,
       })
@@ -91,17 +91,19 @@ const villageController = {
         })
       }
 
-      // Ambil semua district_ids dari villagesData
-      const districtIdsSet = new Set(
+      // Ambil semua district_code dari villagesData
+      const districtCodesSet = new Set(
         villagesData.map((village) => village.district_code)
       )
-      const districtIds = Array.from(districtIdsSet)
+      const districtCodes = Array.from(districtCodesSet)
 
-      // Periksa apakah semua district_ids ada di database
-      const districtsExist = await District.find({ code: { $in: districtIds } })
+      // Periksa apakah semua district_code ada di database
+      const districtsExist = await District.find({
+        code: { $in: districtCodes },
+      })
 
-      // Jika ada district_ids yang tidak ditemukan, kembalikan respons error
-      if (districtIds.length !== districtsExist.length) {
+      // Jika ada district_code yang tidak ditemukan, kembalikan respons error
+      if (districtCodes.length !== districtsExist.length) {
         return apiHandler({
           res,
           status: 'error',
@@ -111,9 +113,9 @@ const villageController = {
         })
       }
 
-      const villageIds = villagesData.map((village) => village.code)
+      const villageCodes = villagesData.map((village) => village.code)
 
-      const foundVillages = await Village.find({ code: { $in: villageIds } })
+      const foundVillages = await Village.find({ code: { $in: villageCodes } })
 
       if (foundVillages.length > 0) {
         return apiHandler({
@@ -124,6 +126,13 @@ const villageController = {
           error: null,
         })
       }
+
+      // add district_id to each village
+      villagesData.forEach((village) => {
+        village.district_id = districtsExist.find(
+          (district) => district.code === village.district_code
+        )._id
+      })
 
       // Semua distrik ditemukan, lanjutkan dengan menyimpan desa
       const createdVillages = await Village.insertMany(villagesData)
@@ -262,13 +271,13 @@ const villageController = {
       }
 
       const villages = await Village.find({ district_id: district_id })
-        .select('_id code village_name district_id is_fillBallot')
+        .select('_id code name district_id is_fillBallot')
         .populate('district_id', 'district_name')
 
       // Modify the structure of each village object
       const modifiedVillages = villages.map((village) => ({
         _id: village._id,
-        village_name: village.village_name,
+        name: village.name,
         code: village.code,
         district_id: village.district_id._id,
         district_name: village.district_id.district_name,
@@ -297,8 +306,8 @@ const villageController = {
   getAllVillages: async (req, res) => {
     try {
       const villages = await Village.find({})
-        .select('_id code village_name district_id is_fillBallot')
-        .populate('district_id', 'district_name')
+        .select('_id code village_name district_id')
+        .populate('district_id', 'name')
 
       // Modify the structure of each village object
       const modifiedVillages = villages.map((village) => ({
@@ -306,8 +315,7 @@ const villageController = {
         village_name: village.village_name,
         code: village.code,
         district_id: village.district_id._id,
-        district_name: village.district_id.district_name,
-        is_fillBallot: village.is_fillBallot,
+        district_name: village.district_id.name,
       }))
 
       return apiHandler({
