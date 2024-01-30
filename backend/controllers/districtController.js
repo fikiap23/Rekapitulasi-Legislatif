@@ -4,9 +4,9 @@ import apiHandler from '../utils/apiHandler.js'
 const districtController = {
   createNewDistrict: async (req, res) => {
     try {
-      const { district_name, code } = req.body
+      const { name, code } = req.body
 
-      if (!district_name || !code) {
+      if (!name || !code) {
         return apiHandler({
           res,
           status: 'error',
@@ -29,7 +29,7 @@ const districtController = {
       }
 
       const newDistrict = new District({
-        district_name,
+        name,
 
         code,
       })
@@ -43,7 +43,7 @@ const districtController = {
         message: 'District created successfully',
         data: {
           _id: newDistrict._id,
-          district_name: newDistrict.district_name,
+          name: newDistrict.name,
           regency_id: newDistrict.regency_id,
           code: newDistrict.code,
         },
@@ -61,7 +61,7 @@ const districtController = {
     }
   },
 
-  createMultipleDistrictsByRegency: async (req, res) => {
+  bulkDistricts: async (req, res) => {
     try {
       const districtsData = req.body
 
@@ -95,16 +95,8 @@ const districtController = {
       }
 
       const createdDistricts = await District.insertMany(
-        districtsData.map((district) => ({ ...district, regency_id }))
+        districtsData.map((district) => ({ ...district }))
       )
-
-      // Update the regency's districts array
-      if (regency) {
-        regency.districts.push(
-          ...createdDistricts.map((district) => district._id)
-        )
-        await regency.save()
-      }
 
       return apiHandler({
         res,
@@ -127,10 +119,9 @@ const districtController = {
   },
   getAllDistricts: async (req, res) => {
     try {
-      const allDistricts = await District.find().populate(
-        'villages',
-        'village_name'
-      )
+      const allDistricts = await District.find()
+        .select('_id name code villages')
+        .populate('villages', 'name')
 
       return apiHandler({
         res,
@@ -154,7 +145,7 @@ const districtController = {
 
   getAllDistrictNames: async (req, res) => {
     try {
-      const allDistricts = await District.find().select('_id district_name')
+      const allDistricts = await District.find().select('_id name')
 
       return apiHandler({
         res,
