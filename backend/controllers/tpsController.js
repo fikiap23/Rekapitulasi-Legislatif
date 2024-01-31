@@ -1,5 +1,8 @@
+import mongoose from 'mongoose'
 import Village from '../models/villageModel.js'
 import Tps from '../models/tpsModel.js'
+import History from '../models/historyModel.js'
+import Party from '../models/partyModel.js'
 import apiHandler from '../utils/apiHandler.js'
 
 const tpsController = {
@@ -79,6 +82,179 @@ const tpsController = {
         status: 'error',
         code: 500,
         message: 'Internal Server Error',
+        error: { type: 'InternalServerError', details: error.message },
+      })
+    }
+  },
+
+  fillValidBallotsDetail: async (req, res) => {
+    try {
+      const { tpsId } = req.params
+      const validBallotsDetail = req.body
+      // Check if validBallotsDetail is an array and not empty
+      if (
+        !Array.isArray(validBallotsDetail) ||
+        validBallotsDetail.length === 0
+      ) {
+        return apiHandler({
+          res,
+          status: 'error',
+          code: 400,
+          message: 'Invalid or empty validBallotsDetail format',
+          error: null,
+        })
+      }
+
+      // Check tpsId
+      if (!tpsId) {
+        return apiHandler({
+          res,
+          status: 'error',
+          code: 400,
+          message: 'Missing tpsId parameter',
+          error: null,
+        })
+      }
+
+      // Check if tps exists
+      const tps = await Tps.findById(tpsId)
+      if (!tps) {
+        return apiHandler({
+          res,
+          status: 'error',
+          code: 400,
+          message: 'TPS not found',
+          error: null,
+        })
+      }
+
+      // Validate existence of parties and candidates
+      let totalVotesAllParties = 0 // Variable to track total votes for all parties
+
+      for (const item of validBallotsDetail) {
+        if (item.party_id) {
+          const partyExists = await Party.findById(item.party_id)
+
+          if (!partyExists) {
+            return apiHandler({
+              res,
+              status: 'error',
+              code: 400,
+              message: `Party with ID ${item.party_id} not found`,
+              error: null,
+            })
+          }
+
+          // Add party details to the current item
+          item.name = partyExists.name
+          item.code = partyExists.code
+          item.logoUrl = partyExists.logoUrl
+
+          if (partyExists.candidates && partyExists.candidates.length > 0) {
+            let totalVotesParty = 0
+
+            for (const candidate of item.candidates) {
+              const candidateId = new mongoose.Types.ObjectId(
+                candidate?.candidate_id
+              )
+              const candidateExists = partyExists.candidates.find((c) =>
+                c._id.equals(candidateId)
+              )
+
+              if (!candidateExists) {
+                console.warn(
+                  `Candidate with ID ${candidate?.candidate_id} not found for party ${item.party_id}. Skipping...`
+                )
+
+                // Skip to the next iteration if candidate is not found
+                continue
+              }
+
+              // Add candidate details to the current item
+              candidate.name = candidateExists.name
+              candidate.gender = candidateExists.gender
+
+              totalVotesParty += candidate.number_of_votes || 0
+            }
+
+            // Rest of the code for processing totalVotesParty
+            // Add total votes for the party to the overall total
+            totalVotesAllParties += totalVotesParty
+
+            // Set total_votes_party for the party
+            item.total_votes_party = totalVotesParty
+          } else {
+            return apiHandler({
+              res,
+              status: 'error',
+              code: 400,
+              message: `No candidates found for party ${item.party_id}`,
+              error: null,
+            })
+          }
+        }
+      }
+
+      // Check if total votes for all parties exceed maxVotes
+
+      if (totalVotesAllParties > tps.total_voters) {
+        return apiHandler({
+          res,
+          status: 'error',
+          code: 400,
+          message: `Total votes for all parties exceed the maximum allowed votes, total votes for all parties: ${totalVotesAllParties}, max votes: ${tps.total_voters}`,
+          error: null,
+        })
+      }
+
+      // update  is_fillBallot in tps
+      const updatedTps = await Tps.findOneAndUpdate(
+        { _id: tpsId },
+        {
+          total_voters: tps.total_voters,
+          valid_ballots_detail: validBallotsDetail,
+          total_valid_ballots: totalVotesAllParties,
+          total_invalid_ballots: tps.total_voters - totalVotesAllParties,
+          is_fillBallot: true,
+        }
+      )
+      // Create a history entry
+      const historyEntry = {
+        updated_at: new Date(),
+        created_by: req.user._id,
+
+        total_voters: tps.total_voters,
+        valid_ballots_detail: validBallotsDetail,
+        total_valid_ballots: totalVotesAllParties,
+        total_invalid_ballots: tps.total_voters - totalVotesAllParties,
+      }
+
+      // Save the history entry to VotesResultHistory
+      const history = await History.findOneAndUpdate(
+        { tps_id: tpsId },
+        {
+          $push: { history: historyEntry },
+        },
+        { new: true, upsert: true }
+      )
+
+      // Return the updated document and history entry
+      return apiHandler({
+        res,
+        status: 'success',
+        code: 200,
+        message: 'Valid ballots detail updated successfully',
+        data: updatedTps,
+        error: null,
+      })
+    } catch (error) {
+      console.error('Error filling valid_ballots_detail:', error)
+      return apiHandler({
+        res,
+        status: 'error',
+        code: 500,
+        message: 'Internal Server Error',
+        data: null,
         error: { type: 'InternalServerError', details: error.message },
       })
     }
