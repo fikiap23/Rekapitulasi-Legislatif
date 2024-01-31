@@ -17,6 +17,8 @@ import {
   TablePagination,
 } from '@mui/material';
 
+import rekapService from 'src/services/rekapService';
+
 import Iconify from 'src/components/iconify';
 
 import PieChart from '../../../layouts/dashboard/common/pie-chart';
@@ -26,85 +28,11 @@ import CardWidget from '../../../layouts/dashboard/common/card-widget';
 // ----------------------------------------------------------------------
 const rowsPerPageOptions = [10, 15, 30];
 export default function DashboardView() {
-  const kecamatansDummy = [
-    {
-      village_id: '1',
-      village_name: 'A',
-      total_voters: 123,
-      total_valid_ballots: 123,
-      total_invalid_ballots: 123,
-    },
-    {
-      village_id: '2',
-      village_name: 'B',
-      total_voters: 123,
-      total_valid_ballots: 123,
-      total_invalid_ballots: 123,
-    },
-    {
-      village_id: '3',
-      village_name: 'C',
-      total_voters: 123,
-      total_valid_ballots: 123,
-      total_invalid_ballots: 123,
-    },
-  ];
-
-  const kelurahansDummy = [
-    {
-      village_id: '1',
-      village_name: 'A',
-      total_voters: 123,
-      total_valid_ballots: 123,
-      total_invalid_ballots: 123,
-    },
-    {
-      village_id: '2',
-      village_name: 'B',
-      total_voters: 123,
-      total_valid_ballots: 123,
-      total_invalid_ballots: 123,
-    },
-    {
-      village_id: '3',
-      village_name: 'C',
-      total_voters: 123,
-      total_valid_ballots: 123,
-      total_invalid_ballots: 123,
-    },
-  ];
-  const dataPartiesDummy = [
-    { party_id: { name: 'partai A' }, total_votes_party: 123 },
-    { party_id: { name: 'partai B' }, total_votes_party: 123 },
-    { party_id: { name: 'partai C' }, total_votes_party: 123 },
-  ];
-
-  const dataAllVotes = [
-    {
-      village_name: 'village A',
-      total_voters: 249,
-      total_invalid_ballots: 123,
-      total_valid_ballots: 123,
-    },
-    {
-      village_name: 'village B',
-      total_voters: 249,
-      total_invalid_ballots: 123,
-      total_valid_ballots: 123,
-    },
-    {
-      village_name: 'village C',
-      total_voters: 249,
-      total_invalid_ballots: 123,
-      total_valid_ballots: 123,
-    },
-  ];
-
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(rowsPerPageOptions[0]);
-  // const [dataKecamatans, setKecamatans] = useState([]);
-  // const [dataParties, setParties] = useState([]);
-  // const [dataAllVotes, setAllVotes] = useState([]);
+  const [dataKecamatans, setKecamatans] = useState([]);
+  const [dataParties, setParties] = useState([]);
+  const [dataAllVotes, setAllVotes] = useState([]);
   const [loading, setLoading] = useState(false);
   const [getGridSize, setGridSize] = useState({
     // default grid size
@@ -132,12 +60,12 @@ export default function DashboardView() {
 
   const handleGetAllVotes = async () => {
     setLoading(true);
-    // const getKecamatans = await resultService.getAllDistricts();
+    const getKecamatans = await rekapService.getAllDistrictsWithRekapVotes();
 
-    // const getVotes = await resultService.getAllBallots();
-    // setKecamatans(getKecamatans.data);
-    // setParties(getVotes.data.valid_ballots_detail);
-    // setAllVotes(getVotes.data);
+    const getVotes = await rekapService.getAllRekapBallots();
+    setKecamatans(getKecamatans.data);
+    setParties(getVotes.data.valid_ballots_detail);
+    setAllVotes(getVotes.data);
     setLoading(false);
   };
 
@@ -233,7 +161,7 @@ export default function DashboardView() {
           <Grid xs={12} sm={6} md={3}>
             <CardWidget
               title="Total Kecamatan"
-              total={kecamatansDummy.length}
+              total={dataKecamatans.length}
               color="error"
               icon={<Iconify icon="teenyicons:building-outline" sx={{ width: 64, height: 64 }} />}
             />
@@ -251,7 +179,7 @@ export default function DashboardView() {
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    {kecamatansDummy
+                    {dataKecamatans
                       .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                       .map((row) => (
                         <TableRow
@@ -271,7 +199,7 @@ export default function DashboardView() {
                 <TablePagination
                   rowsPerPageOptions={rowsPerPageOptions}
                   component="div"
-                  count={kelurahansDummy.length}
+                  count={dataKecamatans.length}
                   rowsPerPage={rowsPerPage}
                   page={page}
                   onPageChange={handleChangePage}
@@ -284,7 +212,7 @@ export default function DashboardView() {
               <PieChart
                 title="Perolehan Suara"
                 chart={{
-                  series: dataPartiesDummy.map((item) => ({
+                  series: dataParties.map((item) => ({
                     label: item.name,
                     value: item.total_votes_party,
                   })),
@@ -297,7 +225,7 @@ export default function DashboardView() {
             <BarChart
               title="Perolehan Suara Per Partai"
               chart={{
-                series: dataPartiesDummy.map((item) => ({
+                series: dataParties.map((item) => ({
                   label: item.name,
                   value: item.total_votes_party,
                 })),
