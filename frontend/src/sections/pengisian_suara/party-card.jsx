@@ -48,7 +48,7 @@ export default function PartyCard({ party, setVotesResult }) {
       <CardHeader
         avatar={
           <Avatar aria-label="recipe">
-            <img src={party.logoUrl} alt={party.name} />
+            <img src={party.logo_url} alt={party.name} />
           </Avatar>
         }
         subheader={`${party.number_party} - ${party.name}`}

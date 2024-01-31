@@ -78,7 +78,9 @@ const partyController = {
   getAllPartiesAndCandidates: async (req, res) => {
     try {
       // Fetch all parties from the database
-      const allParties = await Party.find().select('_id  name candidates')
+      const allParties = await Party.find().select(
+        '_id  name logo_url number_party candidates'
+      )
 
       // Sort parties based on the "number_party" field
       allParties.sort((a, b) => a.number_party - b.number_party)
