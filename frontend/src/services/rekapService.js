@@ -14,9 +14,31 @@ const rekapService = {
     }
   },
 
+  getAllVillagesByDistrictIdWithRekapVotes: async (districtId) => {
+    try {
+      const response = await axios.get(`${BASE_URL}/villages/${districtId}`, {
+        withCredentials: true,
+      });
+      return response.data;
+    } catch (error) {
+      return error.response.data;
+    }
+  },
+
   getAllRekapBallots: async () => {
     try {
-      const response = await axios.get(`${BASE_URL}`, {
+      const response = await axios.get(`${BASE_URL}/ballot`, {
+        withCredentials: true,
+      });
+      return response.data;
+    } catch (error) {
+      return error.response.data;
+    }
+  },
+
+  getAllRekapBallotsByDistrictId: async (districtId) => {
+    try {
+      const response = await axios.get(`${BASE_URL}/ballot-district/${districtId}`, {
         withCredentials: true,
       });
       return response.data;

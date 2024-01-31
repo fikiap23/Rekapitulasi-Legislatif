@@ -37,8 +37,8 @@ export default function KecamatanSearch({ kecamatans, onSelectKecamatan }) {
         },
       }}
       options={kecamatans}
-      getOptionLabel={(kecamatan) => kecamatan.district_name}
-      isOptionEqualToValue={(option, value) => option.district_id === value.district_id}
+      getOptionLabel={(kecamatan) => kecamatan.name}
+      isOptionEqualToValue={(option, value) => option._id === value._id}
       onChange={handleSelectKecamatan} // Set the onChange handler
       renderInput={(params) => (
         <TextField

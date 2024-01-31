@@ -35,6 +35,40 @@ const rekapController = {
       })
     }
   },
+  getAllTpsResultByDistrictId: async (req, res) => {
+    try {
+      const { districtId } = req.params
+      // Ambil semua TPS
+      const tps = await Tps.find({ district_id: districtId }).select(
+        '_id total_voters total_invalid_ballots total_valid_ballots valid_ballots_detail'
+      )
+
+      // Proses secara paralel untuk mendapatkan hasil yang diinginkan
+      const [aggregatedResult, valid_ballots_detail] = await Promise.all([
+        calculateAggregatedResult(tps),
+        getValidBallotsHelper(tps),
+      ])
+
+      return apiHandler({
+        res,
+        status: 'success',
+        code: 200,
+        message: 'Voting results for all TPS retrieved successfully',
+        data: { ...aggregatedResult, valid_ballots_detail },
+        error: null,
+      })
+    } catch (error) {
+      console.error('Error getting total results by district:', error)
+      return apiHandler({
+        res,
+        status: 'error',
+        code: 500,
+        message: 'Internal Server Error',
+        data: null,
+        error: { type: 'InternalServerError', details: error.message },
+      })
+    }
+  },
   getAllDistrictWithResultVotes: async (req, res) => {
     try {
       // Ambil semua TPS dengan informasi district
@@ -83,6 +117,66 @@ const rekapController = {
       })
     } catch (error) {
       console.error('Error getting total results by district:', error)
+      return apiHandler({
+        res,
+        status: 'error',
+        code: 500,
+        message: 'Internal Server Error',
+        data: null,
+        error: { type: 'InternalServerError', details: error.message },
+      })
+    }
+  },
+  getAllVillageByDistrictIdWithResultVote: async (req, res) => {
+    try {
+      const { districtId } = req.params
+
+      // Ambil semua TPS dengan informasi desa berdasarkan districtId
+      const tpsInDistrict = await Tps.find({ district_id: districtId })
+        .populate('village_id', 'name')
+        .select(
+          '_id village_id total_voters total_invalid_ballots total_valid_ballots'
+        )
+
+      // Hitung hasil agregat untuk setiap desa
+      const aggregatedVillageResults = tpsInDistrict.reduce(
+        (villageResults, tpsItem) => {
+          const villageId = tpsItem.village_id._id
+
+          if (!villageResults[villageId]) {
+            villageResults[villageId] = {
+              village_id: villageId,
+              village_name: tpsItem.village_id.name,
+              total_voters: 0,
+              total_invalid_ballots: 0,
+              total_valid_ballots: 0,
+            }
+          }
+
+          villageResults[villageId].total_voters += tpsItem.total_voters
+          villageResults[villageId].total_invalid_ballots +=
+            tpsItem.total_invalid_ballots
+          villageResults[villageId].total_valid_ballots +=
+            tpsItem.total_valid_ballots
+
+          return villageResults
+        },
+        {}
+      )
+
+      const aggregatedResultsArray = Object.values(aggregatedVillageResults)
+
+      return apiHandler({
+        res,
+        status: 'success',
+        code: 200,
+        message:
+          'Aggregated voting results for all villages in the district retrieved successfully',
+        data: aggregatedResultsArray,
+        error: null,
+      })
+    } catch (error) {
+      console.error('Error getting total results by village:', error)
       return apiHandler({
         res,
         status: 'error',
