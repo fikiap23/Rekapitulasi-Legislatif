@@ -264,41 +264,38 @@ const tpsController = {
     try {
       // Find all tps
       const tps = await Tps.find().select(
-        '_id total_voters valid_ballots_detail'
+        '_id total_voters total_invalid_ballots total_valid_ballots valid_ballots_detail'
       )
 
-      // get all valid ballots from all tps
-      //   const validBallotArray = []
+      let valid_ballots_detail = await getValidBallotsHelper(tps)
 
-      //   let valid_ballots_detail = await getValidBallotsHelper(result)
+      // Sum up the total_voters from all tps
+      const total_voters = tps.reduce(
+        (total, tps) => total + tps.total_voters,
+        0
+      )
 
-      //   // Sum up the total_voters from all tps
-      //   const total_voters = tps.reduce(
-      //     (total, tps) => total + tps.total_voters,
-      //     0
-      //   )
+      // Combine and aggregate the results
+      const aggregatedResult = {
+        total_invalid_ballots: tps.reduce(
+          (total, tps) => total + tps.total_invalid_ballots,
+          0
+        ),
+        total_valid_ballots: tps.reduce(
+          (total, tps) => total + tps.total_valid_ballots,
+          0
+        ),
+        total_voters: total_voters,
+      }
 
-      //   // Combine and aggregate the results
-      //   const aggregatedResult = {
-      //     total_invalid_ballots: result.reduce(
-      //       (total, result) => total + result.total_invalid_ballots,
-      //       0
-      //     ),
-      //     total_valid_ballots: result.reduce(
-      //       (total, result) => total + result.total_valid_ballots,
-      //       0
-      //     ),
-      //     total_voters: total_voters,
-      //   }
-
-      // Return the aggregated result
+      // Return the aggregated tps
       return apiHandler({
         res,
         status: 'success',
         code: 200,
         message: 'Voting results for all tps retrieved successfully',
-        // data: { ...aggregatedResult, valid_ballots_detail },
-        data: tps,
+        data: { ...aggregatedResult, valid_ballots_detail },
+
         error: null,
       })
     } catch (error) {
