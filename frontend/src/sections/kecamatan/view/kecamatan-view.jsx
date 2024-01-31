@@ -20,7 +20,7 @@ import {
 } from '@mui/material';
 
 import userAtom from 'src/atoms/userAtom';
-import resultService from 'src/services/resultService';
+// import resultService from 'src/services/resultService';
 
 import Iconify from 'src/components/iconify/iconify';
 
@@ -30,13 +30,47 @@ import BarChart from '../../../layouts/dashboard/common/bar-chart';
 // ----------------------------------------------------------------------
 const rowsPerPageOptions = [10, 15, 30];
 export default function KecamatanView() {
+  // data dummy
+  const kecamatansDummy = [
+    { district_name: 'A', distric_id: 1 },
+    { district_name: 'B', distric_id: 2 },
+    { district_name: 'C', distric_id: 3 },
+  ];
+  const kelurahansDummy = [
+    {
+      village_id: '1',
+      village_name: 'A',
+      total_voters: 123,
+      total_valid_ballots: 123,
+      total_invalid_ballots: 123,
+    },
+    {
+      village_id: '2',
+      village_name: 'B',
+      total_voters: 123,
+      total_valid_ballots: 123,
+      total_invalid_ballots: 123,
+    },
+    {
+      village_id: '3',
+      village_name: 'C',
+      total_voters: 123,
+      total_valid_ballots: 123,
+      total_invalid_ballots: 123,
+    },
+  ];
+  const dataPartiesDummy = [
+    { name: 'partai A', total_votes_party: 123 },
+    { name: 'partai B', total_votes_party: 123 },
+    { name: 'partai C', total_votes_party: 123 },
+  ];
   const user = useRecoilValue(userAtom);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(rowsPerPageOptions[0]);
-  const [kecamatans, setKecamatans] = useState([]);
+  // const [kecamatans, setKecamatans] = useState([]);
   const [selectedKecamatanName, setSelectedKecamatanName] = useState('');
-  const [dataParties, setParties] = useState([]);
-  const [kelurahans, setKelurahans] = useState([]);
+  // const [dataParties, setParties] = useState([]);
+  // const [kelurahans, setKelurahans] = useState([]);
   const [loading, setLoading] = useState(false);
   const [getGridSize, setGridSize] = useState({
     // default grid size
@@ -54,16 +88,16 @@ export default function KecamatanView() {
     const handleGetAllKecamatans = async () => {
       setLoading(true);
       if (user.role === 'admin') {
-        const getKecamatans = await resultService.getAllDistricts();
-        setKecamatans(getKecamatans.data);
+        // const getKecamatans = await resultService.getAllDistricts();
+        // setKecamatans(getKecamatans.data);
         setLoading(false);
       } else if (user.role === 'user_district') {
         setSelectedKecamatanName(user.districtData.district_name);
         setLoading(true);
-        const getKelurahans = await resultService.getAllVillagesByDistrict(user.district_id);
-        const getParties = await resultService.getAllBallotsByDistrictId(user.district_id);
-        setParties(getParties.valid_ballots_detail);
-        setKelurahans(getKelurahans.data);
+        // const getKelurahans = await resultService.getAllVillagesByDistrict(user.district_id);
+        // const getParties = await resultService.getAllBallotsByDistrictId(user.district_id);
+        // setParties(getParties.valid_ballots_detail);
+        // setKelurahans(getKelurahans.data);
         setLoading(false);
       }
 
@@ -76,13 +110,13 @@ export default function KecamatanView() {
     // console.log(selectedKecamatan.district_id);
     setSelectedKecamatanName(selectedKecamatan.district_name);
     setLoading(true);
-    const getKelurahans = await resultService.getAllVillagesByDistrict(
-      selectedKecamatan.district_id
-    );
-    const getParties = await resultService.getAllBallotsByDistrictId(selectedKecamatan.district_id);
-    setParties(getParties.valid_ballots_detail);
-    // console.log(getParties.valid_ballots_detail);
-    setKelurahans(getKelurahans.data);
+    // const getKelurahans = await resultService.getAllVillagesByDistrict(
+    //   selectedKecamatan.district_id
+    // );
+    // const getParties = await resultService.getAllBallotsByDistrictId(selectedKecamatan.district_id);
+    // setParties(getParties.valid_ballots_detail);
+    // // console.log(getParties.valid_ballots_detail);
+    // setKelurahans(getKelurahans.data);
     // console.log(getKelurahans.data);
     setLoading(false);
   };
@@ -117,7 +151,7 @@ export default function KecamatanView() {
     // back to default
     setGridSize(prevGridSize);
     getButton.forEach((element) => {
-      element.style.display = 'inline';
+      element.style.display = 'inline-block';
     });
   };
   const reactToPrint = useReactToPrint({
@@ -140,14 +174,12 @@ export default function KecamatanView() {
       {!loading && (
         <>
           {user.role === 'admin' && (
-            <Stack
-              mb={5}
-              direction="row"
-              alignItems="center"
-              justifyContent="space-between"
-              className="printArea"
-            >
-              <KecamatanSearch kecamatans={kecamatans} onSelectKecamatan={handleSelectKecamatan} />
+            <Stack mb={5} direction="row" alignItems="center" justifyContent="space-between">
+              <KecamatanSearch
+                kecamatans={kecamatansDummy}
+                onSelectKecamatan={handleSelectKecamatan}
+                className="printArea"
+              />
             </Stack>
           )}
           <Button
@@ -173,7 +205,7 @@ export default function KecamatanView() {
                       </TableRow>
                     </TableHead>
                     <TableBody>
-                      {kelurahans
+                      {kelurahansDummy
                         .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                         .map((row) => (
                           <TableRow
@@ -193,7 +225,7 @@ export default function KecamatanView() {
                   <TablePagination
                     rowsPerPageOptions={rowsPerPageOptions}
                     component="div"
-                    count={kelurahans.length}
+                    count={kelurahansDummy.length}
                     rowsPerPage={rowsPerPage}
                     page={page}
                     onPageChange={handleChangePage}
@@ -205,7 +237,7 @@ export default function KecamatanView() {
                 <PieChart
                   title="Perolehan Suara"
                   chart={{
-                    series: dataParties.map((item) => ({
+                    series: dataPartiesDummy.map((item) => ({
                       label: item.name,
                       value: item.total_votes_party,
                     })),
@@ -217,7 +249,7 @@ export default function KecamatanView() {
               <BarChart
                 title="Perolehan Suara Per Partai"
                 chart={{
-                  series: dataParties.map((item) => ({
+                  series: dataPartiesDummy.map((item) => ({
                     label: item.name,
                     value: item.total_votes_party,
                   })),

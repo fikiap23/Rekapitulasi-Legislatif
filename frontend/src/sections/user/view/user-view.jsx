@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 
 import Card from '@mui/material/Card';
 import Stack from '@mui/material/Stack';
@@ -10,7 +10,7 @@ import Typography from '@mui/material/Typography';
 import TableContainer from '@mui/material/TableContainer';
 import TablePagination from '@mui/material/TablePagination';
 
-import userService from 'src/services/userService';
+// import userService from 'src/services/userService';
 
 import Scrollbar from 'src/components/scrollbar';
 
@@ -25,34 +25,51 @@ import { emptyRows, applyFilter, getComparator } from '../utils';
 // ----------------------------------------------------------------------
 
 export default function UserPage() {
+  const dummyUsers = [
+    {
+      _id: '1',
+      username: 'john_doe',
+      role: 'Admin',
+      village_id: { village_name: 'Village A' },
+      status: 'Aktif',
+    },
+    {
+      _id: '2',
+      username: 'jane_smith',
+      role: 'User',
+      district_id: { district_name: 'District B' },
+      status: 'Aktif',
+    },
+    {
+      _id: '3',
+      username: 'sam_wilson',
+      role: 'User',
+      status: 'Aktif',
+    },
+    {
+      _id: '4',
+      username: 'tony_stark',
+      role: 'Admin',
+      status: 'Nonaktif',
+    },
+    {
+      _id: '5',
+      username: 'peter_parker',
+      role: 'User',
+      village_id: { village_name: 'Village C' },
+      status: 'Aktif',
+    },
+  ];
+
   const [page, setPage] = useState(0);
   const [order, setOrder] = useState('asc');
   const [selected, setSelected] = useState([]);
   const [orderBy, setOrderBy] = useState('username');
   const [filterUsername, setFilterUsername] = useState(''); // Change to filter by username
   const [rowsPerPage, setRowsPerPage] = useState(5);
-  const [loading, setLoading] = useState(false);
-  const [users, setUsers] = useState([]);
-
-  // Get all users and admins
-  useEffect(() => {
-    handleGetAllUsers();
-  }, []);
-
-  const handleGetAllUsers = async () => {
-    try {
-      setLoading(true);
-      const result = await userService.getAllUsers();
-      setUsers(result);
-      // console.log('All users and admins:', result);
-      // Handle successful retrieval of users and admins
-      setLoading(false);
-    } catch (error) {
-      console.error('Get all users and admins error:', error);
-      setLoading(false);
-      // Handle error in retrieving users and admins
-    }
-  };
+  const [loading] = useState(false);
+  // const [users, setUsers] = useState([]);
+  const [users] = useState(dummyUsers);
 
   const handleSort = (event, id) => {
     const isAsc = orderBy === id && order === 'asc';

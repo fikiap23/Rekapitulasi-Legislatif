@@ -1,7 +1,7 @@
 // authService.js
 import axios from 'axios';
 
-const BASE_URL = 'http://localhost:3000/api/v2/users';
+const BASE_URL = 'http://localhost:3000/api/v1/users';
 
 const userService = {
   createNewUser: async (userData) => {

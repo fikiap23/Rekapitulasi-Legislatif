@@ -19,7 +19,7 @@ export default function DetailHistory({ parties }) {
   const handleClose = () => {
     setOpen(false);
   };
-  // console.log(parties);
+  console.log(parties);
 
   return (
     <>

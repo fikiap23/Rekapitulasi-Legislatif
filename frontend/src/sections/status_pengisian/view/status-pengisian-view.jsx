@@ -10,8 +10,8 @@ import TableContainer from '@mui/material/TableContainer';
 import TablePagination from '@mui/material/TablePagination';
 import { Grid, MenuItem, TextField, LinearProgress } from '@mui/material';
 
-import villageService from 'src/services/villageService';
-import districtService from 'src/services/districtService';
+// import villageService from 'src/services/villageService';
+// import districtService from 'src/services/districtService';
 
 import Scrollbar from 'src/components/scrollbar';
 
@@ -25,6 +25,40 @@ import { emptyRows, applyFilter, getComparator } from '../utils';
 // ----------------------------------------------------------------------
 
 export default function StatusPengisianView() {
+  const kecamatansDummy = [
+    { district_name: 'A', distric_id: 1 },
+    { district_name: 'B', distric_id: 2 },
+    { district_name: 'C', distric_id: 3 },
+  ];
+  const kelurahansDummy = [
+    {
+      _id: '1',
+      village_name: 'A',
+      total_voters: 123,
+      total_valid_ballots: 123,
+      total_invalid_ballots: 123,
+      is_fillBallot: 'Sudah Mengisi',
+      district_name: 'A',
+    },
+    {
+      _id: '2',
+      village_name: 'B',
+      total_voters: 123,
+      total_valid_ballots: 123,
+      total_invalid_ballots: 123,
+      is_fillBallot: '',
+      district_name: 'B',
+    },
+    {
+      _id: '3',
+      village_name: 'C',
+      total_voters: 123,
+      total_valid_ballots: 123,
+      total_invalid_ballots: 123,
+      is_fillBallot: 'Sudah Mengisi',
+      district_name: 'C',
+    },
+  ];
   const [page, setPage] = useState(0);
 
   const [order, setOrder] = useState('asc');
@@ -35,8 +69,8 @@ export default function StatusPengisianView() {
 
   const [rowsPerPage, setRowsPerPage] = useState(10);
 
-  const [kecamatans, setKecamatans] = useState([]);
-  const [kelurahans, setKelurahans] = useState([]);
+  // const [kecamatans, setKecamatans] = useState([]);
+  // const [kelurahans, setKelurahans] = useState([]);
   const [kecamatan, setKecamatan] = useState('');
 
   const [loading, setLoading] = useState(false);
@@ -46,16 +80,16 @@ export default function StatusPengisianView() {
       try {
         setLoading(true);
 
-        const getKecamatans = await districtService.getAllDistrictNames();
+        // const getKecamatans = await districtService.getAllDistrictNames();
 
-        const getVillages = await villageService.getAllVillages();
-        // console.log(getVillages.data);
-        setKelurahans(getVillages.data);
-        setKecamatans(getKecamatans.data);
+        // const getVillages = await villageService.getAllVillages();
+        // // console.log(getVillages.data);
+        // setKelurahans(getVillages.data);
+        // setKecamatans(getKecamatans.data);
 
         setLoading(false);
       } catch (error) {
-        setKecamatans([]);
+        // setKecamatans([]);
         setLoading(false);
       }
     };
@@ -65,14 +99,14 @@ export default function StatusPengisianView() {
   const handleSelectKecamatan = async (districtId) => {
     try {
       setLoading(true);
-      setKelurahans([]);
+      // setKelurahans([]);
 
-      const getVillages = await villageService.getAllVillageByDistrictId(districtId);
+      // const getVillages = await villageService.getAllVillageByDistrictId(districtId);
       // console.log(getVillages.data);
 
-      if (getVillages.code === 200) {
-        setKelurahans(getVillages.data);
-      }
+      // if (getVillages.code === 200) {
+      //   setKelurahans(getVillages.data);
+      // }
 
       setLoading(false);
     } catch (error) {
@@ -103,7 +137,7 @@ export default function StatusPengisianView() {
   };
 
   const dataFiltered = applyFilter({
-    inputData: kelurahans,
+    inputData: kelurahansDummy,
     comparator: getComparator(order, orderBy),
     filterName,
   });
@@ -145,7 +179,7 @@ export default function StatusPengisianView() {
                 <MenuItem value="" disabled>
                   Pilih Kecamatan
                 </MenuItem>
-                {kecamatans.map((option) => (
+                {kecamatansDummy.map((option) => (
                   <MenuItem key={option._id} value={option}>
                     {option.district_name}
                   </MenuItem>
