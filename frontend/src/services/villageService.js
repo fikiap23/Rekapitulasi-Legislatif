@@ -5,7 +5,7 @@ const BASE_URL = 'http://localhost:3000/api/v1/villages';
 const villageService = {
   getAllVillageByDistrictId: async (districtId) => {
     try {
-      const response = await axios.get(`${BASE_URL}/district/${districtId}`, {
+      const response = await axios.get(`${BASE_URL}/${districtId}`, {
         withCredentials: true,
       });
       return response.data;
