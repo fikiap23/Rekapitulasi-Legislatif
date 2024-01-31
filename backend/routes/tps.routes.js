@@ -11,4 +11,6 @@ router.post(
   tpsController.fillValidBallotsDetail
 )
 
+router.get('/', tpsController.getAllTpsResult)
+
 export default router
