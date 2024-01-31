@@ -37,19 +37,22 @@ const rekapController = {
   },
   getAllDistrictWithResultVotes: async (req, res) => {
     try {
-      // Ambil semua TPS
-      const tps = await Tps.find().select(
-        '_id total_voters total_invalid_ballots total_valid_ballots'
-      )
+      // Ambil semua TPS dengan informasi district
+      const tps = await Tps.find()
+        .populate('district_id', 'name')
+        .select(
+          '_id district_id total_voters total_invalid_ballots total_valid_ballots'
+        )
 
       // Hitung hasil agregat untuk setiap kecamatan
       const aggregatedDistrictResults = tps.reduce(
         (districtResults, tpsItem) => {
-          const districtId = tpsItem.district_id // Assuming there is a district_id field in the TPS model
+          const districtId = tpsItem.district_id._id
 
           if (!districtResults[districtId]) {
             districtResults[districtId] = {
               district_id: districtId,
+              district_name: tpsItem.district_id.name,
               total_voters: 0,
               total_invalid_ballots: 0,
               total_valid_ballots: 0,
