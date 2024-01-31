@@ -15,11 +15,7 @@ router.post(
 
 // get all villages
 router.get('/', villageController.getAllVillages)
-
 // Retrieving all villages by district ID
-router.get(
-  '/district/:district_id',
-  villageController.getAllVillageByDistrictId
-)
+router.get('/:district_id', villageController.getAllVillageByDistrictId)
 
 export default router

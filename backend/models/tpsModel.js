@@ -6,6 +6,10 @@ const tpsSchema = new mongoose.Schema({
     ref: 'Village',
     required: true,
   },
+  village_code: {
+    type: String,
+    required: true,
+  },
   district_id: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'District',

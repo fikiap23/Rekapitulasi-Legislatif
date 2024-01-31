@@ -271,8 +271,8 @@ const villageController = {
       }
 
       const villages = await Village.find({ district_id: district_id })
-        .select('_id code name district_id is_fillBallot')
-        .populate('district_id', 'district_name')
+        .select('_id code name district_id')
+        .populate('district_id', 'name')
 
       // Modify the structure of each village object
       const modifiedVillages = villages.map((village) => ({
@@ -280,8 +280,7 @@ const villageController = {
         name: village.name,
         code: village.code,
         district_id: village.district_id._id,
-        district_name: village.district_id.district_name,
-        is_fillBallot: village.is_fillBallot,
+        district_name: village.district_id.name,
       }))
 
       return apiHandler({
