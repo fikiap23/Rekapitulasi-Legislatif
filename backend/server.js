@@ -7,6 +7,7 @@ import partyRoutes from './routes/party.routes.js'
 import districtRoutes from './routes/district.routes.js'
 import villageRoutes from './routes/village.routes.js'
 import userRoutes from './routes/user.routes.js'
+import tpsRoutes from './routes/tps.routes.js'
 
 import cors from 'cors'
 
@@ -36,6 +37,7 @@ app.use('/api/v1/auth', authRoutes)
 app.use('/api/v1/parties', partyRoutes)
 app.use('/api/v1/districts', districtRoutes)
 app.use('/api/v1/villages', villageRoutes)
+app.use('/api/v1/tps', tpsRoutes)
 app.use('/api/v1/users', userRoutes)
 
 app.listen(PORT, () => {

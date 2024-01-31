@@ -15,7 +15,7 @@ const tpsSchema = new mongoose.Schema({
     ref: 'District',
     required: true,
   },
-  code: {
+  number: {
     type: String,
     required: true,
   },
