@@ -264,40 +264,23 @@ const tpsController = {
 
   getAllTpsResult: async (req, res) => {
     try {
-      // Find all tps
+      // Ambil semua TPS
       const tps = await Tps.find().select(
         '_id total_voters total_invalid_ballots total_valid_ballots valid_ballots_detail'
       )
 
-      let valid_ballots_detail = await getValidBallotsHelper(tps)
+      // Proses secara paralel untuk mendapatkan hasil yang diinginkan
+      const [aggregatedResult, valid_ballots_detail] = await Promise.all([
+        calculateAggregatedResult(tps),
+        getValidBallotsHelper(tps),
+      ])
 
-      // Sum up the total_voters from all tps
-      const total_voters = tps.reduce(
-        (total, tps) => total + tps.total_voters,
-        0
-      )
-
-      // Combine and aggregate the results
-      const aggregatedResult = {
-        total_invalid_ballots: tps.reduce(
-          (total, tps) => total + tps.total_invalid_ballots,
-          0
-        ),
-        total_valid_ballots: tps.reduce(
-          (total, tps) => total + tps.total_valid_ballots,
-          0
-        ),
-        total_voters: total_voters,
-      }
-
-      // Return the aggregated tps
       return apiHandler({
         res,
         status: 'success',
         code: 200,
-        message: 'Voting results for all tps retrieved successfully',
+        message: 'Voting results for all TPS retrieved successfully',
         data: { ...aggregatedResult, valid_ballots_detail },
-
         error: null,
       })
     } catch (error) {
@@ -372,6 +355,23 @@ const getValidBallotsHelper = async (validBallots) => {
     console.error('Error getting total results by district:', error)
     return null
   }
+}
+
+const calculateAggregatedResult = (tps) => {
+  // Hitung hasil agregat dari data TPS
+  const aggregatedResult = {
+    total_invalid_ballots: tps.reduce(
+      (total, tps) => total + tps.total_invalid_ballots,
+      0
+    ),
+    total_valid_ballots: tps.reduce(
+      (total, tps) => total + tps.total_valid_ballots,
+      0
+    ),
+    total_voters: tps.reduce((total, tps) => total + tps.total_voters, 0),
+  }
+
+  return aggregatedResult
 }
 
 export default tpsController
