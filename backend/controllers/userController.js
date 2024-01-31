@@ -245,8 +245,8 @@ const userController = {
       if (user.role === 'admin') {
         users = await User.find()
           .select('-password')
-          .populate('village_id', 'village_name')
-          .populate('district_id', 'district_name')
+          .populate('village_id', 'name')
+          .populate('district_id', 'name')
       } else if (user.role === 'user_district') {
         // get all village id in district
         const district = await District.findById(user.district_id)
@@ -256,8 +256,8 @@ const userController = {
         // get all users with village id in district
         users = await User.find({ village_id: { $in: villageIds } })
           .select('-password')
-          .populate('village_id', 'village_name')
-          .populate('district_id', 'district_name')
+          .populate('village_id', 'name')
+          .populate('district_id', 'name')
         // console.log(users)
       } else {
         return apiHandler({

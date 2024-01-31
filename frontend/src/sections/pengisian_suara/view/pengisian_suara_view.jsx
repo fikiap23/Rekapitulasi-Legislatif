@@ -39,8 +39,9 @@ export default function PengisianSuaraView() {
   const [kecamatans, setKecamatans] = useState([]);
   const [kelurahans, setKelurahans] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [setVotesResult] = useState([]);
+  const [votesResult, setVotesResult] = useState([]);
   const [history, setHistory] = useState([]);
+  // console.log(votesResult);
   function convertDateFormat(originalDateString) {
     const originalDate = new Date(originalDateString);
 

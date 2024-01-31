@@ -197,7 +197,7 @@ export default function EditUserDialog({ user }) {
               >
                 {kelurahans.map((kelurahan) => (
                   <MenuItem key={kelurahan._id} value={kelurahan._id}>
-                    {kelurahan.village_name}
+                    {kelurahan.name}
                   </MenuItem>
                 ))}
               </Select>
@@ -272,7 +272,7 @@ export default function EditUserDialog({ user }) {
                   >
                     {kecamatans.map((kecamatan) => (
                       <MenuItem key={kecamatan._id} value={kecamatan}>
-                        {kecamatan.district_name}
+                        {kecamatan.name}
                       </MenuItem>
                     ))}
                   </Select>
@@ -292,7 +292,7 @@ export default function EditUserDialog({ user }) {
                     >
                       {kelurahans.map((kelurahan) => (
                         <MenuItem key={kelurahan._id} value={kelurahan._id}>
-                          {kelurahan.village_name}
+                          {kelurahan.name}
                         </MenuItem>
                       ))}
                     </Select>
