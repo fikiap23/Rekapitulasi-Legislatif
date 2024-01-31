@@ -65,10 +65,22 @@ const tpsController = {
         await village.save()
       }
 
-      res.status(200).json({ message: 'Bulk TPS data saved successfully' })
+      return apiHandler({
+        res,
+        status: 'success',
+        code: 200,
+        message: 'Bulk TPS created successfully',
+        data: insertedTps,
+      })
     } catch (error) {
       console.error(error)
-      res.status(500).json({ error: 'Internal Server Error' })
+      return apiHandler({
+        res,
+        status: 'error',
+        code: 500,
+        message: 'Internal Server Error',
+        error: { type: 'InternalServerError', details: error.message },
+      })
     }
   },
 }
