@@ -187,6 +187,43 @@ const rekapController = {
       })
     }
   },
+  getAllTpsByVillageIdWithResultVote: async (req, res) => {
+    try {
+      const { villageId } = req.params
+
+      // Ambil semua TPS dengan informasi desa berdasarkan villageId
+      const tpsInVillage = await Tps.find({ village_id: villageId }).select(
+        '_id number total_voters total_invalid_ballots total_valid_ballots '
+      )
+
+      const tpsInVillageValidBallotDetail = await Tps.find({
+        village_id: villageId,
+      }).select('valid_ballots_detail')
+      const [aggregatedResult, valid_ballots_detail] = await Promise.all([
+        calculateAggregatedResult(tpsInVillage),
+        getValidBallotsHelper(tpsInVillageValidBallotDetail),
+      ])
+
+      return apiHandler({
+        res,
+        status: 'success',
+        code: 200,
+        message: 'results for all TPS in the village retrieved successfully',
+        data: { tpsInVillage, ...aggregatedResult, valid_ballots_detail },
+        error: null,
+      })
+    } catch (error) {
+      console.error('Error getting total results tps by village:', error)
+      return apiHandler({
+        res,
+        status: 'error',
+        code: 500,
+        message: 'Internal Server Error',
+        data: null,
+        error: { type: 'InternalServerError', details: error.message },
+      })
+    }
+  },
 }
 
 const getValidBallotsHelper = async (validBallots) => {

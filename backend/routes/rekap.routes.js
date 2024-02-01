@@ -13,5 +13,9 @@ router.get(
   '/villages/:districtId',
   rekapController.getAllVillageByDistrictIdWithResultVote
 )
+router.get(
+  '/tps/:villageId',
+  rekapController.getAllTpsByVillageIdWithResultVote
+)
 
 export default router

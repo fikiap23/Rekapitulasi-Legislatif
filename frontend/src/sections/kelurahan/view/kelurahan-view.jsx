@@ -18,8 +18,8 @@ import {
   LinearProgress,
 } from '@mui/material';
 
-// import resultService from 'src/services/resultService';
-// import districtService from 'src/services/districtService';
+import rekapService from 'src/services/rekapService';
+import districtService from 'src/services/districtService';
 
 import Iconify from 'src/components/iconify/iconify';
 
@@ -29,66 +29,12 @@ import BarChart from '../../../layouts/dashboard/common/bar-chart';
 // ----------------------------------------------------------------------
 
 export default function KelurahanView() {
-  // data dummy
-  const kecamatansDummy = [
-    { district_name: 'A', distric_id: 1 },
-    { district_name: 'B', distric_id: 2 },
-    { district_name: 'C', distric_id: 3 },
-  ];
-  const kelurahansDummy = [
-    {
-      village_id: '1',
-      village_name: 'A',
-      total_voters: 123,
-      total_valid_ballots: 123,
-      total_invalid_ballots: 123,
-    },
-    {
-      village_id: '2',
-      village_name: 'B',
-      total_voters: 123,
-      total_valid_ballots: 123,
-      total_invalid_ballots: 123,
-    },
-    {
-      village_id: '3',
-      village_name: 'C',
-      total_voters: 123,
-      total_valid_ballots: 123,
-      total_invalid_ballots: 123,
-    },
-  ];
-  const dataPartiesDummy = [
-    { party_id: { name: 'partai A' }, total_votes_party: 123 },
-    { party_id: { name: 'partai B' }, total_votes_party: 123 },
-    { party_id: { name: 'partai C' }, total_votes_party: 123 },
-  ];
-  const selectedKelurahanDummy = [
-    {
-      village_name: 'village A',
-      total_voters: 249,
-      total_invalid_ballots: 123,
-      total_valid_ballots: 123,
-    },
-    {
-      village_name: 'village B',
-      total_voters: 249,
-      total_invalid_ballots: 123,
-      total_valid_ballots: 123,
-    },
-    {
-      village_name: 'village C',
-      total_voters: 249,
-      total_invalid_ballots: 123,
-      total_valid_ballots: 123,
-    },
-  ];
-  // const [kecamatans, setKecamatans] = useState([]);
-  // const [kelurahans, setKelurahans] = useState([]);
+  const [kecamatans, setKecamatans] = useState([]);
+  const [kelurahans, setKelurahans] = useState([]);
   const [kecamatan, setKecamatan] = useState('');
   const [kelurahan, setKelurahan] = useState('');
-  // const [selectedKelurahan, setSelectedKelurahan] = useState({});
-  // const [dataParties, setParties] = useState([]);
+  const [tps, setTps] = useState([]);
+  const [dataParties, setParties] = useState([]);
   const [loading, setLoading] = useState(false);
   const [getGridSize, setGridSize] = useState({
     // default grid size
@@ -109,12 +55,12 @@ export default function KelurahanView() {
     try {
       setLoading(true);
 
-      // const getKecamatans = await districtService.getAllDistricts();
-      // setKecamatans(getKecamatans.data);
+      const getKecamatans = await districtService.getAllDistricts();
+      setKecamatans(getKecamatans.data);
 
       setLoading(false);
     } catch (error) {
-      // setKecamatans([]);
+      setKecamatans([]);
       setLoading(false);
     }
   };
@@ -122,14 +68,13 @@ export default function KelurahanView() {
   const handleSelectedKelurahan = async (village_id) => {
     try {
       setLoading(true);
-      // const getKelurahan = await resultService.getVillageByVillageId(village_id);
+      const getKelurahan = await rekapService.getAllTpsByVillageIdWithRekapVotes(village_id);
 
-      // setSelectedKelurahan(getKelurahan.data);
-      // setParties(getKelurahan.data.valid_ballots_detail);
-      // console.log(getKelurahan.data.valid_ballots_detail);
+      setTps(getKelurahan.data.tpsInVillage);
+      setParties(getKelurahan.data.valid_ballots_detail);
+      console.log(getKelurahan.data.valid_ballots_detail);
       setLoading(false);
     } catch (error) {
-      // setSelectedKelurahan({});
       setLoading(false);
     }
   };
@@ -156,7 +101,7 @@ export default function KelurahanView() {
     // back to default
     setGridSize(prevGridSize);
     getButton.forEach((element) => {
-      element.style.display = 'inline-block';
+      element.style.display = 'inline';
     });
   };
   const reactToPrint = useReactToPrint({
@@ -173,7 +118,7 @@ export default function KelurahanView() {
   return (
     <Container maxWidth="xl" ref={pdfRef}>
       <Typography variant="h4" mb={5}>
-        Data Kelurahan {kelurahan?.village_name}
+        Data Kelurahan {kelurahan?.name}
       </Typography>
       {loading && <LinearProgress color="primary" variant="query" />}
 
@@ -188,7 +133,7 @@ export default function KelurahanView() {
                 value={kecamatan}
                 onChange={(e) => {
                   setKecamatan(e.target.value);
-                  // setKelurahans(e.target.value.villages);
+                  setKelurahans(e.target.value.villages);
                   // console.log(e.target.value);
                 }}
                 variant="outlined"
@@ -196,9 +141,9 @@ export default function KelurahanView() {
                 <MenuItem value="" disabled>
                   Pilih Kecamatan
                 </MenuItem>
-                {kecamatansDummy.map((option) => (
+                {kecamatans.map((option) => (
                   <MenuItem key={option._id} value={option}>
-                    {option.district_name}
+                    {option.name}
                   </MenuItem>
                 ))}
               </TextField>
@@ -211,7 +156,7 @@ export default function KelurahanView() {
                 value={kelurahan}
                 onChange={(e) => {
                   setKelurahan(e.target.value);
-                  console.log(e.target.value);
+                  // console.log(e.target.value);
                   handleSelectedKelurahan(e.target.value._id);
                 }}
                 variant="outlined"
@@ -220,9 +165,9 @@ export default function KelurahanView() {
                 <MenuItem value="" disabled>
                   Pilih Desa / Kelurahan
                 </MenuItem>
-                {kelurahansDummy.map((option) => (
+                {kelurahans.map((option) => (
                   <MenuItem key={option._id} value={option}>
-                    {option.village_name}
+                    {option.name}
                   </MenuItem>
                 ))}
               </TextField>
@@ -243,30 +188,26 @@ export default function KelurahanView() {
                   <Table aria-label="simple table">
                     <TableHead>
                       <TableRow>
-                        <TableCell>Kelurahan</TableCell>
+                        <TableCell>TPS</TableCell>
                         <TableCell align="right">Total Suara</TableCell>
                         <TableCell align="right">Suara Sah</TableCell>
                         <TableCell align="right">Suara Tidak Sah</TableCell>
                       </TableRow>
                     </TableHead>
                     <TableBody>
-                      {selectedKelurahanDummy && (
+                      {tps.map((row) => (
                         <TableRow
-                          key={selectedKelurahanDummy.village_name}
+                          key={row._id}
                           sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                         >
                           <TableCell component="th" scope="row">
-                            {selectedKelurahanDummy.village_name}
+                            {row.number}
                           </TableCell>
-                          <TableCell align="right">{selectedKelurahanDummy.total_voters}</TableCell>
-                          <TableCell align="right">
-                            {selectedKelurahanDummy.total_invalid_ballots}
-                          </TableCell>
-                          <TableCell align="right">
-                            {selectedKelurahanDummy.total_valid_ballots}
-                          </TableCell>
+                          <TableCell align="right">{row.total_voters}</TableCell>
+                          <TableCell align="right">{row.total_valid_ballots}</TableCell>
+                          <TableCell align="right">{row.total_invalid_ballots}</TableCell>
                         </TableRow>
-                      )}
+                      ))}
                     </TableBody>
                   </Table>
                 </TableContainer>
@@ -276,8 +217,8 @@ export default function KelurahanView() {
                 <PieChart
                   title="Perolehan Suara"
                   chart={{
-                    series: dataPartiesDummy.map((item) => ({
-                      label: item.party_id.name,
+                    series: dataParties.map((item) => ({
+                      label: item.name,
                       value: item.total_votes_party,
                     })),
                   }}
@@ -289,8 +230,8 @@ export default function KelurahanView() {
               <BarChart
                 title="Perolehan Suara Per Partai"
                 chart={{
-                  series: dataPartiesDummy.map((item) => ({
-                    label: item.party_id.name,
+                  series: dataParties.map((item) => ({
+                    label: item.name,
                     value: item.total_votes_party,
                   })),
                 }}

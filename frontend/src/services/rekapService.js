@@ -25,6 +25,17 @@ const rekapService = {
     }
   },
 
+  getAllTpsByVillageIdWithRekapVotes: async (villageId) => {
+    try {
+      const response = await axios.get(`${BASE_URL}/tps/${villageId}`, {
+        withCredentials: true,
+      });
+      return response.data;
+    } catch (error) {
+      return error.response.data;
+    }
+  },
+
   getAllRekapBallots: async () => {
     try {
       const response = await axios.get(`${BASE_URL}/ballot`, {
