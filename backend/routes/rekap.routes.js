@@ -19,5 +19,13 @@ router.get(
 )
 
 router.get('/caleg', rekapController.getAllCalegsRekap)
+router.get(
+  '/caleg/district/:districtId',
+  rekapController.getAllCalegsRekapByDistrictId
+)
+router.get(
+  '/caleg/village/:villageId',
+  rekapController.getAllCalegsRekapByVillageId
+)
 
 export default router

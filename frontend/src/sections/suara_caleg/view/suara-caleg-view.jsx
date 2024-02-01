@@ -68,7 +68,7 @@ export default function SuaraCalegView() {
       setLoading(true);
 
       const getKecamatans = await districtService.getAllDistricts();
-      const getCalegs = await rekapService.getAllCalegs();
+      const getCalegs = await rekapService.getAllCalegVotes();
       setKecamatans(getKecamatans.data);
       setCalegs(getCalegs.data);
       // console.log(getCalegs.data);
@@ -88,10 +88,15 @@ export default function SuaraCalegView() {
   const handleCalegByKecamatan = async (districtId) => {
     try {
       setCalegs([]);
+      setTop10Calegs([]);
       setKelurahan('');
       setLoading(true);
-      const getCalegs = await rekapService.getCalegByDistrictId(districtId);
+      const getCalegs = await rekapService.getAllCalegVotesInDistrict(districtId);
       setCalegs(getCalegs.data);
+      const sortedCalegs = getCalegs.data.sort((a, b) => b.number_of_votes - a.number_of_votes);
+
+      // Get the top 10 candidates
+      setTop10Calegs(sortedCalegs.slice(0, 10));
       setLoading(false);
     } catch (error) {
       setCalegs([]);
@@ -104,9 +109,14 @@ export default function SuaraCalegView() {
     try {
       setLoading(true);
       setCalegs([]);
-      setLoading(true);
-      const getCalegs = await rekapService.getCalegByVillageId(village_id);
+      setTop10Calegs([]);
+
+      const getCalegs = await rekapService.getAllCalegVotesInVillage(village_id);
       setCalegs(getCalegs.data);
+      const sortedCalegs = getCalegs.data.sort((a, b) => b.number_of_votes - a.number_of_votes);
+
+      // Get the top 10 candidates
+      setTop10Calegs(sortedCalegs.slice(0, 10));
       setLoading(false);
       setLoading(false);
     } catch (error) {
@@ -190,12 +200,12 @@ export default function SuaraCalegView() {
       <Stack direction="row" alignItems="center" justifyContent="space-between" mb={3}>
         {kelurahan ? (
           <Typography variant="h6" sx={{ mb: 2, color: 'primary.main' }}>
-            Data di Kelurahan {kelurahan.village_name}
+            Data di Kelurahan {kelurahan.name}
           </Typography>
         ) : (
           kecamatan && (
             <Typography variant="h6" sx={{ mb: 2, color: 'primary.main' }}>
-              Data di Kecamatan {kecamatan.district_name}
+              Data di Kecamatan {kecamatan.name}
             </Typography>
           )
         )}
@@ -224,7 +234,7 @@ export default function SuaraCalegView() {
                 </MenuItem>
                 {kecamatans.map((option) => (
                   <MenuItem key={option._id} value={option}>
-                    {option.district_name}
+                    {option.name}
                   </MenuItem>
                 ))}
               </TextField>
@@ -248,7 +258,7 @@ export default function SuaraCalegView() {
                 </MenuItem>
                 {kelurahans.map((option) => (
                   <MenuItem key={option._id} value={option}>
-                    {option.village_name}
+                    {option.name}
                   </MenuItem>
                 ))}
               </TextField>
@@ -277,7 +287,7 @@ export default function SuaraCalegView() {
                       onRequestSort={handleSort}
                       headLabel={[
                         { id: 'isVerified', label: 'No', align: 'center' },
-                        { id: 'candidate_data.name', label: 'Nama' },
+                        { id: 'candidate_name', label: 'Nama' },
                         { id: 'party_name', label: 'Partai' },
                         { id: 'number_of_votes', label: 'Jumlah Suara' },
                       ]}
@@ -289,7 +299,7 @@ export default function SuaraCalegView() {
                           <UserTableRow
                             key={row.candidate_id}
                             no={page * rowsPerPage + index + 1}
-                            name={row.candidate_data.name}
+                            name={row.candidate_name}
                             role={row.number_of_votes}
                             company={row.party_name}
                           />
@@ -322,7 +332,7 @@ export default function SuaraCalegView() {
               title="10 Besar Perolehan Suara Caleg"
               chart={{
                 series: top10Calegs.map((item) => ({
-                  label: item.candidate_data.name,
+                  label: item.candidate_name,
                   value: item.number_of_votes,
                 })),
               }}

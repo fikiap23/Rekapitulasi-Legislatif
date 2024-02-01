@@ -255,6 +255,68 @@ const rekapController = {
       })
     }
   },
+  getAllCalegsRekapByDistrictId: async (req, res) => {
+    const { districtId } = req.params
+    try {
+      // Find all tps
+      const tps = await Tps.find({ district_id: districtId }).select(
+        '_id total_voters total_invalid_ballots total_valid_ballots valid_ballots_detail'
+      )
+
+      let valid_ballots_detail = await getValidBallotsCalegHelper(tps)
+
+      // Return the aggregated result
+      return apiHandler({
+        res,
+        status: 'success',
+        code: 200,
+        message: 'Get caleg result by district successfully',
+        data: valid_ballots_detail,
+        error: null,
+      })
+    } catch (error) {
+      console.error('Error getting total results by caleg:', error)
+      return apiHandler({
+        res,
+        status: 'error',
+        code: 500,
+        message: 'Internal Server Error',
+        data: null,
+        error: { type: 'InternalServerError', details: error.message },
+      })
+    }
+  },
+  getAllCalegsRekapByVillageId: async (req, res) => {
+    const { villageId } = req.params
+    try {
+      // Find all tps
+      const tps = await Tps.find({ village_id: villageId }).select(
+        '_id total_voters total_invalid_ballots total_valid_ballots valid_ballots_detail'
+      )
+
+      let valid_ballots_detail = await getValidBallotsCalegHelper(tps)
+
+      // Return the aggregated result
+      return apiHandler({
+        res,
+        status: 'success',
+        code: 200,
+        message: 'Get caleg result by district successfully',
+        data: valid_ballots_detail,
+        error: null,
+      })
+    } catch (error) {
+      console.error('Error getting total results by caleg:', error)
+      return apiHandler({
+        res,
+        status: 'error',
+        code: 500,
+        message: 'Internal Server Error',
+        data: null,
+        error: { type: 'InternalServerError', details: error.message },
+      })
+    }
+  },
 }
 
 const getValidBallotsHelper = async (validBallots) => {
