@@ -18,4 +18,6 @@ router.get(
   rekapController.getAllTpsByVillageIdWithResultVote
 )
 
+router.get('/caleg', rekapController.getAllCalegsRekap)
+
 export default router

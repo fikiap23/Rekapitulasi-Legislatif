@@ -13,8 +13,8 @@ import TableContainer from '@mui/material/TableContainer';
 import TablePagination from '@mui/material/TablePagination';
 import { Grid, Button, MenuItem, TextField, LinearProgress } from '@mui/material';
 
-// import resultService from 'src/services/resultService';
-// import districtService from 'src/services/districtService';
+import rekapService from 'src/services/rekapService';
+import districtService from 'src/services/districtService';
 import PieChart from 'src/layouts/dashboard/common/pie-chart';
 
 import Scrollbar from 'src/components/scrollbar';
@@ -30,57 +30,6 @@ import { emptyRows, applyFilter, getComparator } from '../utils';
 // ----------------------------------------------------------------------
 
 export default function SuaraCalegView() {
-  const kecamatansDummy = [
-    { district_name: 'A', distric_id: 1 },
-    { district_name: 'B', distric_id: 2 },
-    { district_name: 'C', distric_id: 3 },
-  ];
-  const kelurahansDummy = [
-    {
-      village_id: '1',
-      village_name: 'A',
-      total_voters: 123,
-      total_valid_ballots: 123,
-      total_invalid_ballots: 123,
-    },
-    {
-      village_id: '2',
-      village_name: 'B',
-      total_voters: 123,
-      total_valid_ballots: 123,
-      total_invalid_ballots: 123,
-    },
-    {
-      village_id: '3',
-      village_name: 'C',
-      total_voters: 123,
-      total_valid_ballots: 123,
-      total_invalid_ballots: 123,
-    },
-  ];
-  const calegsDummy = [
-    {
-      party_name: 'Partai AAA',
-      number_of_votes: 400,
-      candidate_data: {
-        name: 'CALON 1',
-      },
-    },
-    {
-      party_name: 'Partai BBB',
-      number_of_votes: 400,
-      candidate_data: {
-        name: 'CALON 2',
-      },
-    },
-    {
-      party_name: 'Partai CCC',
-      number_of_votes: 400,
-      candidate_data: {
-        name: 'CALON C',
-      },
-    },
-  ];
   const [page, setPage] = useState(0);
 
   const [order, setOrder] = useState('asc');
@@ -91,13 +40,13 @@ export default function SuaraCalegView() {
 
   const [rowsPerPage, setRowsPerPage] = useState(10);
 
-  // const [kecamatans, setKecamatans] = useState([]);
-  // const [kelurahans, setKelurahans] = useState([]);
-  // const [kecamatan, setKecamatan] = useState('');
-  // const [kelurahan, setKelurahan] = useState('');
+  const [kecamatans, setKecamatans] = useState([]);
+  const [kelurahans, setKelurahans] = useState([]);
+  const [kecamatan, setKecamatan] = useState('');
+  const [kelurahan, setKelurahan] = useState('');
   const [top10Calegs, setTop10Calegs] = useState([]);
 
-  // const [calegs, setCalegs] = useState([]);
+  const [calegs, setCalegs] = useState([]);
   const [loading, setLoading] = useState(false);
   const [getGridSize, setGridSize] = useState({
     // default grid size
@@ -113,40 +62,40 @@ export default function SuaraCalegView() {
 
   useEffect(() => {
     handleGetAllKecamatan();
-  });
+  }, []);
   const handleGetAllKecamatan = async () => {
     try {
       setLoading(true);
 
-      // const getKecamatans = await districtService.getAllDistricts();
-      // const getCalegs = await resultService.getAllCalegs();
-      // setKecamatans(getKecamatans.data);
-      // setCalegs(getCalegs.data);
+      const getKecamatans = await districtService.getAllDistricts();
+      const getCalegs = await rekapService.getAllCalegs();
+      setKecamatans(getKecamatans.data);
+      setCalegs(getCalegs.data);
       // console.log(getCalegs.data);
       // Sort candidates based on number_of_votes in descending order
-      const sortedCalegs = calegsDummy.sort((a, b) => b.number_of_votes - a.number_of_votes);
+      const sortedCalegs = getCalegs.data.sort((a, b) => b.number_of_votes - a.number_of_votes);
 
       // Get the top 10 candidates
       setTop10Calegs(sortedCalegs.slice(0, 10));
 
       setLoading(false);
     } catch (error) {
-      // setKecamatans([]);
+      setKecamatans([]);
       setLoading(false);
     }
   };
 
   const handleCalegByKecamatan = async (districtId) => {
     try {
-      // setCalegs([]);
-      // setKelurahan('');
+      setCalegs([]);
+      setKelurahan('');
       setLoading(true);
-      // const getCalegs = await resultService.getCalegByDistrictId(districtId);
-      // setCalegs(getCalegs.data);
+      const getCalegs = await rekapService.getCalegByDistrictId(districtId);
+      setCalegs(getCalegs.data);
       setLoading(false);
     } catch (error) {
-      // setCalegs([]);
-      // setKelurahan('');
+      setCalegs([]);
+      setKelurahan('');
       setLoading(false);
     }
   };
@@ -154,14 +103,14 @@ export default function SuaraCalegView() {
   const handleSelectedKelurahan = async (village_id) => {
     try {
       setLoading(true);
-      // setCalegs([]);
+      setCalegs([]);
       setLoading(true);
-      // const getCalegs = await resultService.getCalegByVillageId(village_id);
-      // setCalegs(getCalegs.data);
+      const getCalegs = await rekapService.getCalegByVillageId(village_id);
+      setCalegs(getCalegs.data);
       setLoading(false);
       setLoading(false);
     } catch (error) {
-      // setCalegs([]);
+      setCalegs([]);
       setLoading(false);
     }
   };
@@ -189,7 +138,7 @@ export default function SuaraCalegView() {
   };
 
   const dataFiltered = applyFilter({
-    inputData: calegsDummy,
+    inputData: calegs,
     comparator: getComparator(order, orderBy),
     filterName,
   });
@@ -239,14 +188,14 @@ export default function SuaraCalegView() {
       </Stack>
 
       <Stack direction="row" alignItems="center" justifyContent="space-between" mb={3}>
-        {kelurahansDummy ? (
+        {kelurahan ? (
           <Typography variant="h6" sx={{ mb: 2, color: 'primary.main' }}>
-            Data di Kelurahan {kelurahansDummy.village_name}
+            Data di Kelurahan {kelurahan.village_name}
           </Typography>
         ) : (
-          kecamatansDummy && (
+          kecamatan && (
             <Typography variant="h6" sx={{ mb: 2, color: 'primary.main' }}>
-              Data di Kecamatan {kecamatansDummy.district_name}
+              Data di Kecamatan {kecamatan.district_name}
             </Typography>
           )
         )}
@@ -261,10 +210,10 @@ export default function SuaraCalegView() {
                 fullWidth
                 select
                 label="Kecamatan"
-                value={kecamatansDummy}
+                value={kecamatan}
                 onChange={(e) => {
-                  // setKecamatan(e.target.value);
-                  // setKelurahans(e.target.value.villages);
+                  setKecamatan(e.target.value);
+                  setKelurahans(e.target.value.villages);
                   handleCalegByKecamatan(e.target.value._id);
                   // console.log(e.target.value);
                 }}
@@ -273,7 +222,7 @@ export default function SuaraCalegView() {
                 <MenuItem value="" disabled>
                   Pilih Kecamatan
                 </MenuItem>
-                {kecamatansDummy.map((option) => (
+                {kecamatans.map((option) => (
                   <MenuItem key={option._id} value={option}>
                     {option.district_name}
                   </MenuItem>
@@ -285,19 +234,19 @@ export default function SuaraCalegView() {
                 fullWidth
                 select
                 label="Kelurahan"
-                value={kelurahansDummy}
+                value={kelurahan}
                 onChange={(e) => {
-                  // setKelurahan(e.target.value);
+                  setKelurahan(e.target.value);
                   console.log(e.target.value);
                   handleSelectedKelurahan(e.target.value._id);
                 }}
                 variant="outlined"
-                disabled={!kecamatansDummy}
+                disabled={!kecamatan}
               >
                 <MenuItem value="" disabled>
                   Pilih Desa / Kelurahan
                 </MenuItem>
-                {kelurahansDummy.map((option) => (
+                {kelurahans.map((option) => (
                   <MenuItem key={option._id} value={option}>
                     {option.village_name}
                   </MenuItem>
@@ -376,9 +325,6 @@ export default function SuaraCalegView() {
                   label: item.candidate_data.name,
                   value: item.number_of_votes,
                 })),
-              }}
-              style={{
-                breakBefore: 'page', // Perhatikan penggunaan camelCase di sini
               }}
             />
           </Grid>
