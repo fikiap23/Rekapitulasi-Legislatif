@@ -273,9 +273,10 @@ const tpsController = {
       // Transform the data
       const transformedTps = tps.map((tp) => ({
         _id: tp._id,
-        village_id: tp.village_id._id,
+        number: tp.number,
+        // village_id: tp.village_id._id,
         village_name: tp.village_id.name,
-        district_id: tp.district_id._id,
+        // district_id: tp.district_id._id,
         district_name: tp.district_id.name,
         is_fillBallot: tp.is_fillBallot,
       }))
