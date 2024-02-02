@@ -302,6 +302,47 @@ const tpsController = {
       })
     }
   },
+  getAllTpsByVillageId: async (req, res) => {
+    const { villageId } = req.params
+    try {
+      // Find all tps
+      const tps = await Tps.find({ village_id: villageId })
+        .select('_id is_fillBallot village_id district_id number')
+        .populate('village_id', 'name')
+        .populate('district_id', 'name')
+
+      // Transform the data
+      const transformedTps = tps.map((tp) => ({
+        _id: tp._id,
+        number: tp.number,
+        // village_id: tp.village_id._id,
+        village_name: tp.village_id.name,
+        // district_id: tp.district_id._id,
+        district_name: tp.district_id.name,
+        is_fillBallot: tp.is_fillBallot,
+      }))
+
+      // Return the transformed result
+      return apiHandler({
+        res,
+        status: 'success',
+        code: 200,
+        message: 'Get all tps successfully',
+        data: transformedTps,
+        error: null,
+      })
+    } catch (error) {
+      console.error('Error getting tps:', error)
+      return apiHandler({
+        res,
+        status: 'error',
+        code: 500,
+        message: 'Internal Server Error',
+        data: null,
+        error: { type: 'InternalServerError', details: error.message },
+      })
+    }
+  },
 }
 
 export default tpsController

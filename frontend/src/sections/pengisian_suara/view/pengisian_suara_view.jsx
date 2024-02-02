@@ -1,4 +1,5 @@
 import { useRecoilValue } from 'recoil';
+import { useSnackbar } from 'notistack';
 import { useState, useEffect } from 'react';
 
 import Container from '@mui/material/Container';
@@ -15,6 +16,7 @@ import {
   TableHead,
   Accordion,
   Typography,
+  IconButton,
   TableContainer,
   LinearProgress,
   AccordionSummary,
@@ -22,7 +24,9 @@ import {
 } from '@mui/material';
 
 import userAtom from 'src/atoms/userAtom';
+import tpsService from 'src/services/tpsService';
 import partyService from 'src/services/partyService';
+import districtService from 'src/services/districtService';
 
 import Iconify from 'src/components/iconify';
 
@@ -35,13 +39,15 @@ export default function PengisianSuaraView() {
   const user = useRecoilValue(userAtom);
   const [kecamatan, setKecamatan] = useState('');
   const [kelurahan, setKelurahan] = useState('');
+  const [tps, setTps] = useState('');
   const [parties, setParties] = useState([]);
   const [kecamatans, setKecamatans] = useState([]);
   const [kelurahans, setKelurahans] = useState([]);
+  const [tpsList, setTpsList] = useState([]);
   const [loading, setLoading] = useState(false);
   const [votesResult, setVotesResult] = useState([]);
   const [history, setHistory] = useState([]);
-  // console.log(votesResult);
+  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
   function convertDateFormat(originalDateString) {
     const originalDate = new Date(originalDateString);
 
@@ -73,11 +79,93 @@ export default function PengisianSuaraView() {
       }
     };
     handleGetAllParties();
-  }, [user]);
+  }, []);
+
+  useEffect(() => {
+    const handleGetAllDistricts = async () => {
+      try {
+        setLoading(true);
+        const result = await districtService.getAllDistricts();
+
+        setKecamatans(result.data);
+
+        setLoading(false);
+      } catch (error) {
+        setKecamatans([]);
+        setParties([]);
+        setLoading(false);
+      }
+    };
+    handleGetAllDistricts();
+  }, []);
 
   const handleSubmit = async () => {
     try {
       setLoading(true);
+      if (tps === '') {
+        enqueueSnackbar('Please select tps', {
+          variant: 'error',
+          anchorOrigin: {
+            vertical: 'bottom',
+            horizontal: 'center',
+          },
+          action: (key) => (
+            <IconButton
+              key="close"
+              aria-label="Close"
+              color="inherit"
+              onClick={() => closeSnackbar(key)}
+            >
+              <Iconify icon="eva:close-fill" />
+            </IconButton>
+          ),
+        });
+        setLoading(false);
+        return;
+      }
+
+      let result;
+      if (user.role === 'admin') {
+        result = await tpsService.fillBallots(tps, votesResult);
+      }
+      console.log(result);
+      if (result.code === 200) {
+        enqueueSnackbar('Voting success', {
+          variant: 'success',
+          anchorOrigin: {
+            vertical: 'bottom',
+            horizontal: 'center',
+          },
+          action: (key) => (
+            <IconButton
+              key="close"
+              aria-label="Close"
+              color="inherit"
+              onClick={() => closeSnackbar(key)}
+            >
+              <Iconify icon="eva:close-fill" />
+            </IconButton>
+          ),
+        });
+      } else {
+        enqueueSnackbar(result.message, {
+          variant: 'error',
+          anchorOrigin: {
+            vertical: 'bottom',
+            horizontal: 'center',
+          },
+          action: (key) => (
+            <IconButton
+              key="close"
+              aria-label="Close"
+              color="inherit"
+              onClick={() => closeSnackbar(key)}
+            >
+              <Iconify icon="eva:close-fill" />
+            </IconButton>
+          ),
+        });
+      }
 
       setLoading(false);
     } catch (error) {
@@ -159,7 +247,7 @@ export default function PengisianSuaraView() {
                       </MenuItem>
                       {kecamatans.map((option) => (
                         <MenuItem key={option._id} value={option}>
-                          {option.district_name}
+                          {option.name}
                         </MenuItem>
                       ))}
                     </TextField>
@@ -173,6 +261,12 @@ export default function PengisianSuaraView() {
                       onChange={async (e) => {
                         setHistory([]);
                         setKelurahan(e.target.value);
+                        // console.log(e.target.value);
+                        const getTps = await tpsService.getAllTpsByVillageId(e.target.value);
+                        if (getTps.data) {
+                          setTpsList(getTps.data);
+                        }
+                        // console.log(getTps);
                         // const getHistory = await resultService.getHistoryVillageId(e.target.value);
                         // // console.log(getHistory.data.history);
                         // if (getHistory.data.history) {
@@ -187,7 +281,31 @@ export default function PengisianSuaraView() {
                       </MenuItem>
                       {kelurahans.map((option) => (
                         <MenuItem key={option._id} value={option._id}>
-                          {option.village_name}
+                          {option.name}
+                        </MenuItem>
+                      ))}
+                    </TextField>
+                  </Grid>
+                  <Grid item xs={12} md={6}>
+                    <TextField
+                      fullWidth
+                      select
+                      label="TPS"
+                      value={tps}
+                      onChange={async (e) => {
+                        setHistory([]);
+                        setTps(e.target.value);
+                        // console.log(e.target.value);
+                      }}
+                      variant="outlined"
+                      disabled={!kelurahan}
+                    >
+                      <MenuItem value="" disabled>
+                        Pilih TPS
+                      </MenuItem>
+                      {tpsList.map((option) => (
+                        <MenuItem key={option._id} value={option._id}>
+                          {option.number}
                         </MenuItem>
                       ))}
                     </TextField>
