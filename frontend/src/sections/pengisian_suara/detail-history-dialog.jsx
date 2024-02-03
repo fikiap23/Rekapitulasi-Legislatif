@@ -1,7 +1,19 @@
-import React from 'react';
 import PropTypes from 'prop-types';
+import React, { useState } from 'react';
 
-import { Grid, List, Slide, AppBar, Button, Dialog, Toolbar, Typography } from '@mui/material';
+import {
+  Grid,
+  List,
+  Slide,
+  AppBar,
+  Button,
+  Dialog,
+  Toolbar,
+  Typography,
+  LinearProgress,
+} from '@mui/material';
+
+import tpsService from 'src/services/tpsService';
 
 import Iconify from 'src/components/iconify';
 
@@ -9,17 +21,30 @@ import PartyCardV2 from './party-card_v2';
 
 const Transition = React.forwardRef((props, ref) => <Slide direction="up" ref={ref} {...props} />);
 
-export default function DetailHistory({ parties }) {
+export default function DetailHistory({ tps_id }) {
   const [open, setOpen] = React.useState(false);
+  const [parties, setParties] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   const handleClickOpen = () => {
     setOpen(true);
+    getHistory();
   };
 
   const handleClose = () => {
     setOpen(false);
   };
-  console.log(parties);
+
+  const getHistory = async () => {
+    try {
+      setLoading(true);
+      const dataTps = await tpsService.getTpsById(tps_id);
+      setParties(dataTps.data.valid_ballots_detail);
+      setLoading(false);
+    } catch (error) {
+      setLoading(false);
+    }
+  };
 
   return (
     <>
@@ -34,13 +59,16 @@ export default function DetailHistory({ parties }) {
           </Toolbar>
         </AppBar>
         <List>
-          <Grid container spacing={2} mb={5}>
-            {parties.map((party) => (
-              <Grid item xs={12} sm={6} md={4} key={party._id}>
-                <PartyCardV2 party={party} />
-              </Grid>
-            ))}
-          </Grid>
+          {loading && <LinearProgress color="primary" variant="query" />}
+          {!loading && (
+            <Grid container spacing={2} mb={5}>
+              {parties.map((party) => (
+                <Grid item xs={12} sm={6} md={4} key={party._id}>
+                  <PartyCardV2 party={party} />
+                </Grid>
+              ))}
+            </Grid>
+          )}
         </List>
       </Dialog>
     </>
@@ -48,5 +76,5 @@ export default function DetailHistory({ parties }) {
 }
 
 DetailHistory.propTypes = {
-  parties: PropTypes.array,
+  tps_id: PropTypes.any,
 };

@@ -1,10 +1,7 @@
 import PropTypes from 'prop-types';
-import { useState, useEffect } from 'react';
 
 import TableRow from '@mui/material/TableRow';
 import TableCell from '@mui/material/TableCell';
-
-import historyService from 'src/services/historyService';
 
 import Label from 'src/components/label';
 
@@ -20,25 +17,6 @@ export default function UserTableRow({
   tps,
   tps_id,
 }) {
-  const [history, setHistory] = useState([]);
-  const [loading, setLoading] = useState(false);
-
-  useEffect(() => {
-    const getHistory = async () => {
-      try {
-        setLoading(true);
-        const dataHistory = await historyService.getAllHistoryByTps(tps_id);
-        setHistory(dataHistory.data[0].history);
-        console.log(history);
-
-        setLoading(false);
-      } catch (error) {
-        setLoading(false);
-      }
-    };
-    getHistory();
-  }, [history, tps_id]);
-
   return (
     <TableRow hover tabIndex={-1} status="checkbox">
       <TableCell align="center">{no}</TableCell>
@@ -50,10 +28,10 @@ export default function UserTableRow({
           {status ? 'Sudah Mengisi' : 'Belum Mengisi'}
         </Label>
       </TableCell>
-      {status && history && loading === false && (
+      {status && (
         <TableCell align="center">
           {' '}
-          <DetailHistory parties={history} />
+          <DetailHistory tps_id={tps_id} />
         </TableCell>
       )}
     </TableRow>

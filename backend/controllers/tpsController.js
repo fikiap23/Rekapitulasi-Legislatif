@@ -148,7 +148,7 @@ const tpsController = {
           // Add party details to the current item
           item.name = partyExists.name
           item.code = partyExists.code
-          item.logoUrl = partyExists.logoUrl
+          item.logo_url = partyExists.logo_url
 
           if (partyExists.candidates && partyExists.candidates.length > 0) {
             let totalVotesParty = 0
@@ -369,6 +369,49 @@ const tpsController = {
         status: 'success',
         code: 200,
         message: 'Get all tps successfully',
+        data: transformedTps,
+        error: null,
+      })
+    } catch (error) {
+      console.error('Error getting tps:', error)
+      return apiHandler({
+        res,
+        status: 'error',
+        code: 500,
+        message: 'Internal Server Error',
+        data: null,
+        error: { type: 'InternalServerError', details: error.message },
+      })
+    }
+  },
+  getTpsById: async (req, res) => {
+    const { tpsId } = req.params
+    try {
+      // Find all tps
+      const tps = await Tps.findById(tpsId)
+        .select(
+          '_id is_fillBallot village_id district_id number valid_ballots_detail'
+        )
+        .populate('village_id', 'name')
+        .populate('district_id', 'name')
+
+      // Return the transformed result
+      const transformedTps = {
+        _id: tps._id,
+        number: tps.number,
+        // village_id: tps.village_id._id,
+        village_name: tps.village_id.name,
+        // district_id: tps.district_id._id,
+        district_name: tps.district_id.name,
+        is_fillBallot: tps.is_fillBallot,
+        valid_ballots_detail: tps.valid_ballots_detail,
+      }
+
+      return apiHandler({
+        res,
+        status: 'success',
+        code: 200,
+        message: 'Get  tps successfully',
         data: transformedTps,
         error: null,
       })

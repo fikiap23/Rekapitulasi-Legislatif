@@ -122,7 +122,7 @@ export default function StatusPengisianView() {
       <Stack direction="row" alignItems="center" justifyContent="space-between" mb={3}>
         {kecamatan && (
           <Typography variant="h6" sx={{ mb: 2, color: 'primary.main' }}>
-            Data di Kecamatan {kecamatan.district_name}
+            Data di Kecamatan {kecamatan.name}
           </Typography>
         )}
       </Stack>
