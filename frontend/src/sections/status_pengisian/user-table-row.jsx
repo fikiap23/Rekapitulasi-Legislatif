@@ -4,13 +4,22 @@ import { useState, useEffect } from 'react';
 import TableRow from '@mui/material/TableRow';
 import TableCell from '@mui/material/TableCell';
 
+import historyService from 'src/services/historyService';
+
 import Label from 'src/components/label';
 
 import DetailHistory from '../pengisian_suara/detail-history-dialog';
-
 // ----------------------------------------------------------------------
 
-export default function UserTableRow({ village_name, district_name, status, no, village_id }) {
+export default function UserTableRow({
+  village_name,
+  district_name,
+  status,
+  no,
+  village_id,
+  tps,
+  tps_id,
+}) {
   const [history, setHistory] = useState([]);
   const [loading, setLoading] = useState(false);
 
@@ -18,7 +27,9 @@ export default function UserTableRow({ village_name, district_name, status, no, 
     const getHistory = async () => {
       try {
         setLoading(true);
-        setHistory([]);
+        const dataHistory = await historyService.getAllHistoryByTps(tps_id);
+        setHistory(dataHistory.data[0].history);
+        console.log(history);
 
         setLoading(false);
       } catch (error) {
@@ -26,14 +37,14 @@ export default function UserTableRow({ village_name, district_name, status, no, 
       }
     };
     getHistory();
-  }, [village_id]);
+  }, [history, tps_id]);
+
   return (
     <TableRow hover tabIndex={-1} status="checkbox">
       <TableCell align="center">{no}</TableCell>
-      <TableCell>{village_name}</TableCell>
-
       <TableCell>{district_name}</TableCell>
-
+      <TableCell>{village_name}</TableCell>
+      <TableCell>{tps}</TableCell>
       <TableCell>
         <Label color={status ? 'success' : 'error'}>
           {status ? 'Sudah Mengisi' : 'Belum Mengisi'}
@@ -54,5 +65,7 @@ UserTableRow.propTypes = {
   no: PropTypes.any,
   village_name: PropTypes.any,
   village_id: PropTypes.any,
+  tps: PropTypes.any,
+  tps_id: PropTypes.any,
   status: PropTypes.any,
 };

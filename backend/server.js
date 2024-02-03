@@ -9,6 +9,7 @@ import villageRoutes from './routes/village.routes.js'
 import userRoutes from './routes/user.routes.js'
 import tpsRoutes from './routes/tps.routes.js'
 import rekapRoutes from './routes/rekap.routes.js'
+import historyRoutes from './routes/history.routes.js'
 
 import cors from 'cors'
 
@@ -41,6 +42,7 @@ app.use('/api/v1/villages', villageRoutes)
 app.use('/api/v1/tps', tpsRoutes)
 app.use('/api/v1/rekap', rekapRoutes)
 app.use('/api/v1/users', userRoutes)
+app.use('/api/v1/history', historyRoutes)
 
 app.listen(PORT, () => {
   console.log(`Server started at  http://localhost:${PORT}`)

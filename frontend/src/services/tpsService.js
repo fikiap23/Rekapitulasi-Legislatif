@@ -24,7 +24,15 @@ const tpsService = {
   },
   getAllTpsByVillageId: async (villageId) => {
     try {
-      const response = await axios.get(`${BASE_URL}/${villageId}`);
+      const response = await axios.get(`${BASE_URL}/village/${villageId}`);
+      return response.data;
+    } catch (error) {
+      return error.response.data;
+    }
+  },
+  getAllTpsByDistrictId: async (districtId) => {
+    try {
+      const response = await axios.get(`${BASE_URL}/district/${districtId}`);
       return response.data;
     } catch (error) {
       return error.response.data;
