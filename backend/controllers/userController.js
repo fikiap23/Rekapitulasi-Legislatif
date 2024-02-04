@@ -1,13 +1,14 @@
 import District from '../models/districtModel.js'
 import Village from '../models/villageModel.js'
 import User from '../models/userModel.js'
+import Tps from '../models/tpsModel.js'
 import bcrypt from 'bcryptjs'
 import apiHandler from '../utils/apiHandler.js'
 
 const userController = {
   createNewUser: async (req, res) => {
     try {
-      const { password, role, village_id, district_id } = req.body
+      const { password, role, tps_id, village_id, district_id } = req.body
       let { username } = req.body
 
       // check user
@@ -202,6 +203,54 @@ const userController = {
             username: newUser.username,
             role: newUser.role,
             village_id: newUser.village_id,
+          },
+          error: null,
+        })
+      } else if (role === 'user_tps') {
+        // check if user is village
+        if (user.role !== 'user_village' && user.role !== 'admin') {
+          return apiHandler({
+            res,
+            status: 'error',
+            code: 400,
+            message: 'Only village users or admins can perform this action',
+            error: null,
+          })
+        }
+        // check if user village_id and tps_id match
+        if (user.role === 'user_village') {
+          const village = await Village.findById(user.village_id)
+          if (!village.tps.includes(tps_id)) {
+            return apiHandler({
+              res,
+              status: 'error',
+              code: 400,
+              message: 'Village and TPS id do not match',
+              error: null,
+            })
+          }
+        }
+        const salt = await bcrypt.genSalt(10)
+        const hashedPassword = await bcrypt.hash(password, salt)
+
+        const newUser = new User({
+          username,
+          password: hashedPassword,
+          role,
+          tps_id,
+        })
+        await newUser.save()
+
+        return apiHandler({
+          res,
+          status: 'success',
+          code: 201,
+          message: 'User created successfully',
+          data: {
+            _id: newUser._id,
+            username: newUser.username,
+            role: newUser.role,
+            tps_id: newUser.tps_id,
           },
           error: null,
         })

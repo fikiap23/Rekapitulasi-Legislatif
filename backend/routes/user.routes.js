@@ -1,11 +1,14 @@
 import express from 'express'
 import userController from '../controllers/userController.js'
-import { protectUserDistrictRoute } from '../middlewares/protectRoute.js'
+import {
+  protectUserDistrictRoute,
+  protectUserVillageRoute,
+} from '../middlewares/protectRoute.js'
 
 const router = express.Router()
 
 // Create a new user
-router.post('/', protectUserDistrictRoute, userController.createNewUser)
+router.post('/', protectUserVillageRoute, userController.createNewUser)
 // Delete multiple users
 router.post(
   '/deleteUsers',
