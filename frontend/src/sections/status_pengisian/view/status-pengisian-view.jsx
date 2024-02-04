@@ -172,7 +172,7 @@ export default function StatusPengisianView() {
                         { id: 'no', label: 'No', align: 'center' },
                         { id: 'district_name', label: 'kecamatan' },
                         { id: 'village_name', label: 'Kelurahan' },
-                        { id: 'tps', label: 'TPS' },
+                        { id: 'number', label: 'TPS' },
                         { id: 'is_fillBallot', label: 'Status Pengisian' },
                         { id: 'aksi', label: 'Aksi', align: 'center' },
                       ]}

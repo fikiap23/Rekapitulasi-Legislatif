@@ -25,9 +25,10 @@ export default function UserTableRow({
   selected,
   username,
   id,
-  daerah,
+  kecamatan,
+  kelurahan,
+  tps,
   role,
-  status,
   handleClick,
 }) {
   const [open, setOpen] = useState(null);
@@ -112,6 +113,12 @@ export default function UserTableRow({
   const handleCloseMenu = () => {
     setOpen(null);
   };
+  const roleColors = {
+    admin: 'success',
+    user_district: 'primary',
+    user_village: 'secondary',
+    user_tps: 'info',
+  };
 
   return (
     <>
@@ -128,12 +135,12 @@ export default function UserTableRow({
           </Stack>
         </TableCell>
 
-        <TableCell>{daerah}</TableCell>
-
-        <TableCell>{role}</TableCell>
+        <TableCell>{kecamatan}</TableCell>
+        <TableCell>{kelurahan}</TableCell>
+        <TableCell>{tps}</TableCell>
 
         <TableCell>
-          <Label color={(status === 'tidak aktif' && 'error') || 'success'}>{status}</Label>
+          <Label color={roleColors[role]}>{role}</Label>
         </TableCell>
 
         <TableCell align="right">
@@ -165,11 +172,12 @@ export default function UserTableRow({
 
 UserTableRow.propTypes = {
   user: PropTypes.any,
-  daerah: PropTypes.any,
   handleClick: PropTypes.func,
   id: PropTypes.any,
   username: PropTypes.any,
   role: PropTypes.any,
   selected: PropTypes.any,
-  status: PropTypes.string,
+  kecamatan: PropTypes.any,
+  kelurahan: PropTypes.any,
+  tps: PropTypes.any,
 };

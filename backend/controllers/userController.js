@@ -190,6 +190,7 @@ const userController = {
           password: hashedPassword,
           role,
           village_id,
+          district_id: village.district_id,
         })
         await newUser.save()
 
@@ -203,6 +204,7 @@ const userController = {
             username: newUser.username,
             role: newUser.role,
             village_id: newUser.village_id,
+            district_id: newUser.district_id,
           },
           error: null,
         })
@@ -217,6 +219,19 @@ const userController = {
             error: null,
           })
         }
+
+        // check if tps_id
+        const tps = await Tps.findById(tps_id)
+        if (!tps) {
+          return apiHandler({
+            res,
+            status: 'error',
+            code: 400,
+            message: 'TPS not found',
+            error: null,
+          })
+        }
+
         // check if user village_id and tps_id match
         if (user.role === 'user_village') {
           const village = await Village.findById(user.village_id)
@@ -238,6 +253,8 @@ const userController = {
           password: hashedPassword,
           role,
           tps_id,
+          village_id: tps.village_id,
+          district_id: tps.district_id,
         })
         await newUser.save()
 
@@ -251,6 +268,8 @@ const userController = {
             username: newUser.username,
             role: newUser.role,
             tps_id: newUser.tps_id,
+            village_id: newUser.village_id,
+            district_id: newUser.district_id,
           },
           error: null,
         })
@@ -296,6 +315,7 @@ const userController = {
           .select('-password')
           .populate('village_id', 'name')
           .populate('district_id', 'name')
+          .populate('tps_id', 'number')
       } else if (user.role === 'user_district') {
         // get all village id in district
         const district = await District.findById(user.district_id)
@@ -317,6 +337,18 @@ const userController = {
           error: null,
         })
       }
+
+      // transform data
+      users = users.map((user) => {
+        return {
+          _id: user._id,
+          username: user.username,
+          role: user.role,
+          village_name: user.village_id?.name,
+          district_name: user.district_id?.name,
+          tps_number: user.tps_id?.number,
+        }
+      })
 
       // Return the list of users
       return apiHandler({

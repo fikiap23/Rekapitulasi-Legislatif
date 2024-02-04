@@ -138,10 +138,12 @@ export default function UserPage() {
                   onRequestSort={handleSort}
                   onSelectAllClick={handleSelectAllClick}
                   headLabel={[
-                    { id: 'username', label: 'Username' }, // Change to filter by username
-                    { id: 'daerah', label: 'Daerah' },
+                    { id: 'username', label: 'Username' },
+                    { id: 'district_name', label: 'Kecamatan' },
+                    { id: 'village_name', label: 'Kelurahan' },
+                    { id: 'tps_number', label: 'TPS' },
                     { id: 'role', label: 'Peran' },
-                    { id: 'status', label: 'Status' },
+
                     { id: '' },
                   ]}
                 />
@@ -153,12 +155,13 @@ export default function UserPage() {
                         user={row}
                         id={row._id}
                         key={row._id}
-                        username={row.username} // Change to filter by username
+                        username={row.username}
                         role={row.role}
-                        status="Aktif"
-                        daerah={row.village_id?.name ?? row.district_id?.name ?? 'Super Admin'}
-                        selected={selected.indexOf(row._id) !== -1} // Change to filter by username
-                        handleClick={(event) => handleClick(event, row._id)} // Change to filter by username
+                        kecamatan={row.district_name ?? '-'}
+                        kelurahan={row.village_name ?? '-'}
+                        tps={row.tps_number ?? '-'}
+                        selected={selected.indexOf(row._id) !== -1}
+                        handleClick={(event) => handleClick(event, row._id)}
                       />
                     ))}
 
