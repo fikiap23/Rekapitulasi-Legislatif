@@ -5,7 +5,7 @@ import TableCell from '@mui/material/TableCell';
 
 import Label from 'src/components/label';
 
-import DetailHistory from '../pengisian_suara/detail-history-dialog';
+import DetailHistory from './detail-history-dialog';
 // ----------------------------------------------------------------------
 
 export default function UserTableRow({

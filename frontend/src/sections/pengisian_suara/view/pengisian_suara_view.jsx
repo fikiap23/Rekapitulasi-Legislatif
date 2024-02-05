@@ -26,6 +26,7 @@ import {
 import userAtom from 'src/atoms/userAtom';
 import tpsService from 'src/services/tpsService';
 import partyService from 'src/services/partyService';
+import historyService from 'src/services/historyService';
 import districtService from 'src/services/districtService';
 
 import Iconify from 'src/components/iconify';
@@ -91,6 +92,9 @@ export default function PengisianSuaraView() {
           setKecamatans(getKecamatans.data);
         } else if (user.role === 'user_tps') {
           const getTps = await tpsService.getTpsById(user.tps_id);
+          const getHistory = await historyService.getAllHistoryByTps(user.tps_id);
+          console.log(getHistory.data);
+          setHistory(getHistory.data);
           setTps(getTps.data);
         }
 
@@ -135,7 +139,6 @@ export default function PengisianSuaraView() {
         result = await tpsService.fillBallots(tps, votesResult);
       } else if (user.role === 'user_tps') {
         result = await tpsService.fillBallots(user.tps_id, votesResult);
-        console.log(result);
       }
 
       if (result.code === 200) {
