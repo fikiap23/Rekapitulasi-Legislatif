@@ -115,7 +115,7 @@ export default function UserPage() {
     <Container>
       <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
         <Typography variant="h4">Users</Typography>
-        <CreateUserDialog />
+        <CreateUserDialog setUsers={setUsers} />
       </Stack>
       {loading && <LinearProgress color="primary" variant="query" />}
       {!loading && (
@@ -162,6 +162,7 @@ export default function UserPage() {
                         tps={row.tps_number ?? '-'}
                         selected={selected.indexOf(row._id) !== -1}
                         handleClick={(event) => handleClick(event, row._id)}
+                        setUsers={setUsers}
                       />
                     ))}
 

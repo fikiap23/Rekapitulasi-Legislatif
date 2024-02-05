@@ -30,6 +30,7 @@ export default function UserTableRow({
   tps,
   role,
   handleClick,
+  setUsers,
 }) {
   const [open, setOpen] = useState(null);
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
@@ -56,8 +57,9 @@ export default function UserTableRow({
             </IconButton>
           ),
         });
+
+        setUsers((prevUsers) => prevUsers.filter((userNow) => userNow._id !== id));
         setLoading(false);
-        window.location.reload();
       } else {
         enqueueSnackbar(
           'Delete failed',
@@ -178,4 +180,5 @@ UserTableRow.propTypes = {
   kecamatan: PropTypes.any,
   kelurahan: PropTypes.any,
   tps: PropTypes.any,
+  setUsers: PropTypes.func,
 };

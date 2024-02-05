@@ -14,6 +14,7 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 
 import userAtom from 'src/atoms/userAtom';
+import tpsService from 'src/services/tpsService';
 import userService from 'src/services/userService';
 import villageService from 'src/services/villageService';
 import districtService from 'src/services/districtService';
@@ -29,13 +30,14 @@ export default function EditUserDialog({ user }) {
     role: user.role,
     district_id: user.district_id?._id || '',
     village_id: user.village_id?._id || '',
+    tps_id: user.tps_id?._id || '',
   });
   const currentUser = useRecoilValue(userAtom);
   const [loading, setLoading] = useState(false);
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
   const [kecamatans, setKecamatans] = useState([]);
   const [kelurahans, setKelurahans] = useState([]);
-
+  const [tpsList, setTpsList] = useState([]);
   useEffect(() => {
     const handleGetKecamatans = async () => {
       if (currentUser.role === 'admin') {
@@ -64,16 +66,23 @@ export default function EditUserDialog({ user }) {
       if (formData.role === 'user_village') {
         formData.kecamatan = '';
         formData.district_id = '';
-        console.log(formData);
+        // console.log(formData);
       } else if (formData.role === 'user_district') {
         formData.kecamatan = '';
         formData.village_id = '';
-        console.log(formData);
+        // console.log(formData);
+      } else if (formData.role === 'user_tps') {
+        formData.district_id = '';
+        formData.village_id = '';
+        formData.kecamatan = '';
+        // console.log(formData);
       } else {
         formData.district_id = '';
         formData.village_id = '';
         formData.kecamatan = '';
-        console.log(formData);
+        formData.tps_id = '';
+
+        // console.log(formData);
       }
 
       const result = await userService.editUser(user._id, formData);
@@ -97,7 +106,7 @@ export default function EditUserDialog({ user }) {
           ),
         });
         setLoading(false);
-        window.location.reload();
+        // window.location.reload();
       } else {
         enqueueSnackbar(result.message, {
           variant: 'error',
@@ -246,6 +255,7 @@ export default function EditUserDialog({ user }) {
                 <MenuItem value="admin">Admin</MenuItem>
                 <MenuItem value="user_district">User Kecamatan</MenuItem>
                 <MenuItem value="user_village">User Kelurahan</MenuItem>
+                <MenuItem value="user_tps">User TPS</MenuItem>
               </Select>
             </div>
 
@@ -297,6 +307,57 @@ export default function EditUserDialog({ user }) {
                       ))}
                     </Select>
                   </div>
+                )}
+
+                {formData.role === 'user_tps' && (
+                  <>
+                    <div style={{ marginTop: '16px' }}>
+                      <InputLabel id="kelurahan-label">Kelurahan</InputLabel>
+                      <Select
+                        disabled={!formData.kecamatan}
+                        labelId="kelurahan-label"
+                        id="kelurahan"
+                        name="kelurahan"
+                        value={formData.village_id}
+                        onChange={async (e) => {
+                          const getTps = await tpsService.getAllTpsByVillageId(e.target.value);
+                          if (getTps.data) {
+                            setTpsList(getTps.data);
+                          }
+                          // console.log(getTps.data);
+                          setFormData({ ...formData, village_id: e.target.value });
+                        }}
+                        fullWidth
+                      >
+                        {kelurahans.map((kelurahan) => (
+                          <MenuItem key={kelurahan._id} value={kelurahan._id}>
+                            {kelurahan.name}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    </div>
+                    <div style={{ marginTop: '16px' }}>
+                      <InputLabel id="kelurahan-label">TPS</InputLabel>
+                      <Select
+                        disabled={!formData.village_id}
+                        labelId="tps-label"
+                        id="tps"
+                        name="tps"
+                        value={formData.tps_id}
+                        onChange={async (e) => {
+                          // console.log(e.target.value);
+                          setFormData({ ...formData, tps_id: e.target.value });
+                        }}
+                        fullWidth
+                      >
+                        {tpsList.map((tp) => (
+                          <MenuItem key={tp._id} value={tp._id}>
+                            {tp.number}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    </div>
+                  </>
                 )}
               </>
             )}
