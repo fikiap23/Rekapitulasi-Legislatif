@@ -71,6 +71,28 @@ export default function CreateUserDialog({ setUsers }) {
       setLoading(true);
       // console.log(formData);
       if (formData.role === 'user_tps') {
+        // check tps not null
+        if (!formData.tps_id) {
+          enqueueSnackbar('Please select TPS', {
+            variant: 'error',
+            anchorOrigin: {
+              vertical: 'bottom',
+              horizontal: 'center',
+            },
+            action: (key) => (
+              <IconButton
+                key="close"
+                aria-label="Close"
+                color="inherit"
+                onClick={() => closeSnackbar(key)}
+              >
+                <Iconify icon="eva:close-fill" />
+              </IconButton>
+            ),
+          });
+          setLoading(false);
+          return;
+        }
         formData.district_id = '';
         formData.village_id = '';
         formData.kecamatan = '';
