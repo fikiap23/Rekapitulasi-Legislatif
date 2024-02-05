@@ -93,7 +93,7 @@ export default function PengisianSuaraView() {
         } else if (user.role === 'user_tps') {
           const getTps = await tpsService.getTpsById(user.tps_id);
           const getHistory = await historyService.getAllHistoryByTps(user.tps_id);
-          console.log(getHistory.data);
+          // console.log(getHistory.data);
           setHistory(getHistory.data);
           setTps(getTps.data);
         }
@@ -299,11 +299,6 @@ export default function PengisianSuaraView() {
                           setTpsList(getTps.data);
                         }
                         // console.log(getTps);
-                        // const getHistory = await resultService.getHistoryVillageId(e.target.value);
-                        // // console.log(getHistory.data.history);
-                        // if (getHistory.data.history) {
-                        //   setHistory(getHistory.data.history);
-                        // }
                       }}
                       variant="outlined"
                       disabled={!kecamatan}
@@ -327,7 +322,11 @@ export default function PengisianSuaraView() {
                       onChange={async (e) => {
                         setHistory([]);
                         setTps(e.target.value);
-                        // console.log(e.target.value);
+                        // console.log(getHistory.data);
+                        const getHistory = await historyService.getAllHistoryByTps(e.target.value);
+                        if (getHistory.data) {
+                          setHistory(getHistory.data);
+                        }
                       }}
                       variant="outlined"
                       disabled={!kelurahan}
