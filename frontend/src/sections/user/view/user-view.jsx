@@ -139,10 +139,10 @@ export default function UserPage() {
                   onSelectAllClick={handleSelectAllClick}
                   headLabel={[
                     { id: 'username', label: 'Username' },
+                    { id: 'role', label: 'Peran' },
                     { id: 'district_name', label: 'Kecamatan' },
                     { id: 'village_name', label: 'Kelurahan' },
                     { id: 'tps_number', label: 'TPS' },
-                    { id: 'role', label: 'Peran' },
 
                     { id: '' },
                   ]}

@@ -134,14 +134,12 @@ export default function UserTableRow({
             </Typography>
           </Stack>
         </TableCell>
-
-        <TableCell>{kecamatan}</TableCell>
-        <TableCell>{kelurahan}</TableCell>
-        <TableCell>{tps}</TableCell>
-
         <TableCell>
           <Label color={roleColors[role]}>{role}</Label>
         </TableCell>
+        <TableCell>{kecamatan}</TableCell>
+        <TableCell>{kelurahan}</TableCell>
+        <TableCell>{tps}</TableCell>
 
         <TableCell align="right">
           <IconButton onClick={handleOpenMenu}>
