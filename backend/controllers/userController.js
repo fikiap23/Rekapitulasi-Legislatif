@@ -375,7 +375,7 @@ const userController = {
   updateUser: async (req, res) => {
     try {
       const userId = req.params.userId
-      const { password, role, village_id, district_id } = req.body
+      const { password, role, village_id, district_id, tps_id } = req.body
       let { username } = req.body
 
       // Check if userId is provided
@@ -436,9 +436,31 @@ const userController = {
         const hashedPassword = await bcrypt.hash(password, salt)
         user.password = hashedPassword
       }
-      if (role) user.role = role
-      if (district_id) user.district_id = district_id
-      if (village_id) user.village_id = village_id
+
+      if (role === 'user_tps') {
+        const tps = await Tps.findById(tps_id)
+        user.role = role
+        user.tps_id = tps._id
+        user.district_id = tps.district_id
+        user.village_id = tps.village_id
+      } else if (role === 'user_district') {
+        const district = await District.findById(district_id)
+        user.role = role
+        user.district_id = district._id
+        user.village_id = null
+        user.tps_id = null
+      } else if (role === 'user_village') {
+        const village = await Village.findById(village_id)
+        user.role = role
+        user.village_id = village._id
+        user.district_id = village.district_id
+        user.tps_id = null
+      } else if (role === 'admin') {
+        user.role = role
+        user.district_id = null
+        user.village_id = null
+        user.tps_id = null
+      }
 
       // Save the updated user
       await user.save()

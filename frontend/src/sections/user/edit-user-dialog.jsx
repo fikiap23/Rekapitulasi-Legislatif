@@ -106,7 +106,7 @@ export default function EditUserDialog({ user }) {
           ),
         });
         setLoading(false);
-        // window.location.reload();
+        window.location.reload();
       } else {
         enqueueSnackbar(result.message, {
           variant: 'error',
