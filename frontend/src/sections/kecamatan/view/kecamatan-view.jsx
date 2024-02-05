@@ -22,6 +22,7 @@ import {
 import userAtom from 'src/atoms/userAtom';
 import rekapService from 'src/services/rekapService';
 import districtService from 'src/services/districtService';
+import CardWidget from 'src/layouts/dashboard/common/card-widget';
 
 import Iconify from 'src/components/iconify/iconify';
 
@@ -38,6 +39,7 @@ export default function KecamatanView() {
   const [selectedKecamatanName, setSelectedKecamatanName] = useState('');
   const [dataParties, setParties] = useState([]);
   const [kelurahans, setKelurahans] = useState([]);
+  const [dataSuaraKecamatans, setDataSuaraKecamatans] = useState({});
   const [loading, setLoading] = useState(false);
   const [getGridSize, setGridSize] = useState({
     // default grid size
@@ -61,9 +63,12 @@ export default function KecamatanView() {
       } else if (user.role === 'user_district') {
         setSelectedKecamatanName(user.districtData.name);
         setLoading(true);
-        const getKelurahans = await rekapService.getAllVillagesByDistrict(user.district_id);
-        const getParties = await rekapService.getAllBallotsByDistrictId(user.district_id);
-        setParties(getParties.valid_ballots_detail);
+        const getKelurahans = await rekapService.getAllVillagesByDistrictIdWithRekapVotes(
+          user.district_id
+        );
+        const getParties = await rekapService.getAllRekapBallotsByDistrictId(user.district_id);
+        setDataSuaraKecamatans(getParties.data);
+        setParties(getParties.data.valid_ballots_detail);
         setKelurahans(getKelurahans.data);
         setLoading(false);
       }
@@ -81,6 +86,7 @@ export default function KecamatanView() {
       selectedKecamatan._id
     );
     const getParties = await rekapService.getAllRekapBallotsByDistrictId(selectedKecamatan._id);
+    setDataSuaraKecamatans(getParties.data);
     // console.log(getParties.data.valid_ballots_detail);
     setParties(getParties.data.valid_ballots_detail);
     // console.log(getParties.valid_ballots_detail);
@@ -162,6 +168,37 @@ export default function KecamatanView() {
           </Button>
 
           <Grid container spacing={3}>
+            <Grid xs={12} sm={6} md={3}>
+              <CardWidget
+                title="Total Suara Sah"
+                total={dataSuaraKecamatans.total_valid_ballots}
+                color="info"
+                icon={
+                  <Iconify
+                    icon="emojione-v1:ballot-box-bold-check"
+                    sx={{ width: 64, height: 64 }}
+                  />
+                }
+              />
+            </Grid>
+
+            <Grid xs={12} sm={6} md={3}>
+              <CardWidget
+                title="Total Suara Tidak Sah"
+                total={dataSuaraKecamatans.total_invalid_ballots}
+                color="warning"
+                icon={<Iconify icon="fxemoji:ballottscriptx" sx={{ width: 64, height: 64 }} />}
+              />
+            </Grid>
+
+            <Grid xs={12} sm={6} md={3}>
+              <CardWidget
+                title="Total Hak Suara"
+                total={dataSuaraKecamatans.total_voters}
+                color="error"
+                icon={<Iconify icon="teenyicons:building-outline" sx={{ width: 64, height: 64 }} />}
+              />
+            </Grid>
             <Grid container lg={12}>
               <Grid xs={getGridSize.Table.xs} md={getGridSize.Table.md} lg={8}>
                 <TableContainer component={Paper}>
