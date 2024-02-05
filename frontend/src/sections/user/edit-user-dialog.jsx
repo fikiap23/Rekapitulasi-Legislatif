@@ -28,9 +28,9 @@ export default function EditUserDialog({ user }) {
     password: '',
     kecamatan: '',
     role: user.role,
-    district_id: user.district_id?._id || '',
-    village_id: user.village_id?._id || '',
-    tps_id: user.tps_id?._id || '',
+    district_id: user.district_id || '',
+    village_id: user.village_id || '',
+    tps_id: user.tps_id || '',
   });
   const currentUser = useRecoilValue(userAtom);
   const [loading, setLoading] = useState(false);
@@ -38,26 +38,46 @@ export default function EditUserDialog({ user }) {
   const [kecamatans, setKecamatans] = useState([]);
   const [kelurahans, setKelurahans] = useState([]);
   const [tpsList, setTpsList] = useState([]);
+  console.log(formData);
   useEffect(() => {
     const handleGetKecamatans = async () => {
       if (currentUser.role === 'admin') {
-        const getKecamatans = await districtService.getAllDistricts();
+        const getKecamatans = await districtService.getAllDistrictNames();
         if (getKecamatans.code === 200) {
           setKecamatans(getKecamatans.data);
         } else {
           setKecamatans([]);
         }
-      } else if (currentUser.role === 'user_district') {
-        const getKelurahans = await villageService.getAllVillageByDistrictId(
-          currentUser.district_id
-        );
-        // console.log(getKelurahans.data);
-        // setKecamatan(user.districtData);
-        setKelurahans(getKelurahans.data);
       }
     };
     handleGetKecamatans();
   }, [currentUser]);
+
+  useEffect(() => {
+    const handleGetKelurahan = async () => {
+      const getKelurahan = await villageService.getAllVillageByDistrictId(formData.district_id);
+      if (getKelurahan.code === 200) {
+        setKelurahans(getKelurahan.data);
+      } else {
+        setKelurahans([]);
+      }
+    };
+
+    handleGetKelurahan();
+  }, [formData.district_id]);
+
+  useEffect(() => {
+    const handleGetTps = async () => {
+      const getTps = await tpsService.getAllTpsByVillageId(formData.village_id);
+      if (getTps.data) {
+        setTpsList(getTps.data);
+      } else {
+        setTpsList([]);
+      }
+    };
+
+    handleGetTps();
+  }, [formData.village_id]);
 
   const handleEditUser = async () => {
     try {
@@ -208,21 +228,19 @@ export default function EditUserDialog({ user }) {
                     labelId="kecamatan-label"
                     id="kecamatan"
                     name="kecamatan"
-                    value={formData.kecamatan}
+                    value={formData.district_id}
                     onChange={(e) => {
                       setFormData({
                         ...formData,
-                        kecamatan: e.target.value,
-                        village_id: '',
-                        district_id: e.target.value._id,
+                        district_id: e.target.value,
                       });
 
-                      setKelurahans(e.target.value.villages);
+                      // setKelurahans(e.target.value.villages);
                     }}
                     fullWidth
                   >
                     {kecamatans.map((kecamatan) => (
-                      <MenuItem key={kecamatan._id} value={kecamatan}>
+                      <MenuItem key={kecamatan._id} value={kecamatan._id}>
                         {kecamatan.name}
                       </MenuItem>
                     ))}
@@ -231,17 +249,12 @@ export default function EditUserDialog({ user }) {
                 <div style={{ marginTop: '16px' }}>
                   <InputLabel id="kelurahan-label">Kelurahan</InputLabel>
                   <Select
-                    disabled={!formData.kecamatan}
+                    disabled={!formData.district_id}
                     labelId="kelurahan-label"
                     id="kelurahan"
                     name="kelurahan"
                     value={formData.village_id}
                     onChange={async (e) => {
-                      const getTps = await tpsService.getAllTpsByVillageId(e.target.value);
-                      if (getTps.data) {
-                        setTpsList(getTps.data);
-                      }
-                      // console.log(getTps.data);
                       setFormData({ ...formData, village_id: e.target.value });
                     }}
                     fullWidth
@@ -262,7 +275,6 @@ export default function EditUserDialog({ user }) {
                     name="tps"
                     value={formData.tps_id}
                     onChange={async (e) => {
-                      // console.log(e.target.value);
                       setFormData({ ...formData, tps_id: e.target.value });
                     }}
                     fullWidth

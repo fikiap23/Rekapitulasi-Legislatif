@@ -194,6 +194,9 @@ const userController = {
           village_name: user.village_id?.name,
           district_name: user.district_id?.name,
           tps_number: user.tps_id?.number,
+          village_id: user.village_id?._id,
+          district_id: user.district_id?._id,
+          tps_id: user.tps_id?._id,
         }
       })
 

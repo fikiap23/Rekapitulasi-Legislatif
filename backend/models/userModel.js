@@ -25,6 +25,14 @@ const userSchema = mongoose.Schema(
         return this.role === 'user_tps'
       },
     },
+    village_id: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Village',
+    },
+    district_id: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'District',
+    },
   },
   {
     timestamps: true,

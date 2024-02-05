@@ -117,8 +117,6 @@ export default function UserTableRow({
   };
   const roleColors = {
     admin: 'success',
-    user_district: 'primary',
-    user_village: 'secondary',
     user_tps: 'info',
   };
 
