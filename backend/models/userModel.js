@@ -13,7 +13,7 @@ const userSchema = mongoose.Schema(
     },
     role: {
       type: String,
-      enum: ['user_tps', 'user_village', 'user_district', 'admin'],
+      enum: ['user_tps', 'admin'],
       required: true,
       default: '',
     },
@@ -23,20 +23,6 @@ const userSchema = mongoose.Schema(
       ref: 'Tps',
       required: function () {
         return this.role === 'user_tps'
-      },
-    },
-    village_id: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'Village',
-      required: function () {
-        return this.role === 'user_village'
-      },
-    },
-    district_id: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'District',
-      required: function () {
-        return this.role === 'user_district'
       },
     },
   },
