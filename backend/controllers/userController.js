@@ -1,5 +1,3 @@
-import District from '../models/districtModel.js'
-import Village from '../models/villageModel.js'
 import User from '../models/userModel.js'
 import Tps from '../models/tpsModel.js'
 import bcrypt from 'bcryptjs'
@@ -8,11 +6,32 @@ import apiHandler from '../utils/apiHandler.js'
 const userController = {
   createNewUser: async (req, res) => {
     try {
-      const { password, role, tps_id, village_id, district_id } = req.body
+      const { password, role, tps_id } = req.body
       let { username } = req.body
 
       // check user
       const user = await User.findById(req.user._id)
+
+      // check users must be admin
+      if (!user) {
+        return apiHandler({
+          res,
+          status: 'error',
+          code: 404,
+          message: 'User not found',
+          error: null,
+        })
+      }
+
+      if (user.role !== 'admin') {
+        return apiHandler({
+          res,
+          status: 'error',
+          code: 400,
+          message: 'Only admins can create users',
+          error: null,
+        })
+      }
 
       if (!username || !password) {
         return apiHandler({
@@ -51,16 +70,6 @@ const userController = {
 
       // check what user wants to create
       if (role === 'admin') {
-        // check if user is admin
-        if (user.role !== 'admin') {
-          return apiHandler({
-            res,
-            status: 'error',
-            code: 400,
-            message: 'Only admins can create admin users',
-            error: null,
-          })
-        }
         // Admin user
         const salt = await bcrypt.genSalt(10)
         const hashedPassword = await bcrypt.hash(password, salt)
@@ -84,142 +93,7 @@ const userController = {
           },
           error: null,
         })
-      } else if (role === 'user_district') {
-        // check if user is admin
-        if (user.role !== 'admin') {
-          return apiHandler({
-            res,
-            status: 'error',
-            code: 400,
-            message: 'Only admins can perform this action',
-            error: null,
-          })
-        }
-
-        if (!district_id) {
-          return apiHandler({
-            res,
-            status: 'error',
-            code: 400,
-            message: 'District id is required',
-            error: null,
-          })
-        }
-
-        // check if district exists
-        const district = await District.findById(district_id)
-        if (!district) {
-          return apiHandler({
-            res,
-            status: 'error',
-            code: 400,
-            message: 'District not found',
-            error: null,
-          })
-        }
-
-        // User with district role
-        const salt = await bcrypt.genSalt(10)
-        const hashedPassword = await bcrypt.hash(password, salt)
-
-        const newUser = new User({
-          username,
-          password: hashedPassword,
-          role,
-          district_id,
-        })
-        await newUser.save()
-
-        return apiHandler({
-          res,
-          status: 'success',
-          code: 201,
-          message: 'User with district role created successfully',
-          data: {
-            _id: newUser._id,
-            username: newUser.username,
-            district_id: newUser.district_id,
-            role: newUser.role,
-          },
-          error: null,
-        })
-      } else if (role === 'user_village') {
-        // check village id not null
-        if (!village_id) {
-          return apiHandler({
-            res,
-            status: 'error',
-            code: 400,
-            message: 'Village id is required',
-            error: null,
-          })
-        }
-        // check if village exists
-        const village = await Village.findById(village_id)
-        if (!village) {
-          return apiHandler({
-            res,
-            status: 'error',
-            code: 400,
-            message: 'Village not found',
-            error: null,
-          })
-        }
-
-        // check if user is user_district
-        if (user.role === 'user_district') {
-          //  check is village_id belongs to user district
-          const district = await District.findById(user.district_id)
-
-          if (!district.villages.includes(village_id)) {
-            return apiHandler({
-              res,
-              status: 'error',
-              code: 400,
-              message: 'Village id does not belong to user district',
-              error: null,
-            })
-          }
-        }
-
-        const salt = await bcrypt.genSalt(10)
-        const hashedPassword = await bcrypt.hash(password, salt)
-
-        const newUser = new User({
-          username,
-          password: hashedPassword,
-          role,
-          village_id,
-          district_id: village.district_id,
-        })
-        await newUser.save()
-
-        return apiHandler({
-          res,
-          status: 'success',
-          code: 201,
-          message: 'User created successfully',
-          data: {
-            _id: newUser._id,
-            username: newUser.username,
-            role: newUser.role,
-            village_id: newUser.village_id,
-            district_id: newUser.district_id,
-          },
-          error: null,
-        })
       } else if (role === 'user_tps') {
-        // check if user is village
-        if (user.role !== 'user_village' && user.role !== 'admin') {
-          return apiHandler({
-            res,
-            status: 'error',
-            code: 400,
-            message: 'Only village users or admins can perform this action',
-            error: null,
-          })
-        }
-
         // check if tps_id
         const tps = await Tps.findById(tps_id)
         if (!tps) {
@@ -232,19 +106,6 @@ const userController = {
           })
         }
 
-        // check if user village_id and tps_id match
-        if (user.role === 'user_village') {
-          const village = await Village.findById(user.village_id)
-          if (!village.tps.includes(tps_id)) {
-            return apiHandler({
-              res,
-              status: 'error',
-              code: 400,
-              message: 'Village and TPS id do not match',
-              error: null,
-            })
-          }
-        }
         const salt = await bcrypt.genSalt(10)
         const hashedPassword = await bcrypt.hash(password, salt)
 
@@ -258,18 +119,24 @@ const userController = {
         })
         await newUser.save()
 
+        const savedUser = await User.findOne({ _id: newUser._id })
+          .select('-password')
+          .populate('village_id', 'name')
+          .populate('district_id', 'name')
+          .populate('tps_id', 'number')
+
         return apiHandler({
           res,
           status: 'success',
           code: 201,
           message: 'User created successfully',
           data: {
-            _id: newUser._id,
-            username: newUser.username,
-            role: newUser.role,
-            tps_id: newUser.tps_id,
-            village_id: newUser.village_id,
-            district_id: newUser.district_id,
+            _id: savedUser._id,
+            username: savedUser.username,
+            role: savedUser.role,
+            village_name: savedUser.village_id?.name,
+            district_name: savedUser.district_id?.name,
+            tps_number: savedUser.tps_id?.number,
           },
           error: null,
         })
@@ -316,26 +183,6 @@ const userController = {
           .populate('village_id', 'name')
           .populate('district_id', 'name')
           .populate('tps_id', 'number')
-      } else if (user.role === 'user_district') {
-        // get all village id in district
-        const district = await District.findById(user.district_id)
-        const villageIds = district.villages
-        // console.log(villageIds)
-
-        // get all users with village id in district
-        users = await User.find({ village_id: { $in: villageIds } })
-          .select('-password')
-          .populate('village_id', 'name')
-          .populate('district_id', 'name')
-        // console.log(users)
-      } else {
-        return apiHandler({
-          res,
-          status: 'error',
-          code: 400,
-          message: 'Invalid role',
-          error: null,
-        })
       }
 
       // transform data
@@ -375,7 +222,7 @@ const userController = {
   updateUser: async (req, res) => {
     try {
       const userId = req.params.userId
-      const { password, role, village_id, district_id, tps_id } = req.body
+      const { password, role, tps_id } = req.body
       let { username } = req.body
 
       // Check if userId is provided
@@ -443,23 +290,19 @@ const userController = {
         user.tps_id = tps._id
         user.district_id = tps.district_id
         user.village_id = tps.village_id
-      } else if (role === 'user_district') {
-        const district = await District.findById(district_id)
-        user.role = role
-        user.district_id = district._id
-        user.village_id = null
-        user.tps_id = null
-      } else if (role === 'user_village') {
-        const village = await Village.findById(village_id)
-        user.role = role
-        user.village_id = village._id
-        user.district_id = village.district_id
-        user.tps_id = null
       } else if (role === 'admin') {
         user.role = role
         user.district_id = null
         user.village_id = null
         user.tps_id = null
+      } else {
+        return apiHandler({
+          res,
+          status: 'error',
+          code: 400,
+          message: 'Invalid role',
+          error: null,
+        })
       }
 
       // Save the updated user
