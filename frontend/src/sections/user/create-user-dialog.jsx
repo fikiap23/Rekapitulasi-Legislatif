@@ -69,16 +69,8 @@ export default function CreateUserDialog({ setUsers }) {
   const handleSubmit = async () => {
     try {
       setLoading(true);
-      //   check if create user village
-      if (formData.role === 'user_village') {
-        formData.kecamatan = '';
-        formData.district_id = '';
-        // console.log(formData);
-      } else if (formData.role === 'user_district') {
-        formData.kecamatan = '';
-        formData.village_id = '';
-        // console.log(formData);
-      } else if (formData.role === 'user_tps') {
+      // console.log(formData);
+      if (formData.role === 'user_tps') {
         formData.district_id = '';
         formData.village_id = '';
         formData.kecamatan = '';
@@ -153,54 +145,6 @@ export default function CreateUserDialog({ setUsers }) {
       <Dialog maxWidth="xs" fullWidth open={open} onClose={handleClose}>
         <DialogTitle>Buat akun baru</DialogTitle>
 
-        {user.role === 'user_district' && (
-          <DialogContent>
-            <TextField
-              onChange={(e) => setFormData({ ...formData, username: e.target.value })}
-              autoFocus
-              margin="dense"
-              id="username"
-              name="username"
-              label="Username"
-              type="text"
-              fullWidth
-              variant="standard"
-            />
-
-            <TextField
-              onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-              margin="dense"
-              id="password"
-              name="password"
-              label="Password"
-              type="password"
-              fullWidth
-              variant="standard"
-            />
-            <div style={{ marginTop: '16px' }}>
-              <InputLabel id="kelurahan-label">Kelurahan</InputLabel>
-              <Select
-                labelId="kelurahan-label"
-                id="kelurahan"
-                name="kelurahan"
-                value={formData.village_id}
-                onChange={(e) => {
-                  const newValue = e.target.value;
-                  // console.log('New value for village_id:', newValue);
-                  setFormData({ ...formData, village_id: newValue, role: 'user_village' });
-                }}
-                fullWidth
-              >
-                {kelurahans.map((kelurahan) => (
-                  <MenuItem key={kelurahan._id} value={kelurahan._id}>
-                    {kelurahan.name}
-                  </MenuItem>
-                ))}
-              </Select>
-            </div>
-          </DialogContent>
-        )}
-
         {user.role === 'admin' && (
           <DialogContent>
             <TextField
@@ -240,13 +184,11 @@ export default function CreateUserDialog({ setUsers }) {
                 fullWidth
               >
                 <MenuItem value="admin">Admin</MenuItem>
-                <MenuItem value="user_district">User Kecamatan</MenuItem>
-                <MenuItem value="user_village">User Kelurahan</MenuItem>
-                <MenuItem value="user_tps">User TPS</MenuItem>
+                <MenuItem value="user_tps">Petugas TPS</MenuItem>
               </Select>
             </div>
 
-            {formData.role !== 'admin' && (
+            {formData.role === 'user_tps' && (
               <>
                 <div style={{ marginTop: '16px' }}>
                   <InputLabel id="kecamatan-label">Kecamatan</InputLabel>
@@ -273,78 +215,52 @@ export default function CreateUserDialog({ setUsers }) {
                     ))}
                   </Select>
                 </div>
-
-                {formData.role === 'user_village' && (
-                  <div style={{ marginTop: '16px' }}>
-                    <InputLabel id="kelurahan-label">Kelurahan</InputLabel>
-                    <Select
-                      disabled={!formData.kecamatan}
-                      labelId="kelurahan-label"
-                      id="kelurahan"
-                      name="kelurahan"
-                      value={formData.village_id}
-                      onChange={(e) => setFormData({ ...formData, village_id: e.target.value })}
-                      fullWidth
-                    >
-                      {kelurahans.map((kelurahan) => (
-                        <MenuItem key={kelurahan._id} value={kelurahan._id}>
-                          {kelurahan.name}
-                        </MenuItem>
-                      ))}
-                    </Select>
-                  </div>
-                )}
-
-                {formData.role === 'user_tps' && (
-                  <>
-                    <div style={{ marginTop: '16px' }}>
-                      <InputLabel id="kelurahan-label">Kelurahan</InputLabel>
-                      <Select
-                        disabled={!formData.kecamatan}
-                        labelId="kelurahan-label"
-                        id="kelurahan"
-                        name="kelurahan"
-                        value={formData.village_id}
-                        onChange={async (e) => {
-                          const getTps = await tpsService.getAllTpsByVillageId(e.target.value);
-                          if (getTps.data) {
-                            setTpsList(getTps.data);
-                          }
-                          // console.log(getTps.data);
-                          setFormData({ ...formData, village_id: e.target.value });
-                        }}
-                        fullWidth
-                      >
-                        {kelurahans.map((kelurahan) => (
-                          <MenuItem key={kelurahan._id} value={kelurahan._id}>
-                            {kelurahan.name}
-                          </MenuItem>
-                        ))}
-                      </Select>
-                    </div>
-                    <div style={{ marginTop: '16px' }}>
-                      <InputLabel id="kelurahan-label">TPS</InputLabel>
-                      <Select
-                        disabled={!formData.village_id}
-                        labelId="tps-label"
-                        id="tps"
-                        name="tps"
-                        value={formData.tps_id}
-                        onChange={async (e) => {
-                          // console.log(e.target.value);
-                          setFormData({ ...formData, tps_id: e.target.value });
-                        }}
-                        fullWidth
-                      >
-                        {tpsList.map((tp) => (
-                          <MenuItem key={tp._id} value={tp._id}>
-                            {tp.number}
-                          </MenuItem>
-                        ))}
-                      </Select>
-                    </div>
-                  </>
-                )}
+                <div style={{ marginTop: '16px' }}>
+                  <InputLabel id="kelurahan-label">Kelurahan</InputLabel>
+                  <Select
+                    disabled={!formData.kecamatan}
+                    labelId="kelurahan-label"
+                    id="kelurahan"
+                    name="kelurahan"
+                    value={formData.village_id}
+                    onChange={async (e) => {
+                      const getTps = await tpsService.getAllTpsByVillageId(e.target.value);
+                      if (getTps.data) {
+                        setTpsList(getTps.data);
+                      }
+                      // console.log(getTps.data);
+                      setFormData({ ...formData, village_id: e.target.value });
+                    }}
+                    fullWidth
+                  >
+                    {kelurahans.map((kelurahan) => (
+                      <MenuItem key={kelurahan._id} value={kelurahan._id}>
+                        {kelurahan.name}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </div>
+                <div style={{ marginTop: '16px' }}>
+                  <InputLabel id="kelurahan-label">TPS</InputLabel>
+                  <Select
+                    disabled={!formData.village_id}
+                    labelId="tps-label"
+                    id="tps"
+                    name="tps"
+                    value={formData.tps_id}
+                    onChange={async (e) => {
+                      // console.log(e.target.value);
+                      setFormData({ ...formData, tps_id: e.target.value });
+                    }}
+                    fullWidth
+                  >
+                    {tpsList.map((tp) => (
+                      <MenuItem key={tp._id} value={tp._id}>
+                        {tp.number}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </div>
               </>
             )}
           </DialogContent>
