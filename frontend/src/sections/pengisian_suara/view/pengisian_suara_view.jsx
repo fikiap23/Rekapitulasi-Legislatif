@@ -142,6 +142,7 @@ export default function PengisianSuaraView() {
       }
 
       if (result.code === 200) {
+        setHistory(result.data);
         enqueueSnackbar('Voting success', {
           variant: 'success',
           anchorOrigin: {

@@ -245,7 +245,7 @@ const tpsController = {
         code: 200,
         message: 'Valid ballots detail updated successfully',
         // send lash history
-        data: history.history[history.history.length - 1],
+        data: history.history,
 
         error: null,
       })
