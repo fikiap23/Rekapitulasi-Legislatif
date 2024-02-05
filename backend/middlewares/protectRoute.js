@@ -24,7 +24,7 @@ const protectAdminRoute = async (req, res, next) => {
   }
 }
 
-const protectUserDistrictRoute = async (req, res, next) => {
+const protectUserTpsRoute = async (req, res, next) => {
   try {
     const token = req.cookies.jwt
 
@@ -32,7 +32,7 @@ const protectUserDistrictRoute = async (req, res, next) => {
 
     const decoded = jwt.verify(token, process.env.JWT_SECRET)
 
-    if (decoded.userType === 'admin' || decoded.userType === 'user_district') {
+    if (decoded.userType === 'admin' || decoded.userType === 'user_tps') {
       const user = await User.findById(decoded.userId).select('-password')
       if (!user) return res.status(401).json({ message: 'Unauthorized' })
       req.user = user
@@ -42,34 +42,8 @@ const protectUserDistrictRoute = async (req, res, next) => {
     }
   } catch (err) {
     res.status(500).json({ message: err.message })
-    console.log('Error in protectUserDistrictRoute: ', err.message)
+    console.log('Error in protectUserTpsRoute: ', err.message)
   }
 }
 
-const protectUserVillageRoute = async (req, res, next) => {
-  try {
-    const token = req.cookies.jwt
-
-    if (!token) return res.status(401).json({ message: 'Unauthorized' })
-
-    const decoded = jwt.verify(token, process.env.JWT_SECRET)
-
-    if (
-      decoded.userType === 'admin' ||
-      decoded.userType === 'user_district' ||
-      decoded.userType === 'user_village'
-    ) {
-      const user = await User.findById(decoded.userId).select('-password')
-      if (!user) return res.status(401).json({ message: 'Unauthorized' })
-      req.user = user
-      next()
-    } else {
-      return res.status(401).json({ message: 'Invalid user type in token' })
-    }
-  } catch (err) {
-    res.status(500).json({ message: err.message })
-    console.log('Error in protectUserVillageRoute: ', err.message)
-  }
-}
-
-export { protectUserVillageRoute, protectUserDistrictRoute, protectAdminRoute }
+export { protectUserTpsRoute, protectAdminRoute }

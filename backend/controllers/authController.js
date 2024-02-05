@@ -3,9 +3,6 @@ import bcrypt from 'bcryptjs'
 import generateTokenAndSetCookie from '../utils/helpers/generateTokenAndSetCookie.js'
 import apiHandler from '../utils/apiHandler.js'
 import User from '../models/userModel.js'
-import District from '../models/districtModel.js'
-import Village from '../models/villageModel.js'
-import e from 'express'
 
 const authController = {
   registerAdmin: async (req, res) => {
@@ -133,42 +130,6 @@ const authController = {
             username: user.username,
           },
         })
-      } else if (user.role == 'user_district') {
-        const districtData = await District.findOne({ _id: user.district_id })
-        console.log(districtData)
-        generateTokenAndSetCookie(user._id, 'user_district', res)
-        return apiHandler({
-          res,
-          status: 'success',
-          code: 200,
-          message: 'User logged in successfully',
-          data: {
-            _id: user._id,
-            name: user.name,
-            role: user.role,
-            username: user.username,
-            district_id: user.district_id,
-            districtData: districtData,
-          },
-        })
-      } else if (user.role == 'user_village') {
-        const villageData = await Village.findOne({ _id: user.village_id })
-        // console.log(villageData)
-        generateTokenAndSetCookie(user._id, 'user_village', res)
-        return apiHandler({
-          res,
-          status: 'success',
-          code: 200,
-          message: 'User logged in successfully',
-          data: {
-            _id: user._id,
-            role: user.role,
-            name: user.name,
-            username: user.username,
-            village_id: user.village_id,
-            villageData: villageData,
-          },
-        })
       } else if (user.role == 'user_tps') {
         generateTokenAndSetCookie(user._id, 'user_tps', res)
         return apiHandler({
@@ -181,6 +142,7 @@ const authController = {
             role: user.role,
             name: user.name,
             username: user.username,
+            tps_id: user.tps_id,
           },
         })
       } else {

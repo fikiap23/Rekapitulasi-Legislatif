@@ -85,9 +85,14 @@ export default function PengisianSuaraView() {
     const handleGetAllDistricts = async () => {
       try {
         setLoading(true);
-        const result = await districtService.getAllDistricts();
 
-        setKecamatans(result.data);
+        if (user.role === 'admin') {
+          const getKecamatans = await districtService.getAllDistricts();
+          setKecamatans(getKecamatans.data);
+        } else if (user.role === 'user_tps') {
+          const getTps = await tpsService.getTpsById(user.tps_id);
+          setTps(getTps.data);
+        }
 
         setLoading(false);
       } catch (error) {
@@ -97,38 +102,42 @@ export default function PengisianSuaraView() {
       }
     };
     handleGetAllDistricts();
-  }, []);
+  }, [user.role, user.tps_id]);
 
   const handleSubmit = async () => {
     try {
       setLoading(true);
-      if (tps === '') {
-        enqueueSnackbar('Please select tps', {
-          variant: 'error',
-          anchorOrigin: {
-            vertical: 'bottom',
-            horizontal: 'center',
-          },
-          action: (key) => (
-            <IconButton
-              key="close"
-              aria-label="Close"
-              color="inherit"
-              onClick={() => closeSnackbar(key)}
-            >
-              <Iconify icon="eva:close-fill" />
-            </IconButton>
-          ),
-        });
-        setLoading(false);
-        return;
-      }
 
       let result;
       if (user.role === 'admin') {
+        if (tps === '') {
+          enqueueSnackbar('Please select tps', {
+            variant: 'error',
+            anchorOrigin: {
+              vertical: 'bottom',
+              horizontal: 'center',
+            },
+            action: (key) => (
+              <IconButton
+                key="close"
+                aria-label="Close"
+                color="inherit"
+                onClick={() => closeSnackbar(key)}
+              >
+                <Iconify icon="eva:close-fill" />
+              </IconButton>
+            ),
+          });
+          setLoading(false);
+          return;
+        }
+
         result = await tpsService.fillBallots(tps, votesResult);
+      } else if (user.role === 'user_tps') {
+        result = await tpsService.fillBallots(user.tps_id, votesResult);
+        console.log(result);
       }
-      console.log(result);
+
       if (result.code === 200) {
         enqueueSnackbar('Voting success', {
           variant: 'success',
@@ -214,6 +223,26 @@ export default function PengisianSuaraView() {
                 </TableContainer>
               </Grid>
             </Grid>
+          )}
+
+          {user.role === 'user_tps' && (
+            <>
+              <Typography variant="h6" sx={{ mb: 2, color: 'primary.main' }}>
+                Input suara sah di Kelurahan {tps.village_name} - {tps.number}
+              </Typography>
+              <Grid container spacing={2} mb={5}>
+                {parties.map((party) => (
+                  <Grid item xs={12} sm={6} md={4} key={party._id}>
+                    <PartyCard party={party} setVotesResult={setVotesResult} />
+                  </Grid>
+                ))}
+              </Grid>
+              <Grid item xs={12} mb={5}>
+                <Button type="button" variant="contained" color="primary" onClick={handleSubmit}>
+                  Submit
+                </Button>
+              </Grid>
+            </>
           )}
 
           {user.role === 'admin' && (

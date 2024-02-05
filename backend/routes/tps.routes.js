@@ -1,6 +1,6 @@
 import express from 'express'
 import tpsController from '../controllers/tpsController.js'
-import { protectUserVillageRoute } from '../middlewares/protectRoute.js'
+import { protectUserTpsRoute } from '../middlewares/protectRoute.js'
 
 const router = express.Router()
 
@@ -12,7 +12,7 @@ router.get('/:tpsId', tpsController.getTpsById)
 router.post('/bulk', tpsController.bulkTps)
 router.post(
   '/fill/:tpsId',
-  protectUserVillageRoute,
+  protectUserTpsRoute,
   tpsController.fillValidBallotsDetail
 )
 

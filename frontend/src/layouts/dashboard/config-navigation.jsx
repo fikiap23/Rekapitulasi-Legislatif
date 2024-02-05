@@ -7,7 +7,7 @@ const navConfig = [
     title: 'pengisian suara',
     path: '/pengisian-suara',
     icon: <Iconify icon="radix-icons:pencil-2" />,
-    accessibleRoles: ['admin', 'user_district', 'user_village'],
+    accessibleRoles: ['admin', 'user_tps'],
   },
   {
     title: 'status pengisian',
@@ -25,7 +25,7 @@ const navConfig = [
     title: 'data kecamatan',
     path: '/kecamatan',
     icon: <Iconify icon="teenyicons:building-outline" />,
-    accessibleRoles: ['admin', 'user_district'],
+    accessibleRoles: ['admin'],
   },
   {
     title: 'data kelurahan',
@@ -43,7 +43,7 @@ const navConfig = [
     title: 'pengguna',
     path: '/user',
     icon: <Iconify icon="solar:user-outline" />,
-    accessibleRoles: ['admin', 'user_district'],
+    accessibleRoles: ['admin'],
   },
 ];
 

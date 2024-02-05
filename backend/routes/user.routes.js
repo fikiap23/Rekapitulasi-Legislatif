@@ -1,28 +1,24 @@
 import express from 'express'
 import userController from '../controllers/userController.js'
 import {
-  protectUserDistrictRoute,
-  protectUserVillageRoute,
+  protectUserTpsRoute,
+  protectAdminRoute,
 } from '../middlewares/protectRoute.js'
 
 const router = express.Router()
 
 // Create a new user
-router.post('/', protectUserVillageRoute, userController.createNewUser)
+router.post('/', protectUserTpsRoute, userController.createNewUser)
 // Delete multiple users
-router.post(
-  '/deleteUsers',
-  protectUserDistrictRoute,
-  userController.deleteUsers
-)
+router.post('/deleteUsers', protectAdminRoute, userController.deleteUsers)
 
 // Get all users
-router.get('/', protectUserDistrictRoute, userController.getAllUsers)
+router.get('/', protectAdminRoute, userController.getAllUsers)
 
 // Update a user
-router.put('/:userId', protectUserDistrictRoute, userController.updateUser)
+router.put('/:userId', protectAdminRoute, userController.updateUser)
 
 // Delete a user
-router.delete('/:userId', protectUserDistrictRoute, userController.deleteUser)
+router.delete('/:userId', protectAdminRoute, userController.deleteUser)
 
 export default router
