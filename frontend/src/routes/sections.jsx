@@ -14,6 +14,7 @@ export const LoginPage = lazy(() => import('src/pages/login'));
 export const PengisianSuaraPage = lazy(() => import('src/pages/pengisian_suara'));
 export const Page404 = lazy(() => import('src/pages/page-not-found'));
 export const SuaraCaleg = lazy(() => import('src/pages/suara-caleg'));
+export const CetakDataPage = lazy(() => import('src/pages/cetak-data'));
 
 // ----------------------------------------------------------------------
 
@@ -62,6 +63,10 @@ export default function Router() {
         {
           path: 'suara-caleg',
           element: user?.role === 'admin' ? <SuaraCaleg /> : <Navigate to="/404" replace />,
+        },
+        {
+          path: 'cetak-data',
+          element: user?.role === 'admin' ? <CetakDataPage /> : <Navigate to="/404" replace />,
         },
       ],
     },
