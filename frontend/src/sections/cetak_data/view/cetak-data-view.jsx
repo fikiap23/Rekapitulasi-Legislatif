@@ -53,22 +53,19 @@ export default function CetakDataView() {
     });
   };
 
-  useEffect(() => {
-    const handleGetAllKecamatan = async () => {
-      try {
-        setLoading(true);
+  const handleGetAllKecamatan = async () => {
+    try {
+      setLoading(true);
 
-        const getKecamatans = await districtService.getAllDistricts();
-        setKecamatans(getKecamatans.data);
+      const getKecamatans = await districtService.getAllDistricts();
+      setKecamatans(getKecamatans.data);
 
-        setLoading(false);
-      } catch (error) {
-        setKecamatans([]);
-        setLoading(false);
-      }
-    };
-    handleGetAllKecamatan();
-  }, []);
+      setLoading(false);
+    } catch (error) {
+      setKecamatans([]);
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
     const handleGetAllCaleg = async () => {
@@ -200,6 +197,7 @@ export default function CetakDataView() {
                 value={cetakDataType}
                 onChange={(e) => {
                   handleResetData();
+                  handleGetAllKecamatan();
                   setCetakDataType(e.target.value);
                 }}
                 variant="outlined"
