@@ -35,6 +35,24 @@ export default function CetakDataView() {
     },
   });
 
+  const handleResetData = () => {
+    setKecamatan('');
+    setKelurahan('');
+    setCetakDataType('');
+    setCalegs([]);
+    setGridSize({
+      // default grid size
+      Table: {
+        xs: 12,
+        md: 6,
+      },
+      Chart: {
+        xs: 12,
+        md: 6,
+      },
+    });
+  };
+
   useEffect(() => {
     const handleGetAllKecamatan = async () => {
       try {
@@ -181,6 +199,7 @@ export default function CetakDataView() {
                 label="Data Yang Ingin Dicetak"
                 value={cetakDataType}
                 onChange={(e) => {
+                  handleResetData();
                   setCetakDataType(e.target.value);
                 }}
                 variant="outlined"
