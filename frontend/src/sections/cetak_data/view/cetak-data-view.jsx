@@ -1,32 +1,21 @@
 import { useReactToPrint } from 'react-to-print';
 import { useRef, useState, useEffect } from 'react';
 
-import Card from '@mui/material/Card';
 import Stack from '@mui/material/Stack';
-import Table from '@mui/material/Table';
 import Container from '@mui/material/Container';
-import TableBody from '@mui/material/TableBody';
 import Typography from '@mui/material/Typography';
-import TableContainer from '@mui/material/TableContainer';
 import { Grid, Button, MenuItem, TextField, LinearProgress } from '@mui/material';
 
 import rekapService from 'src/services/rekapService';
 import districtService from 'src/services/districtService';
 
-import Scrollbar from 'src/components/scrollbar';
 import Iconify from 'src/components/iconify/iconify';
 
-import UserTableRow from '../user-table-row';
-import UserTableHead from '../user-table-head';
-import { applyFilter, getComparator } from '../utils';
+import CalegTable from '../caleg-table';
 
 // ----------------------------------------------------------------------
 
 export default function CetakDataView() {
-  const [order, setOrder] = useState('asc');
-
-  const [orderBy, setOrderBy] = useState('name');
-
   const [kecamatans, setKecamatans] = useState([]);
   const [kelurahans, setKelurahans] = useState([]);
   const [kecamatan, setKecamatan] = useState('');
@@ -47,20 +36,53 @@ export default function CetakDataView() {
   });
 
   useEffect(() => {
+    const handleGetAllKecamatan = async () => {
+      try {
+        setLoading(true);
+
+        const getKecamatans = await districtService.getAllDistricts();
+        setKecamatans(getKecamatans.data);
+
+        setLoading(false);
+      } catch (error) {
+        setKecamatans([]);
+        setLoading(false);
+      }
+    };
     handleGetAllKecamatan();
   }, []);
-  const handleGetAllKecamatan = async () => {
-    try {
-      setLoading(true);
 
-      const getKecamatans = await districtService.getAllDistricts();
+  useEffect(() => {
+    const handleGetAllCaleg = async () => {
+      try {
+        if (cetakDataType === 'data-caleg') {
+          setLoading(true);
+          if (kelurahan) {
+            handleGetCalegKelurahan(kelurahan._id);
+          } else if (kecamatan) {
+            handleCalegByKecamatan(kecamatan._id);
+          } else {
+            handlGetAllCaleg();
+          }
+        }
+      } catch (error) {
+        setLoading(false);
+        setCalegs([]);
+      }
+    };
+    handleGetAllCaleg();
+  }, [cetakDataType, kecamatan, kelurahan]);
+
+  const handlGetAllCaleg = async () => {
+    try {
+      setKelurahan('');
+      setLoading(true);
       const getCalegs = await rekapService.getAllCalegVotes();
-      setKecamatans(getKecamatans.data);
       setCalegs(getCalegs.data);
 
       setLoading(false);
     } catch (error) {
-      setKecamatans([]);
+      setKelurahan('');
       setLoading(false);
     }
   };
@@ -79,7 +101,7 @@ export default function CetakDataView() {
     }
   };
 
-  const handleSelectedKelurahan = async (village_id) => {
+  const handleGetCalegKelurahan = async (village_id) => {
     try {
       setLoading(true);
 
@@ -87,24 +109,10 @@ export default function CetakDataView() {
       setCalegs(getCalegs.data);
 
       setLoading(false);
-      setLoading(false);
     } catch (error) {
       setLoading(false);
     }
   };
-
-  const handleSort = (event, id) => {
-    const isAsc = orderBy === id && order === 'asc';
-    if (id !== '') {
-      setOrder(isAsc ? 'desc' : 'asc');
-      setOrderBy(id);
-    }
-  };
-
-  const dataFiltered = applyFilter({
-    inputData: calegs,
-    comparator: getComparator(order, orderBy),
-  });
 
   // print area function
   const handlePrint = async () => {
@@ -194,12 +202,11 @@ export default function CetakDataView() {
                 fullWidth
                 select
                 label="Kecamatan"
+                disabled={!cetakDataType}
                 value={kecamatan}
                 onChange={(e) => {
                   setKecamatan(e.target.value);
                   setKelurahans(e.target.value.villages);
-                  handleCalegByKecamatan(e.target.value._id);
-                  // console.log(e.target.value);
                 }}
                 variant="outlined"
               >
@@ -221,8 +228,6 @@ export default function CetakDataView() {
                 value={kelurahan}
                 onChange={(e) => {
                   setKelurahan(e.target.value);
-                  console.log(e.target.value);
-                  handleSelectedKelurahan(e.target.value._id);
                 }}
                 variant="outlined"
                 disabled={!kecamatan}
@@ -238,7 +243,6 @@ export default function CetakDataView() {
               </TextField>
             </Grid>
           </Grid>
-
           <Button
             onClick={() => handlePrint()}
             variant="contained"
@@ -247,39 +251,7 @@ export default function CetakDataView() {
           >
             Export Data
           </Button>
-
-          <Grid item>
-            <Card>
-              <Scrollbar>
-                <TableContainer sx={{ overflow: 'unset' }}>
-                  <Table>
-                    <UserTableHead
-                      order={order}
-                      orderBy={orderBy}
-                      onRequestSort={handleSort}
-                      headLabel={[
-                        { id: 'isVerified', label: 'No', align: 'center' },
-                        { id: 'candidate_name', label: 'Nama' },
-                        { id: 'party_name', label: 'Partai' },
-                        { id: 'number_of_votes', label: 'Jumlah Suara' },
-                      ]}
-                    />
-                    <TableBody>
-                      {dataFiltered.map((row, index) => (
-                        <UserTableRow
-                          key={row.candidate_id}
-                          no={index + 1}
-                          name={row.candidate_name}
-                          role={row.number_of_votes}
-                          company={row.party_name}
-                        />
-                      ))}
-                    </TableBody>
-                  </Table>
-                </TableContainer>
-              </Scrollbar>
-            </Card>
-          </Grid>
+          {cetakDataType === 'data-caleg' && <CalegTable calegs={calegs} />}
         </>
       )}
     </Container>
