@@ -70,6 +70,40 @@ const rekapController = {
       })
     }
   },
+  getAllTpsResultByVillageId: async (req, res) => {
+    try {
+      const { villageId } = req.params
+      // Ambil semua TPS
+      const tps = await Tps.find({ village_id: villageId }).select(
+        '_id total_voters total_invalid_ballots total_valid_ballots valid_ballots_detail'
+      )
+
+      // Proses secara paralel untuk mendapatkan hasil yang diinginkan
+      const [aggregatedResult, valid_ballots_detail] = await Promise.all([
+        calculateAggregatedResult(tps),
+        getValidBallotsHelper(tps),
+      ])
+
+      return apiHandler({
+        res,
+        status: 'success',
+        code: 200,
+        message: 'Get all tps balllot by village successfully',
+        data: { ...aggregatedResult, valid_ballots_detail },
+        error: null,
+      })
+    } catch (error) {
+      console.error('Error getting total results by district:', error)
+      return apiHandler({
+        res,
+        status: 'error',
+        code: 500,
+        message: 'Internal Server Error',
+        data: null,
+        error: { type: 'InternalServerError', details: error.message },
+      })
+    }
+  },
   getAllDistrictWithResultVotes: async (req, res) => {
     try {
       // Ambil semua TPS dengan informasi district

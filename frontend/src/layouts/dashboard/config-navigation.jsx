@@ -40,6 +40,12 @@ const navConfig = [
     accessibleRoles: ['admin'],
   },
   {
+    title: 'cetak data',
+    path: '/cetak-data',
+    icon: <Iconify icon="material-symbols:print-outline" />,
+    accessibleRoles: ['admin'],
+  },
+  {
     title: 'pengguna',
     path: '/user',
     icon: <Iconify icon="solar:user-outline" />,

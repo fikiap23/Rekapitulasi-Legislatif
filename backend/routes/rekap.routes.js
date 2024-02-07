@@ -8,6 +8,10 @@ router.get(
   '/ballot-district/:districtId',
   rekapController.getAllTpsResultByDistrictId
 )
+router.get(
+  '/ballot-village/:villageId',
+  rekapController.getAllTpsResultByVillageId
+)
 router.get('/districts', rekapController.getAllDistrictWithResultVotes)
 router.get(
   '/villages/:districtId',
