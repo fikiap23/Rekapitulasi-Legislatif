@@ -12,6 +12,7 @@ import districtService from 'src/services/districtService';
 import Iconify from 'src/components/iconify/iconify';
 
 import CalegTable from '../caleg-table';
+import PartyTable from '../partai-table';
 
 // ----------------------------------------------------------------------
 
@@ -22,6 +23,7 @@ export default function CetakDataView() {
   const [kelurahan, setKelurahan] = useState('');
   const [cetakDataType, setCetakDataType] = useState('');
   const [calegs, setCalegs] = useState([]);
+  const [parties, setParties] = useState([]);
   const [loading, setLoading] = useState(false);
   const [getGridSize, setGridSize] = useState({
     // default grid size
@@ -53,22 +55,25 @@ export default function CetakDataView() {
     });
   };
 
-  const handleGetAllKecamatan = async () => {
-    try {
-      setLoading(true);
-
-      const getKecamatans = await districtService.getAllDistricts();
-      setKecamatans(getKecamatans.data);
-
-      setLoading(false);
-    } catch (error) {
-      setKecamatans([]);
-      setLoading(false);
-    }
-  };
-
   useEffect(() => {
-    const handleGetAllCaleg = async () => {
+    const handleGetAllKecamatan = async () => {
+      try {
+        if (kecamatans.length === 0) {
+          setLoading(true);
+
+          const getKecamatans = await districtService.getAllDistricts();
+          setKecamatans(getKecamatans.data);
+          setLoading(false);
+        }
+      } catch (error) {
+        setKecamatans([]);
+        setLoading(false);
+      }
+    };
+    handleGetAllKecamatan();
+  }, [kecamatans]);
+  useEffect(() => {
+    const handleGetCaleg = async () => {
       try {
         if (cetakDataType === 'data-caleg') {
           setLoading(true);
@@ -77,18 +82,32 @@ export default function CetakDataView() {
           } else if (kecamatan) {
             handleCalegByKecamatan(kecamatan._id);
           } else {
-            handlGetAllCaleg();
+            handleGetAllCaleg();
           }
+        } else if (cetakDataType === 'data-partai') {
+          setLoading(true);
+          handleGetAllPartiesBallot();
         }
       } catch (error) {
         setLoading(false);
         setCalegs([]);
       }
     };
-    handleGetAllCaleg();
+    handleGetCaleg();
   }, [cetakDataType, kecamatan, kelurahan]);
 
-  const handlGetAllCaleg = async () => {
+  const handleGetAllPartiesBallot = async () => {
+    try {
+      setLoading(true);
+      const getParties = await rekapService.getAllRekapBallots();
+      // console.log(getParties.data);
+      setParties(getParties.data.valid_ballots_detail);
+      setLoading(false);
+    } catch (error) {
+      setLoading(false);
+    }
+  };
+  const handleGetAllCaleg = async () => {
     try {
       setKelurahan('');
       setLoading(true);
@@ -197,7 +216,6 @@ export default function CetakDataView() {
                 value={cetakDataType}
                 onChange={(e) => {
                   handleResetData();
-                  handleGetAllKecamatan();
                   setCetakDataType(e.target.value);
                 }}
                 variant="outlined"
@@ -222,6 +240,7 @@ export default function CetakDataView() {
                 disabled={!cetakDataType}
                 value={kecamatan}
                 onChange={(e) => {
+                  setKelurahan('');
                   setKecamatan(e.target.value);
                   setKelurahans(e.target.value.villages);
                 }}
@@ -269,6 +288,7 @@ export default function CetakDataView() {
             Export Data
           </Button>
           {cetakDataType === 'data-caleg' && <CalegTable calegs={calegs} />}
+          {cetakDataType === 'data-partai' && <PartyTable parties={parties} />}
         </>
       )}
     </Container>
