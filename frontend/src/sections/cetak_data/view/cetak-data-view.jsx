@@ -86,7 +86,14 @@ export default function CetakDataView() {
           }
         } else if (cetakDataType === 'data-partai') {
           setLoading(true);
-          handleGetAllPartiesBallot();
+
+          if (kelurahan) {
+            // handlePartiesBallotByVillageId(kelurahan._id);
+          } else if (kecamatan) {
+            handlePartiesBallotByDistrictId(kecamatan._id);
+          } else {
+            handleGetAllPartiesBallot();
+          }
         }
       } catch (error) {
         setLoading(false);
@@ -100,6 +107,18 @@ export default function CetakDataView() {
     try {
       setLoading(true);
       const getParties = await rekapService.getAllRekapBallots();
+      // console.log(getParties.data);
+      setParties(getParties.data.valid_ballots_detail);
+      setLoading(false);
+    } catch (error) {
+      setLoading(false);
+    }
+  };
+
+  const handlePartiesBallotByDistrictId = async (districtId) => {
+    try {
+      setLoading(true);
+      const getParties = await rekapService.getAllRekapBallotsByDistrictId(districtId);
       // console.log(getParties.data);
       setParties(getParties.data.valid_ballots_detail);
       setLoading(false);
