@@ -12,8 +12,8 @@ import districtService from 'src/services/districtService';
 import Iconify from 'src/components/iconify/iconify';
 
 import CalegTable from '../caleg-table';
-import PartyTable from '../partai-table';
 import SuaraTable from '../suara-table';
+import PartyTable from '../partai-table';
 
 // ----------------------------------------------------------------------
 
