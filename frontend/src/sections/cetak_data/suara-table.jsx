@@ -1,3 +1,4 @@
+/* eslint-disable no-nested-ternary */
 import { useState } from 'react';
 import PropTypes from 'prop-types';
 
@@ -12,29 +13,11 @@ import Scrollbar from 'src/components/scrollbar';
 import UserTableHead from './user-table-head';
 import { applyFilter, getComparator } from './utils';
 
-export default function PetugasTable({ petugasList }) {
+export default function SuaraTable({ data, name }) {
   const [order, setOrder] = useState('asc');
 
-  const [orderBy, setOrderBy] = useState('name');
+  const [orderBy, setOrderBy] = useState('no');
 
-  const dummyPetugasList = [
-    {
-      id: 1,
-      no: 1,
-      district_name: 'Kab. Tangerang',
-      village_name: 'Tangerang',
-      tps_number: 1,
-      username: 'tps2',
-    },
-    {
-      id: 2,
-      no: 2,
-      district_name: 'Kab. Tangerang',
-      village_name: 'Tangerang',
-      tps_number: 1,
-      username: 'tps3',
-    },
-  ];
   const handleSort = (event, id) => {
     const isAsc = orderBy === id && order === 'asc';
     if (id !== '') {
@@ -44,7 +27,7 @@ export default function PetugasTable({ petugasList }) {
   };
 
   const dataFiltered = applyFilter({
-    inputData: dummyPetugasList,
+    inputData: data,
     comparator: getComparator(order, orderBy),
   });
   return (
@@ -59,22 +42,28 @@ export default function PetugasTable({ petugasList }) {
                 onRequestSort={handleSort}
                 headLabel={[
                   { id: 'no', label: 'No', align: 'center' },
-                  { id: 'district_name', label: 'District' },
-                  { id: 'village_name', label: 'Village' },
-                  { id: 'tps_number', label: 'TPS Number' },
-                  { id: 'username', label: 'Username' },
-                  { id: 'password', label: 'Password' },
+                  {
+                    id:
+                      name === 'Kecamatan'
+                        ? 'district_name'
+                        : name === 'Kelurahan'
+                        ? 'village_name'
+                        : 'number',
+                    label: name,
+                  },
+                  { id: 'total_voters', label: 'Total Hak Suara' },
+                  { id: 'total_valid_ballots', label: 'Suara Sah' },
+                  { id: 'total_invalid_ballots', label: 'Suara Tidak Sah' },
                 ]}
               />
               <TableBody>
                 {dataFiltered.map((row, index) => (
                   <TableRow hover tabIndex={-1} role="checkbox">
                     <TableCell align="center">{index + 1}</TableCell>
-                    <TableCell>{row.district_name}</TableCell>
-                    <TableCell>{row.village_name}</TableCell>
-                    <TableCell>{row.tps_number}</TableCell>
-                    <TableCell>{row.username}</TableCell>
-                    <TableCell>{row.password}</TableCell>
+                    <TableCell>{row.district_name ?? row.village_name ?? row.number}</TableCell>
+                    <TableCell>{row.total_voters}</TableCell>
+                    <TableCell>{row.total_valid_ballots}</TableCell>
+                    <TableCell>{row.total_invalid_ballots}</TableCell>
                   </TableRow>
                 ))}
               </TableBody>
@@ -86,6 +75,7 @@ export default function PetugasTable({ petugasList }) {
   );
 }
 
-PetugasTable.propTypes = {
-  petugasList: PropTypes.array,
+SuaraTable.propTypes = {
+  data: PropTypes.array,
+  name: PropTypes.string,
 };

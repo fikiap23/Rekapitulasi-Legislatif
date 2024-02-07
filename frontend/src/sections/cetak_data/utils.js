@@ -15,20 +15,44 @@ export function emptyRows(page, rowsPerPage, arrayLength) {
 }
 
 function descendingComparator(a, b, orderBy) {
-  if (a[orderBy] === null) {
-    return 1;
+  try {
+    // Mengambil angka dari string menggunakan ekspresi reguler
+    const numA = parseInt(a[orderBy].match(/\d+/)?.[0], 10) || 0;
+    const numB = parseInt(b[orderBy].match(/\d+/)?.[0], 10) || 0;
+    // Bandingkan angka
+    if (numB < numA) {
+      return -1;
+    }
+    if (numB > numA) {
+      return 1;
+    }
+
+    // Jika angka sama, bandingkan string secara leksikografis
+    if (b[orderBy] < a[orderBy]) {
+      return -1;
+    }
+    if (b[orderBy] > a[orderBy]) {
+      return 1;
+    }
+
+    return 0;
+  } catch (error) {
+    if (a[orderBy] === null) {
+      return 1;
+    }
+    if (b[orderBy] === null) {
+      return -1;
+    }
+    if (b[orderBy] < a[orderBy]) {
+      return -1;
+    }
+    if (b[orderBy] > a[orderBy]) {
+      return 1;
+    }
+    return 0;
   }
-  if (b[orderBy] === null) {
-    return -1;
-  }
-  if (b[orderBy] < a[orderBy]) {
-    return -1;
-  }
-  if (b[orderBy] > a[orderBy]) {
-    return 1;
-  }
-  return 0;
 }
+
 export function getComparator(order, orderBy) {
   return order === 'desc'
     ? (a, b) => descendingComparator(a, b, orderBy)
