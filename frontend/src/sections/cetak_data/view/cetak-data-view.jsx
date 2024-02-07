@@ -13,6 +13,7 @@ import Iconify from 'src/components/iconify/iconify';
 
 import CalegTable from '../caleg-table';
 import PartyTable from '../partai-table';
+import PetugasTable from '../petugas-table';
 
 // ----------------------------------------------------------------------
 
@@ -319,6 +320,7 @@ export default function CetakDataView() {
           </Button>
           {cetakDataType === 'data-caleg' && <CalegTable calegs={calegs} />}
           {cetakDataType === 'data-partai' && <PartyTable parties={parties} />}
+          {cetakDataType === 'data-petugas' && <PetugasTable petugasList={[]} />}
         </>
       )}
     </Container>
