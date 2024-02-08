@@ -1,9 +1,11 @@
 import mongoose from 'mongoose'
 import Village from '../models/villageModel.js'
 import Tps from '../models/tpsModel.js'
+import User from '../models/userModel.js'
 import History from '../models/historyModel.js'
 import Party from '../models/partyModel.js'
 import apiHandler from '../utils/apiHandler.js'
+import bcrypt from 'bcryptjs'
 
 const tpsController = {
   bulkTps: async (req, res) => {
@@ -66,6 +68,23 @@ const tpsController = {
 
         // Save the updated village with the new TPS references
         await village.save()
+      }
+
+      // create user for each tps
+      const salt = await bcrypt.genSalt(10)
+      for (const tps of insertedTps) {
+        const user = {
+          username: tps.number.replace(/\s+/g, '_').toLowerCase(),
+          password: await bcrypt.hash(
+            tps.number.replace(/\s+/g, '_').toLowerCase(),
+            salt
+          ),
+          role: 'user_tps',
+          tps_id: tps._id,
+          village_id: tps.village_id,
+          district_id: tps.district_id,
+        }
+        await User.create(user)
       }
 
       return apiHandler({
