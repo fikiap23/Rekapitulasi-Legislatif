@@ -86,6 +86,7 @@ export default function Nav({ openNav, onCloseNav }) {
       }}
     >
       <Logo sx={{ mt: 3, ml: 4 }} />
+      {/* <img src="/assets/logo_kab_bandung.png" alt="logo" /> */}
 
       {renderAccount}
 
