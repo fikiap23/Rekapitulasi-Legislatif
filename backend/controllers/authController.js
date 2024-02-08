@@ -186,6 +186,72 @@ const authController = {
       })
     }
   },
+  changePassword: async (req, res) => {
+    try {
+      const { userId } = req.params
+      const { oldPassword, newPassword } = req.body
+
+      if (!userId || !oldPassword || !newPassword) {
+        return apiHandler({
+          res,
+          status: 'error',
+          code: 400,
+          message: 'UserId, oldPassword, and newPassword are required',
+          error: {
+            type: 'MissingCredentials',
+            details: 'UserId, oldPassword, and newPassword are required',
+          },
+        })
+      }
+
+      const user = await User.findById(userId)
+      if (!user) {
+        return apiHandler({
+          res,
+          status: 'error',
+          code: 404,
+          message: 'User not found',
+          error: { type: 'UserNotFound', details: 'User not found' },
+        })
+      }
+
+      const isPasswordCorrect = await bcrypt.compare(oldPassword, user.password)
+      if (!isPasswordCorrect) {
+        return apiHandler({
+          res,
+          status: 'error',
+          code: 400,
+          message: 'Old password is incorrect',
+          error: {
+            type: 'IncorrectPassword',
+            details: 'Old password is incorrect',
+          },
+        })
+      }
+
+      const salt = await bcrypt.genSalt(10)
+      const hashedNewPassword = await bcrypt.hash(newPassword, salt)
+
+      user.password = hashedNewPassword
+      await user.save()
+
+      return apiHandler({
+        res,
+        status: 'success',
+        code: 200,
+        message: 'Password updated successfully',
+        data: null,
+      })
+    } catch (error) {
+      return apiHandler({
+        res,
+        status: 'error',
+        code: 500,
+        message: 'Internal Server Error',
+        error: { type: 'InternalServerError', details: error.message },
+      })
+    }
+  },
 }
 
 export default authController

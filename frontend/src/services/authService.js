@@ -23,6 +23,16 @@ const authService = {
       return error.response.data;
     }
   },
+  changePassword: async (userId, userData) => {
+    try {
+      const response = await axios.post(`${BASE_URL}/change-password/${userId}`, userData, {
+        withCredentials: true,
+      });
+      return response.data;
+    } catch (error) {
+      return error.response.data;
+    }
+  },
 
   logoutUser: async () => {
     try {

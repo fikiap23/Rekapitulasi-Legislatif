@@ -1,15 +1,21 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { useSnackbar } from 'notistack';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 
 import Box from '@mui/material/Box';
 import Avatar from '@mui/material/Avatar';
+import Dialog from '@mui/material/Dialog';
+import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
 import Popover from '@mui/material/Popover';
 import { alpha } from '@mui/material/styles';
 import MenuItem from '@mui/material/MenuItem';
+import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
+import DialogTitle from '@mui/material/DialogTitle';
+import DialogContent from '@mui/material/DialogContent';
+import DialogActions from '@mui/material/DialogActions';
 
 import userAtom from 'src/atoms/userAtom';
 import { account } from 'src/_mock/account';
@@ -21,15 +27,7 @@ import Iconify from 'src/components/iconify';
 
 const MENU_OPTIONS = [
   {
-    label: 'Home',
-    icon: 'eva:home-fill',
-  },
-  {
-    label: 'Profile',
-    icon: 'eva:person-fill',
-  },
-  {
-    label: 'Settings',
+    label: 'Ganti Password',
     icon: 'eva:settings-2-fill',
   },
 ];
@@ -39,7 +37,11 @@ const MENU_OPTIONS = [
 export default function AccountPopover() {
   const user = useRecoilValue(userAtom);
   const [open, setOpen] = useState(null);
+  const [openPasswordDialog, setOpenPasswordDialog] = useState(false);
+  const [oldPassword, setOldPassword] = useState('');
+  const [newPassword, setNewPassword] = useState('');
   const setUser = useSetRecoilState(userAtom);
+  const [loading, setLoading] = useState(false);
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
 
   const handleOpen = (event) => {
@@ -76,6 +78,84 @@ export default function AccountPopover() {
       }
     } catch (error) {
       console.log(error);
+    }
+  };
+
+  const handleOpenPasswordDialog = () => {
+    setOpenPasswordDialog(true);
+    handleClose();
+  };
+
+  const handleClosePasswordDialog = () => {
+    setOpenPasswordDialog(false);
+  };
+
+  const handlePasswordChange = async () => {
+    try {
+      // Ganti kata sandi logic here
+      setLoading(true);
+      const result = await authService.changePassword(user._id, { oldPassword, newPassword });
+      if (result.code === 200) {
+        console.log(result);
+        setOldPassword('');
+        setNewPassword('');
+        enqueueSnackbar('Password changed successfully', {
+          variant: 'success',
+          anchorOrigin: {
+            vertical: 'bottom',
+            horizontal: 'center',
+          },
+          action: (key) => (
+            <IconButton
+              key="close"
+              aria-label="Close"
+              color="inherit"
+              onClick={() => closeSnackbar(key)}
+            >
+              <Iconify icon="eva:close-fill" />
+            </IconButton>
+          ),
+        });
+        handleClosePasswordDialog();
+      } else {
+        enqueueSnackbar(result.message, {
+          variant: 'error',
+          anchorOrigin: {
+            vertical: 'bottom',
+            horizontal: 'center',
+          },
+          action: (key) => (
+            <IconButton
+              key="close"
+              aria-label="Close"
+              color="inherit"
+              onClick={() => closeSnackbar(key)}
+            >
+              <Iconify icon="eva:close-fill" />
+            </IconButton>
+          ),
+        });
+      }
+      setLoading(false);
+    } catch (error) {
+      console.error(error);
+      enqueueSnackbar('Failed to change password', {
+        variant: 'error',
+        anchorOrigin: {
+          vertical: 'bottom',
+          horizontal: 'center',
+        },
+        action: (key) => (
+          <IconButton
+            key="close"
+            aria-label="Close"
+            color="inherit"
+            onClick={() => closeSnackbar(key)}
+          >
+            <Iconify icon="eva:close-fill" />
+          </IconButton>
+        ),
+      });
     }
   };
 
@@ -133,7 +213,7 @@ export default function AccountPopover() {
         <Divider sx={{ borderStyle: 'dashed' }} />
 
         {MENU_OPTIONS.map((option) => (
-          <MenuItem key={option.label} onClick={handleClose}>
+          <MenuItem key={option.label} onClick={handleOpenPasswordDialog}>
             {option.label}
           </MenuItem>
         ))}
@@ -149,6 +229,39 @@ export default function AccountPopover() {
           Logout
         </MenuItem>
       </Popover>
+
+      {/* Dialog ganti kata sandi */}
+      <Dialog open={openPasswordDialog} onClose={handleClosePasswordDialog}>
+        <DialogTitle>Ganti Kata Sandi</DialogTitle>
+        <DialogContent>
+          <TextField
+            fullWidth
+            type="password"
+            label="Kata Sandi Lama"
+            value={oldPassword}
+            onChange={(e) => setOldPassword(e.target.value)}
+            margin="normal"
+            variant="outlined"
+            required
+          />
+          <TextField
+            fullWidth
+            type="password"
+            label="Kata Sandi Baru"
+            value={newPassword}
+            onChange={(e) => setNewPassword(e.target.value)}
+            margin="normal"
+            variant="outlined"
+            required
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClosePasswordDialog}>Batal</Button>
+          <Button onClick={handlePasswordChange} variant="contained" color="primary">
+            {loading ? 'Loading...' : ' Simpan'}
+          </Button>
+        </DialogActions>
+      </Dialog>
     </>
   );
 }
