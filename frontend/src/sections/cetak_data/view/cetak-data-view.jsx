@@ -31,6 +31,7 @@ export default function CetakDataView() {
   const [ballots, setBallots] = useState([]);
   const [ballotName, setBallotName] = useState('');
   const [loading, setLoading] = useState(false);
+  const [title, setTitle] = useState('');
   const [getGridSize, setGridSize] = useState({
     // default grid size
     Table: {
@@ -84,38 +85,50 @@ export default function CetakDataView() {
         if (cetakDataType === 'data-caleg') {
           setLoading(true);
           if (kelurahan) {
+            setTitle(`Data Suara Caleg Di Kelurahan ${kelurahan.name}`);
             handleGetCalegKelurahan(kelurahan._id);
           } else if (kecamatan) {
+            setTitle(`Data Suara Caleg Di Kecamatan ${kecamatan.name}`);
             handleCalegByKecamatan(kecamatan._id);
           } else {
+            setTitle('Data Suara Caleg Di Kabupaten Bandung');
             handleGetAllCaleg();
           }
         } else if (cetakDataType === 'data-partai') {
           setLoading(true);
 
           if (kelurahan) {
+            setTitle(`Data Suara Partai Di Kelurahan ${kelurahan.name}`);
             handlePartiesBallotByVillageId(kelurahan._id);
           } else if (kecamatan) {
+            setTitle(`Data Suara Partai Di Kecamatan ${kecamatan.name}`);
             handlePartiesBallotByDistrictId(kecamatan._id);
           } else {
+            setTitle('Data Suara Partai Di Kabupaten Bandung');
             handleGetAllPartiesBallot();
           }
         } else if (cetakDataType === 'data-suara') {
           setLoading(true);
           if (kelurahan) {
+            setTitle(`Data Suara Sah Di Kelurahan ${kelurahan.name}`);
             handleSuaraByVillageId(kelurahan._id);
           } else if (kecamatan) {
+            setTitle(`Data Suara Sah Di Kecamatan ${kecamatan.name}`);
             handleSuaraByDistrictId(kecamatan._id);
           } else {
+            setTitle('Data Suara Sah Di Kabupaten Bandung');
             handleGetAllSuara();
           }
         } else if (cetakDataType === 'data-petugas') {
           setLoading(true);
           if (kelurahan) {
+            setTitle(`Data Akun Petugas Di Kelurahan ${kelurahan.name}`);
             handleGetPetugasByVillageId(kelurahan._id);
           } else if (kecamatan) {
+            setTitle(`Data Akun Petugas Di Kecamatan ${kecamatan.name}`);
             handleGetPetugasByDistrictId(kecamatan._id);
           } else {
+            setTitle('Data Akun Petugas Di Kabupaten Bandung');
             handleGetAllPetugas();
           }
         }
@@ -306,7 +319,13 @@ export default function CetakDataView() {
 
   return (
     <Container ref={pdfRef}>
-      <Stack direction="row" alignItems="center" justifyContent="space-between" mb={3}>
+      <Stack
+        direction="row"
+        alignItems="center"
+        justifyContent="space-between"
+        mb={3}
+        className="printArea"
+      >
         <Typography variant="h4">Cetak Data</Typography>
       </Stack>
 
@@ -404,6 +423,9 @@ export default function CetakDataView() {
           >
             Export Data
           </Button>
+          <Typography variant="h6" sx={{ mb: 2, mt: 2, color: 'primary.main' }}>
+            {title}
+          </Typography>
           {cetakDataType === 'data-caleg' && <CalegTable calegs={calegs} />}
           {cetakDataType === 'data-partai' && <PartyTable parties={parties} />}
           {cetakDataType === 'data-suara' && <SuaraTable data={ballots} name={ballotName} />}
