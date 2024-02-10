@@ -46,7 +46,6 @@ export default function PetugasTable({ data }) {
                   { id: 'village_name', label: 'Kelurahan' },
                   { id: 'tps_number', label: 'Nomor TPS' },
                   { id: 'username', label: 'Username' },
-                  { id: 'username', label: 'Password' },
                 ]}
               />
               <TableBody>
@@ -56,7 +55,6 @@ export default function PetugasTable({ data }) {
                     <TableCell>{row.district_name}</TableCell>
                     <TableCell>{row.village_name}</TableCell>
                     <TableCell>{row.tps_number}</TableCell>
-                    <TableCell>{row.username}</TableCell>
                     <TableCell>{row.username}</TableCell>
                   </TableRow>
                 ))}

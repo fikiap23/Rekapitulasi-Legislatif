@@ -128,8 +128,7 @@ export default function CetakDataView() {
             setTitle(`Data Akun Petugas Di Kecamatan ${kecamatan.name}`);
             handleGetPetugasByDistrictId(kecamatan._id);
           } else {
-            setTitle('Data Akun Petugas Di Kabupaten Bandung');
-            handleGetAllPetugas();
+            setLoading(false);
           }
         }
       } catch (error) {
@@ -140,18 +139,6 @@ export default function CetakDataView() {
     handleGetCaleg();
   }, [cetakDataType, kecamatan, kelurahan]);
 
-  const handleGetAllPetugas = async () => {
-    try {
-      setLoading(true);
-      const getPetugas = await userService.getAllPetugas();
-      // console.log(getPetugas.data);
-      setListPetugas(getPetugas.data);
-
-      setLoading(false);
-    } catch (error) {
-      setLoading(false);
-    }
-  };
   const handleGetPetugasByDistrictId = async (districtId) => {
     try {
       setLoading(true);
@@ -426,6 +413,11 @@ export default function CetakDataView() {
           <Typography variant="h6" sx={{ mb: 2, mt: 2, color: 'primary.main' }}>
             {title}
           </Typography>
+          {cetakDataType === 'data-petugas' && (
+            <Typography variant="subtitle1" sx={{ fontStyle: 'italic' }}>
+              Password sama dengan username. Setelah Login Harap passwordnya diganti
+            </Typography>
+          )}
           {cetakDataType === 'data-caleg' && <CalegTable calegs={calegs} />}
           {cetakDataType === 'data-partai' && <PartyTable parties={parties} />}
           {cetakDataType === 'data-suara' && <SuaraTable data={ballots} name={ballotName} />}
