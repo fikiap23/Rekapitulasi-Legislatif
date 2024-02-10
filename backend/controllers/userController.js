@@ -440,6 +440,128 @@ const userController = {
       })
     }
   },
+  getAllPetugasTPS: async (req, res) => {
+    try {
+      let users = await User.find({ role: 'user_tps' })
+        .select('username village_id district_id tps_id')
+        .populate('village_id', 'name')
+        .populate('district_id', 'name')
+        .populate('tps_id', 'number')
+
+      // transform data
+      users = users.map((user) => {
+        return {
+          _id: user._id,
+          username: user.username,
+          village_name: user.village_id?.name,
+          district_name: user.district_id?.name,
+          tps_number: user.tps_id?.number,
+        }
+      })
+
+      // Return the list of users
+      return apiHandler({
+        res,
+        status: 'success',
+        code: 200,
+        message: 'List of all petugas TPS retrieved successfully',
+        data: users,
+        error: null,
+      })
+    } catch (error) {
+      // Handle errors
+      return apiHandler({
+        res,
+        status: 'error',
+        code: 500,
+        message: 'Internal Server Error',
+        data: null,
+        error: { type: 'InternalServerError', details: error.message },
+      })
+    }
+  },
+  getPetugasTPSByDistrict: async (req, res) => {
+    const { districtId } = req.params
+    try {
+      let users = await User.find({ district_id: districtId })
+        .select('username village_id district_id tps_id')
+        .populate('village_id', 'name')
+        .populate('district_id', 'name')
+        .populate('tps_id', 'number')
+
+      // transform data
+      users = users.map((user) => {
+        return {
+          _id: user._id,
+          username: user.username,
+          village_name: user.village_id?.name,
+          district_name: user.district_id?.name,
+          tps_number: user.tps_id?.number,
+        }
+      })
+
+      // Return the list of users
+      return apiHandler({
+        res,
+        status: 'success',
+        code: 200,
+        message: 'List of all petugas TPS retrieved successfully',
+        data: users,
+        error: null,
+      })
+    } catch (error) {
+      // Handle errors
+      return apiHandler({
+        res,
+        status: 'error',
+        code: 500,
+        message: 'Internal Server Error',
+        data: null,
+        error: { type: 'InternalServerError', details: error.message },
+      })
+    }
+  },
+  getPetugasTPSByVillage: async (req, res) => {
+    const { villageId } = req.params
+    try {
+      let users = await User.find({ village_id: villageId })
+        .select('username village_id district_id tps_id')
+        .populate('village_id', 'name')
+        .populate('district_id', 'name')
+        .populate('tps_id', 'number')
+
+      // transform data
+      users = users.map((user) => {
+        return {
+          _id: user._id,
+          username: user.username,
+          village_name: user.village_id?.name,
+          district_name: user.district_id?.name,
+          tps_number: user.tps_id?.number,
+        }
+      })
+
+      // Return the list of users
+      return apiHandler({
+        res,
+        status: 'success',
+        code: 200,
+        message: 'List of all petugas TPS retrieved successfully',
+        data: users,
+        error: null,
+      })
+    } catch (error) {
+      // Handle errors
+      return apiHandler({
+        res,
+        status: 'error',
+        code: 500,
+        message: 'Internal Server Error',
+        data: null,
+        error: { type: 'InternalServerError', details: error.message },
+      })
+    }
+  },
 }
 
 export default userController

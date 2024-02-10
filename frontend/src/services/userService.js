@@ -27,6 +27,41 @@ const userService = {
     }
   },
 
+  getAllPetugas: async () => {
+    try {
+      const response = await axios.get(`${BASE_URL}/petugas`, {
+        withCredentials: true,
+      });
+
+      return response.data;
+    } catch (error) {
+      return error.response.data;
+    }
+  },
+
+  getPetugasByDistrictId: async (districtId) => {
+    try {
+      const response = await axios.get(`${BASE_URL}/petugas/district/${districtId}`, {
+        withCredentials: true,
+      });
+
+      return response.data;
+    } catch (error) {
+      return error.response.data;
+    }
+  },
+  getPetugasByVillageId: async (villageId) => {
+    try {
+      const response = await axios.get(`${BASE_URL}/petugas/village/${villageId}`, {
+        withCredentials: true,
+      });
+
+      return response.data;
+    } catch (error) {
+      return error.response.data;
+    }
+  },
+
   editUser: async (userId, userData) => {
     try {
       const response = await axios.put(`${BASE_URL}/${userId}`, userData, {

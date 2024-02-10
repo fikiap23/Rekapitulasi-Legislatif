@@ -6,6 +6,7 @@ import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
 import { Grid, Button, MenuItem, TextField, LinearProgress } from '@mui/material';
 
+import userService from 'src/services/userService';
 import rekapService from 'src/services/rekapService';
 import districtService from 'src/services/districtService';
 
@@ -14,6 +15,7 @@ import Iconify from 'src/components/iconify/iconify';
 import CalegTable from '../caleg-table';
 import SuaraTable from '../suara-table';
 import PartyTable from '../partai-table';
+import PetugasTable from '../petugas-table';
 
 // ----------------------------------------------------------------------
 
@@ -25,6 +27,7 @@ export default function CetakDataView() {
   const [cetakDataType, setCetakDataType] = useState('');
   const [calegs, setCalegs] = useState([]);
   const [parties, setParties] = useState([]);
+  const [listPetugas, setListPetugas] = useState([]);
   const [ballots, setBallots] = useState([]);
   const [ballotName, setBallotName] = useState('');
   const [loading, setLoading] = useState(false);
@@ -106,6 +109,15 @@ export default function CetakDataView() {
           } else {
             handleGetAllSuara();
           }
+        } else if (cetakDataType === 'data-petugas') {
+          setLoading(true);
+          if (kelurahan) {
+            handleGetPetugasByVillageId(kelurahan._id);
+          } else if (kecamatan) {
+            handleGetPetugasByDistrictId(kecamatan._id);
+          } else {
+            handleGetAllPetugas();
+          }
         }
       } catch (error) {
         setLoading(false);
@@ -115,6 +127,39 @@ export default function CetakDataView() {
     handleGetCaleg();
   }, [cetakDataType, kecamatan, kelurahan]);
 
+  const handleGetAllPetugas = async () => {
+    try {
+      setLoading(true);
+      const getPetugas = await userService.getAllPetugas();
+      // console.log(getPetugas.data);
+      setListPetugas(getPetugas.data);
+
+      setLoading(false);
+    } catch (error) {
+      setLoading(false);
+    }
+  };
+  const handleGetPetugasByDistrictId = async (districtId) => {
+    try {
+      setLoading(true);
+      const getPetugas = await userService.getPetugasByDistrictId(districtId);
+      setListPetugas(getPetugas.data);
+      setLoading(false);
+    } catch (error) {
+      setLoading(false);
+    }
+  };
+
+  const handleGetPetugasByVillageId = async (villageId) => {
+    try {
+      setLoading(true);
+      const getPetugas = await userService.getPetugasByVillageId(villageId);
+      setListPetugas(getPetugas.data);
+      setLoading(false);
+    } catch (error) {
+      setLoading(false);
+    }
+  };
   const handleGetAllSuara = async () => {
     try {
       setLoading(true);
@@ -298,6 +343,7 @@ export default function CetakDataView() {
                 <MenuItem value="" disabled>
                   Pilih Data Yang Ingin Dicetak
                 </MenuItem>
+                <MenuItem value="data-petugas">Data Akun Petugas TPS</MenuItem>
                 <MenuItem value="data-partai">Data Partai</MenuItem>
                 <MenuItem value="data-caleg">Data Caleg</MenuItem>
                 <MenuItem value="data-suara">Data Suara Sah </MenuItem>
@@ -361,6 +407,7 @@ export default function CetakDataView() {
           {cetakDataType === 'data-caleg' && <CalegTable calegs={calegs} />}
           {cetakDataType === 'data-partai' && <PartyTable parties={parties} />}
           {cetakDataType === 'data-suara' && <SuaraTable data={ballots} name={ballotName} />}
+          {cetakDataType === 'data-petugas' && <PetugasTable data={listPetugas} />}
         </>
       )}
     </Container>
