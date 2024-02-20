@@ -283,30 +283,47 @@ const tpsController = {
 
   getAllTps: async (req, res) => {
     try {
-      // Find all tps
+      const page = parseInt(req.query.page) || 1
+      const limit = parseInt(req.query.limit) || 10
+      // Hitung skip untuk query
+      const skip = (page - 1) * limit
+
+      // Query untuk mengambil tps dengan pagination
       const tps = await Tps.find()
         .select('_id is_fillBallot village_id district_id number')
         .populate('village_id', 'name')
         .populate('district_id', 'name')
+        .skip(skip)
+        .limit(limit)
 
-      // Transform the data
+      // Transformasi data seperti sebelumnya
       const transformedTps = tps.map((tp) => ({
         _id: tp._id,
         number: tp.number,
-        // village_id: tp.village_id._id,
         village_name: tp.village_id.name,
-        // district_id: tp.district_id._id,
         district_name: tp.district_id.name,
         is_fillBallot: tp.is_fillBallot,
       }))
 
-      // Return the transformed result
+      // Menghitung total tps
+      const totalTps = await Tps.countDocuments()
+
+      // Return hasil dengan informasi pagination
       return apiHandler({
         res,
         status: 'success',
         code: 200,
         message: 'Get all tps successfully',
-        data: transformedTps,
+        data: {
+          tps: transformedTps,
+          pagination: {
+            total_records: totalTps,
+            current_page: page,
+            total_pages: Math.ceil(totalTps / limit),
+            next_page: page < Math.ceil(totalTps / limit) ? page + 1 : null,
+            prev_page: page > 1 ? page - 1 : null,
+          },
+        },
         error: null,
       })
     } catch (error) {
@@ -321,6 +338,7 @@ const tpsController = {
       })
     }
   },
+
   getAllTpsByDistrictId: async (req, res) => {
     const { districtId } = req.params
     try {
